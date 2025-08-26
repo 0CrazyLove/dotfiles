@@ -1,0 +1,7 @@
+# Neovim cache y archivos temporales
+.config/nvim/plugin/
+.config/nvim/.netrwhist
+.config/nvim/session/
+.config/nvim/swap/
+.config/nvim/undo/
+.config/nvim/view/
