@@ -1,0 +1,47 @@
+monitor=,preferred,auto,auto
+
+input {
+    kb_layout = us
+    follow_mouse = 1
+    touchpad {
+        natural_scroll = no
+    }
+    sensitivity = 0
+}
+
+general {
+    gaps_in = 5
+    gaps_out = 20
+    border_size = 2
+    col.active_border = rgba(33ccffee)
+    col.inactive_border = rgba(595959aa)
+    layout = dwindle
+}
+
+decoration {
+    rounding = 10
+    blur {
+        enabled = true
+        size = 3
+        passes = 1
+    }
+    drop_shadow = yes
+    shadow_range = 4
+    shadow_render_power = 3
+    col.shadow = rgba(1a1a1aee)
+}
+
+$mainMod = SUPER
+
+bind = $mainMod, Return, exec, alacritty
+bind = $mainMod, Q, killactive
+bind = $mainMod, M, exit
+bind = $mainMod, E, exec, thunar
+bind = $mainMod, V, togglefloating
+bind = $mainMod, R, exec, rofi -show drun
+
+bind = $mainMod, 1, workspace, 1
+bind = $mainMod, 2, workspace, 2
+bind = $mainMod, 3, workspace, 3
+bind = $mainMod, 4, workspace, 4
+bind = $mainMod, 5, workspace, 5
