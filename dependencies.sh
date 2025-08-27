@@ -19,8 +19,8 @@ print_info "🚀 Instalando dependencias para dotfiles..."
 
 # Verificar si estamos en Arch Linux
 if ! command -v pacman >/dev/null 2>&1; then
-    print_error "Este script está diseñado para Arch Linux"
-    exit 1
+  print_error "Este script está diseñado para Arch Linux"
+  exit 1
 fi
 
 # Actualizar sistema
@@ -29,95 +29,95 @@ sudo pacman -Syu --noconfirm
 
 # Dependencias principales
 MAIN_PACKAGES=(
-    "fish"                # Shell
-    "hyprland"           # Window manager
-    "kitty"              # Terminal
-    "neofetch"           # System info
-    "neovim"             # Editor
-    "git"                # Version control
+  "fish"     # Shell
+  "hyprland" # Window manager
+  "kitty"    # Terminal
+  "neofetch" # System info
+  "neovim"   # Editor
+  "git"      # Version control
 )
 
 # Dependencias de Hyprland
 HYPRLAND_PACKAGES=(
-    "waybar"             # Status bar
-    "wofi"               # Application launcher
-    "dunst"              # Notification daemon
-    "swww"               # Wallpaper daemon
-    "grim"               # Screenshot utility
-    "slurp"              # Screen selection
-    "wl-clipboard"       # Clipboard utilities
+  "waybar"       # Status bar
+  "wofi"         # Application launcher
+  "dunst"        # Notification daemon
+  "swww"         # Wallpaper daemon
+  "grim"         # Screenshot utility
+  "slurp"        # Screen selection
+  "wl-clipboard" # Clipboard utilities
 )
 
 # Dependencias opcionales
 OPTIONAL_PACKAGES=(
-    "rofi-wayland"       # Alternative launcher
-    "thunar"             # File manager
-    "firefox"            # Browser
-    "code"               # VS Code
+  "rofi-wayland" # Alternative launcher
+  "thunar"       # File manager
+  "firefox"      # Browser
+  "code"         # VS Code
 )
 
 # Instalar paquetes principales
 print_info "Instalando paquetes principales..."
 for package in "${MAIN_PACKAGES[@]}"; do
-    print_info "Instalando $package..."
-    sudo pacman -S --noconfirm "$package"
+  print_info "Instalando $package..."
+  sudo pacman -S --noconfirm "$package"
 done
 
 # Instalar paquetes de Hyprland
 print_info "Instalando paquetes de Hyprland..."
 for package in "${HYPRLAND_PACKAGES[@]}"; do
-    print_info "Instalando $package..."
-    sudo pacman -S --noconfirm "$package" || print_warning "⚠ No se pudo instalar $package"
+  print_info "Instalando $package..."
+  sudo pacman -S --noconfirm "$package" || print_warning "⚠ No se pudo instalar $package"
 done
 
 # Preguntar por paquetes opcionales
 echo
 print_info "Paquetes opcionales disponibles:"
 for package in "${OPTIONAL_PACKAGES[@]}"; do
-    echo "  • $package"
+  echo "  • $package"
 done
 
 read -p "¿Instalar paquetes opcionales? (y/N): " -n 1 -r
 echo
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    for package in "${OPTIONAL_PACKAGES[@]}"; do
-        print_info "Instalando $package..."
-        sudo pacman -S --noconfirm "$package" || print_warning "⚠ No se pudo instalar $package"
-    done
+  for package in "${OPTIONAL_PACKAGES[@]}"; do
+    print_info "Instalando $package..."
+    sudo pacman -S --noconfirm "$package" || print_warning "⚠ No se pudo instalar $package"
+  done
 fi
 
 # AUR helper (yay)
 if ! command -v yay >/dev/null 2>&1; then
-    print_info "¿Instalar yay (AUR helper)?"
-    read -p "Recomendado para algunos paquetes adicionales (y/N): " -n 1 -r
-    echo
-    
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_info "Instalando yay..."
-        cd /tmp
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ~
-        rm -rf /tmp/yay
-    fi
+  print_info "¿Instalar yay (AUR helper)?"
+  read -p "Recomendado para algunos paquetes adicionales (y/N): " -n 1 -r
+  echo
+
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    print_info "Instalando yay..."
+    cd /tmp
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd ~
+    rm -rf /tmp/yay
+  fi
 fi
 
 # Configurar Fish como shell por defecto
 if command -v fish >/dev/null 2>&1; then
-    current_shell=$(echo $SHELL)
-    if [[ "$current_shell" != *"fish"* ]]; then
-        print_info "¿Configurar Fish como shell por defecto?"
-        read -p "(y/N): " -n 1 -r
-        echo
-        
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            chsh -s /usr/bin/fish
-            print_success "✓ Fish configurado como shell por defecto"
-            print_warning "⚠ Reinicia la sesión para aplicar cambios"
-        fi
+  current_shell=$(echo $SHELL)
+  if [[ "$current_shell" != *"fish"* ]]; then
+    print_info "¿Configurar Fish como shell por defecto?"
+    read -p "(y/N): " -n 1 -r
+    echo
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      chsh -s /usr/bin/fish
+      print_success "✓ Fish configurado como shell por defecto"
+      print_warning "⚠ Reinicia la sesión para aplicar cambios"
     fi
+  fi
 fi
 
 print_success "🎉 ¡Dependencias instaladas!"

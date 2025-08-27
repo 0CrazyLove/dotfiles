@@ -101,13 +101,19 @@ fi
 print_info "Creando backup en: $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
-# Función para crear backup y symlink
-create_symlink() {
+# Función para crear backup y copiar archivos
+install_config() {
   local source="$1"
   local target="$2"
   local name="$3"
 
   print_info "Instalando configuración de $name..."
+
+  # Verificar que el origen existe
+  if [ ! -d "$source" ]; then
+    print_warning "⚠ $source no encontrado, saltando $name"
+    return
+  fi
 
   # Crear directorio padre si no existe
   mkdir -p "$(dirname "$target")"
@@ -118,8 +124,8 @@ create_symlink() {
     mv "$target" "$BACKUP_DIR/"
   fi
 
-  # Crear symlink
-  ln -sf "$source" "$target"
+  # Copiar archivos
+  cp -r "$source" "$target"
   print_success "✓ $name configurado"
 }
 
@@ -129,12 +135,12 @@ mkdir -p "$HOME/.config"
 print_info "Instalando configuraciones..."
 
 # Instalar configuraciones de .config
-create_symlink "$DOTFILES_DIR/.config/fish" "$HOME/.config/fish" "Fish shell"
-create_symlink "$DOTFILES_DIR/.config/hypr" "$HOME/.config/hypr" "Hyprland"
-create_symlink "$DOTFILES_DIR/.config/kitty" "$HOME/.config/kitty" "Kitty terminal"
-create_symlink "$DOTFILES_DIR/.config/neofetch" "$HOME/.config/neofetch" "Neofetch"
-create_symlink "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
-create_symlink "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
+install_config "$DOTFILES_DIR/.config/fish" "$HOME/.config/fish" "Fish shell"
+install_config "$DOTFILES_DIR/.config/hypr" "$HOME/.config/hypr" "Hyprland"
+install_config "$DOTFILES_DIR/.config/kitty" "$HOME/.config/kitty" "Kitty terminal"
+install_config "$DOTFILES_DIR/.config/neofetch" "$HOME/.config/neofetch" "Neofetch"
+install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
+install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
 
 # Instalar fondos de pantalla
 if [ -d "$DOTFILES_DIR/FondosPantallas" ]; then
@@ -164,4 +170,7 @@ echo "  • Reinicia tu sesión o recarga Hyprland: Super+Shift+R"
 echo "  • Para Fish: exec fish"
 echo "  • Para Neovim: Los plugins se instalarán automáticamente"
 echo
-print_warning "Si algo no funciona, puedes restaurar desde: $BACKUP_DIR"
+print_info "Configuraciones instaladas como archivos independientes."
+print_info "Puedes eliminar el directorio ~/dotfiles si quieres."
+echo
+print_warning "Para actualizar en el futuro, usa: ./update.sh desde ~/dotfiles"
