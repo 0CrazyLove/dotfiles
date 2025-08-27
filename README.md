@@ -57,6 +57,5 @@ update.sh
 
 ## Notas
 
-- Las configuraciones usan symlinks para mantenerse sincronizadas
 - Los wallpapers se copian a `~/Documents/FondosPantallas/`
 - Los backups se guardan en `~/.config_backup_FECHA/`
