@@ -25,7 +25,7 @@ Item {
             visible: Config.options.bar.utilButtons.showScreenSnip
             sourceComponent: CircleUtilButton {
                 Layout.alignment: Qt.AlignVCenter
-                onClicked: Quickshell.execDetached(["/home/crazy/.local/bin/screenshot-launcher"])
+                onClicked: Quickshell.execDetached([Quickshell.env("HOME") + "/.config/hypr/scripts/screenshot-launcher"])
                 MaterialSymbol {
                     horizontalAlignment: Qt.AlignHCenter
                     fill: 1

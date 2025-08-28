@@ -1,0 +1,4 @@
+#!/bin/bash
+export LANG=C.UTF-8
+cd ~/.config/quickshell/ii/
+qs -p screenshot.qml

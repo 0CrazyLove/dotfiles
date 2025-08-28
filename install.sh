@@ -101,6 +101,34 @@ fi
 print_info "Creando backup en: $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
+# Función para configurar carga automática del módulo WiFi
+configure_wifi_module() {
+  print_info "Configurando carga automática del módulo WiFi..."
+
+  if [ -f "/etc/modules-load.d/wifi.conf" ]; then
+    print_warning "Archivo /etc/modules-load.d/wifi.conf ya existe"
+    if grep -q "rtl8xxxu" /etc/modules-load.d/wifi.conf; then
+      print_success "✓ Módulo rtl8xxxu ya está configurado"
+      return
+    fi
+  fi
+
+  # Configurar el módulo para carga automática
+  if echo "rtl8xxxu" | sudo tee /etc/modules-load.d/wifi.conf >/dev/null 2>&1; then
+    print_success "✓ Módulo WiFi configurado para carga automática"
+
+    # Cargar el módulo inmediatamente
+    if sudo modprobe rtl8xxxu >/dev/null 2>&1; then
+      print_success "✓ Módulo WiFi cargado correctamente"
+    else
+      print_warning "⚠ No se pudo cargar el módulo inmediatamente (se cargará en el próximo reinicio)"
+    fi
+  else
+    print_error "✗ Error al configurar el módulo WiFi"
+    print_warning "Puedes ejecutar manualmente: echo 'rtl8xxxu' | sudo tee /etc/modules-load.d/wifi.conf"
+  fi
+}
+
 # Función para crear backup y copiar archivos
 install_config() {
   local source="$1"
@@ -142,6 +170,9 @@ install_config "$DOTFILES_DIR/.config/neofetch" "$HOME/.config/neofetch" "Neofet
 install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
 install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
 
+# Configurar módulo WiFi automático
+configure_wifi_module
+
 # Instalar fondos de pantalla
 if [ -d "$DOTFILES_DIR/FondosPantallas" ]; then
   print_info "Instalando fondos de pantalla..."
@@ -169,6 +200,7 @@ print_info "Para aplicar los cambios:"
 echo "  • Reinicia tu sesión o recarga Hyprland: Super+Shift+R"
 echo "  • Para Fish: exec fish"
 echo "  • Para Neovim: Los plugins se instalarán automáticamente"
+echo "  • El módulo WiFi se cargará automáticamente en futuros reinicios"
 echo
 print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."

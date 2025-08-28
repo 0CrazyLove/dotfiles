@@ -21,7 +21,6 @@ alias pamcan pacman
 alias ls 'eza --icons'
 alias clear "printf '\033[2J\033[3J\033[1;1H'"
 alias q 'qs -c ii'
-    
 
 # function fish_prompt
 #   set_color cyan; echo (pwd)
@@ -33,4 +32,3 @@ if test -f ~/.cache/wal/sequences
 end
 #neofetch
 neofetch
-set -gx GEMINI_API_KEY "AIzaSyBYDx7RvRXvqBqcOzXDZx1hDC_56vWzEpw"
