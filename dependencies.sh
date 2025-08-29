@@ -29,31 +29,20 @@ sudo pacman -Syu --noconfirm
 
 # Dependencias principales
 MAIN_PACKAGES=(
-  "fish"     # Shell
-  "hyprland" # Window manager
-  "kitty"    # Terminal
-  "neofetch" # System info
-  "neovim"   # Editor
-  "git"      # Version control
+  "fish"      # Shell
+  "hyprland"  # Window manager
+  "kitty"     # Terminal
+  "neofetch"  # System info
+  "neovim"    # Editor
+  "git"       # Version control
+  "qt5-tools" # Qt5 tools
 )
 
 # Dependencias de Hyprland
-HYPRLAND_PACKAGES=(
-  "waybar"       # Status bar
-  "wofi"         # Application launcher
-  "dunst"        # Notification daemon
-  "swww"         # Wallpaper daemon
-  "grim"         # Screenshot utility
-  "slurp"        # Screen selection
-  "wl-clipboard" # Clipboard utilities
-)
-
-# Dependencias opcionales
-OPTIONAL_PACKAGES=(
-  "rofi-wayland" # Alternative launcher
-  "thunar"       # File manager
-  "firefox"      # Browser
-  "code"         # VS Code
+HYPRLAND_PACKAGES=( # Notification daemon
+  "swww"  # Wallpaper daemon
+  "grim"  # Screenshot utility
+  "slurp" # Screen selection
 )
 
 # Instalar paquetes principales
