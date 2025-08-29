@@ -87,6 +87,24 @@ set wal_pid $last_pid
 # Esperar a que ambos procesos terminen
 wait $swww_pid $wal_pid
 
+# Aplicar colores a Dolphin/KDE sin reiniciar
+if test -f ~/.cache/wal/colors-kde.conf
+    cp ~/.cache/wal/colors-kde.conf ~/.config/kdeglobals
+    
+    # Aplicar cambios sin reiniciar aplicaciones
+    if command -v qdbus > /dev/null
+        # Recargar configuración de KDE
+        qdbus org.kde.KWin /KWin reconfigure 2>/dev/null
+        # Notificar cambio de colores a las aplicaciones Qt
+        qdbus org.kde.klauncher5 /KLauncher reparseConfiguration 2>/dev/null
+    end
+    
+    echo "✅ Colores aplicados a Dolphin (sin reiniciar)"
+else
+    echo "⚠️  Template de KDE no encontrado"
+end
+
+
 # Actualizar QuickShell en background
 echo "⚙️  Actualizando colores de QuickShell..."
 python3 $HOME/.config/hypr/scripts/actualizar-quickshell-colores.py &
