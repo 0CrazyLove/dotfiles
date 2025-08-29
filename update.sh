@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Script para actualizar dotfiles en el repositorio
 
 # Colores
@@ -13,6 +12,7 @@ print_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+
 DOTFILES_DIR="$HOME/dotfiles"
 
 # Verificar que estamos en el directorio correcto
@@ -22,7 +22,6 @@ if [ ! -d "$DOTFILES_DIR" ]; then
 fi
 
 cd "$DOTFILES_DIR"
-
 print_info "Actualizando dotfiles desde configuraciones actuales..."
 
 # Función para actualizar configuraciones
@@ -33,29 +32,46 @@ update_config() {
 
   if [ -d "$source_path" ]; then
     print_info "Actualizando $config_name..."
-
     # Eliminar configuración antigua en dotfiles
     rm -rf "$dest_path"
-
     # Copiar nueva configuración
     cp -r "$source_path" "$dest_path"
-
     # Limpiar archivos git si existen
     find "$dest_path" -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
-
     print_success "✓ $config_name actualizado"
   else
     print_warning "⚠ $config_name no encontrado en ~/.config/"
   fi
 }
 
-# Actualizar cada configuración
+# Función para actualizar archivos individuales
+update_file() {
+  local config_name="$1"
+  local source_path="$HOME/.config/$config_name"
+  local dest_path=".config/$config_name"
+
+  if [ -f "$source_path" ]; then
+    print_info "Actualizando $config_name..."
+    # Crear directorio padre si no existe
+    mkdir -p "$(dirname "$dest_path")"
+    # Copiar archivo
+    cp "$source_path" "$dest_path"
+    print_success "✓ $config_name actualizado"
+  else
+    print_warning "⚠ $config_name no encontrado en ~/.config/"
+  fi
+}
+
+# Actualizar cada configuración (directorios)
 update_config "fish"
 update_config "hypr"
 update_config "kitty"
 update_config "neofetch"
 update_config "nvim"
 update_config "quickshell"
+
+# Actualizar archivos individuales
+update_file "starship.toml"
 
 # Actualizar fondos de pantalla
 if [ -d "$HOME/Documents/FondosPantallas" ]; then
