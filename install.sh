@@ -49,22 +49,155 @@ if [ ! -d "$DOTFILES_DIR" ]; then
   exit 1
 fi
 
+# Función para verificar si un comando existe
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Función para verificar si yay está instalado
+check_yay() {
+  if ! command_exists yay; then
+    print_warning "yay (AUR helper) no está instalado"
+    print_info "Para instalar yay, ejecuta:"
+    echo "sudo pacman -S --needed base-devel git"
+    echo "git clone https://aur.archlinux.org/yay.git"
+    echo "cd yay && makepkg -si"
+    return 1
+  fi
+  return 0
+}
+
+# Instalar dependencias con pacman
+install_pacman_deps() {
+  print_info "Instalando dependencias con pacman..."
+
+  local pacman_deps=(
+    "starship"
+    "eza"
+    "python-pywal"
+    "cliphist"
+    "ddcutil"
+    "python-pillow"
+    "python-materialyoucolor"
+    "fuzzel"
+    "glib2"
+    "hypridle"
+    "hyprutils"
+    "hyprlock"
+    "hyprpicker"
+    "nm-connection-editor"
+    "wlogout"
+    "fish"
+    "hyprland"
+    "kitty"
+    "nvim"
+    "git"
+    "dolphin"
+    "mako"
+    "swww"
+    "grim"
+    "slurp"
+    "code"
+  )
+
+  local missing_pacman=()
+
+  # Verificar qué paquetes faltan
+  for dep in "${pacman_deps[@]}"; do
+    if ! pacman -Qi "$dep" >/dev/null 2>&1; then
+      missing_pacman+=("$dep")
+    fi
+  done
+
+  if [ ${#missing_pacman[@]} -ne 0 ]; then
+    print_info "Instalando: ${missing_pacman[*]}"
+    if sudo pacman -S --needed "${missing_pacman[@]}"; then
+      print_success "✓ Dependencias de pacman instaladas"
+    else
+      print_error "✗ Error instalando algunas dependencias de pacman"
+      return 1
+    fi
+  else
+    print_success "✓ Todas las dependencias de pacman ya están instaladas"
+  fi
+}
+
+# Instalar dependencias con yay (AUR)
+install_yay_deps() {
+  if ! check_yay; then
+    print_warning "Saltando instalación de paquetes AUR (yay no disponible)"
+    return 1
+  fi
+
+  print_info "Instalando dependencias con yay (AUR)..."
+
+  local yay_deps=(
+    "neofetch"
+    "translate-shell"
+    "quickshell-git"
+    "discord"
+    "spotify"
+    "brave-bin"
+  )
+
+  local missing_yay=()
+
+  # Verificar qué paquetes AUR faltan
+  for dep in "${yay_deps[@]}"; do
+    if ! yay -Qi "$dep" >/dev/null 2>&1; then
+      missing_yay+=("$dep")
+    fi
+  done
+
+  if [ ${#missing_yay[@]} -ne 0 ]; then
+    print_info "Instalando desde AUR: ${missing_yay[*]}"
+    if yay -S --needed "${missing_yay[@]}"; then
+      print_success "✓ Dependencias de AUR instaladas"
+    else
+      print_error "✗ Error instalando algunas dependencias de AUR"
+      return 1
+    fi
+  else
+    print_success "✓ Todas las dependencias de AUR ya están instaladas"
+  fi
+}
+
+# Instalación de dependencias
+print_info "Comenzando instalación de dependencias..."
+
+# Actualizar base de datos de paquetes
+print_info "Actualizando base de datos de paquetes..."
+sudo pacman -Sy
+
+# Instalar dependencias
+install_pacman_deps
+install_yay_deps
+
 # Lista de dependencias requeridas (actualizada)
 DEPENDENCIES=(
   "fish"
   "hyprland"
   "kitty"
-  "neofetch"
   "nvim"
   "starship"
   "git"
-)
-
-# Lista de dependencias opcionales (actualizada)
-OPTIONAL_DEPS=(
-  "waybar"
-  "rofi"
-  "wofi"
+  "eza"
+  "neofetch"
+  "python-pywal"
+  "cliphist"
+  "ddcutil"
+  "translate-shell"
+  "python-pillow"
+  "python-materialyoucolor"
+  "fuzzel"
+  "glib2"
+  "hypridle"
+  "hyprutils"
+  "hyprlock"
+  "hyprpicker"
+  "nm-connection-editor"
+  "quickshell-git"
+  "wlogout"
   "dolphin"
   "mako"
   "swww"
@@ -72,19 +205,22 @@ OPTIONAL_DEPS=(
   "slurp"
 )
 
-# Función para verificar si un comando existe
-command_exists() {
-  command -v "$1" >/dev/null 2>&1
-}
+# Lista de dependencias opcionales (actualizada)
+OPTIONAL_DEPS=(
+  "code"
+  "discord"
+  "spotify"
+  "brave-bin"
+)
 
-# Verificar dependencias
-print_info "Verificando dependencias..."
+# Verificar dependencias instaladas
+print_info "Verificando dependencias instaladas..."
 missing_deps=()
 missing_optional=()
 
 for dep in "${DEPENDENCIES[@]}"; do
   # Verificar tanto el comando como el paquete instalado
-  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
+  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1 && ! yay -Qi "$dep" >/dev/null 2>&1; then
     missing_deps+=("$dep")
     print_error "✗ $dep no encontrado"
   else
@@ -93,7 +229,7 @@ for dep in "${DEPENDENCIES[@]}"; do
 done
 
 for dep in "${OPTIONAL_DEPS[@]}"; do
-  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
+  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1 && ! yay -Qi "$dep" >/dev/null 2>&1; then
     missing_optional+=("$dep")
     print_warning "⚠ $dep no encontrado (opcional)"
   else
@@ -101,29 +237,13 @@ for dep in "${OPTIONAL_DEPS[@]}"; do
   fi
 done
 
-# Mostrar comandos de instalación si faltan dependencias
+# Mostrar resumen de dependencias faltantes
 if [ ${#missing_deps[@]} -ne 0 ]; then
-  print_error "Faltan dependencias requeridas!"
-  echo
-  print_info "Instala las dependencias faltantes con:"
-  echo "sudo pacman -S ${missing_deps[*]}"
-  echo
-  print_info "O ejecuta primero el script de dependencias:"
-  echo "./dependencies.sh"
-  echo
-  read -p "¿Continuar sin las dependencias faltantes? (y/N): " -n 1 -r
-  echo
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    print_info "Instalación cancelada. Instala las dependencias primero."
-    exit 1
-  fi
+  print_warning "Algunas dependencias requeridas aún faltan: ${missing_deps[*]}"
 fi
 
 if [ ${#missing_optional[@]} -ne 0 ]; then
-  echo
-  print_info "Dependencias opcionales faltantes (recomendadas):"
-  echo "sudo pacman -S ${missing_optional[*]}"
-  echo
+  print_warning "Algunas dependencias opcionales faltan: ${missing_optional[*]}"
 fi
 
 # Crear directorio de backup
