@@ -69,15 +69,27 @@ sudo pacman -Syu --noconfirm
 
 # Dependencias principales
 MAIN_PACKAGES=(
-  "fish"      # Shell
-  "hyprland"  # Window manager
-  "kitty"     # Terminal
-  "neofetch"  # System info
-  "neovim"    # Editor
-  "git"       # Version control
-  "qt5-tools" # Qt5 tools
-  "starship"  # Cross-shell prompt
-  "dolphin"   # File manager
+  "fish"                 # Shell
+  "hyprland"             # Window manager
+  "kitty"                # Terminal
+  "neovim"               # Editor
+  "git"                  # Version control
+  "qt5-tools"            # Qt5 tools
+  "starship"             # Cross-shell prompt
+  "dolphin"              # File manager
+  "eza"                  # Modern ls replacement
+  "python-pywal"         # Color scheme generator
+  "cliphist"             # Clipboard manager
+  "ddcutil"              # Display control utility
+  "python-pillow"        # Python imaging library
+  "fuzzel"               # Application launcher
+  "glib2"                # GLib library
+  "hypridle"             # Hyprland idle daemon
+  "hyprutils"            # Hyprland utilities
+  "hyprlock"             # Hyprland lock screen
+  "hyprpicker"           # Color picker for Hyprland
+  "nm-connection-editor" # Network manager connection editor
+  "wlogout"              # Logout menu for Wayland
 )
 
 # Dependencias de Hyprland
@@ -88,9 +100,96 @@ HYPRLAND_PACKAGES=(
   "waybar" # Status bar
 )
 
+# Nuevas dependencias con pacman
+NEW_PACMAN_PACKAGES=(
+  "geoclue"
+  "brightnessctl"
+  "axel"
+  "bc"
+  "coreutils"
+  "cmake"
+  "curl"
+  "rsync"
+  "wget"
+  "ripgrep"
+  "jq"
+  "meson"
+  "xdg-user-dirs"
+  "fontconfig"
+  "breeze"
+  "tinyxml2"
+  "gtkmm3"
+  "cairomm"
+  "gtk4"
+  "libadwaita"
+  "libsoup3"
+  "gobject-introspection"
+  "sassc"
+  "python-opencv"
+  "tesseract"
+  "tesseract-data-eng"
+  "wf-recorder"
+  "kdialog"
+  "qt6-base"
+  "qt6-declarative"
+  "qt6-imageformats"
+  "qt6-multimedia"
+  "qt6-positioning"
+  "qt6-quicktimeline"
+  "qt6-sensors"
+  "qt6-svg"
+  "qt6-tools"
+  "qt6-translations"
+  "qt6-wayland"
+  "upower"
+  "qt6-5compat"
+  "syntax-highlighting"
+)
+
+# Dependencias AUR (yay)
+AUR_PACKAGES=(
+  "neofetch"                # System info
+  "translate-shell"         # Command-line translator
+  "python-materialyoucolor" # Material You color library
+  "quickshell-git"          # Shell for Qt Quick
+  # Nuevos paquetes AUR
+  "adw-gtk-theme-git"
+  "breeze-plus"
+  "darkly-bin"
+  "kde-material-you-colors"
+  "matugen-bin"
+  "otf-space-grotesk"
+  "ttf-gabarito-git"
+  "ttf-jetbrains-mono-nerd"
+  "ttf-material-symbols-variable-git"
+  "ttf-readex-pro"
+  "ttf-rubik-vf"
+  "ttf-twemoji"
+  "hyprcursor"
+  "hyprland-qtutils"
+  "hyprland-qt-support"
+  "hyprlang"
+  "hyprsunset"
+  "hyprwayland-scanner"
+  "xdg-desktop-portal-hyprland"
+  "wl-clipboard"
+  "bluedevil"
+  "gnome-keyring"
+  "networkmanager"
+  "plasma-nm"
+  "polkit-kde-agent"
+  "systemsettings"
+  "uv"
+  "hyprshot"
+  "swappy"
+  "qt6-avif-image-plugin"
+  "wtype"
+  "ydotool"
+)
+
 # Paquetes opcionales
 OPTIONAL_PACKAGES=(
-  "code"    # iVS Code
+  "code"    # VS Code
   "discord" # Communication
   "spotify" # Music
 )
@@ -122,6 +221,31 @@ install_package() {
   return 1
 }
 
+# Función para instalar paquetes AUR con yay
+install_aur_package() {
+  local package="$1"
+  local max_retries=3
+  local retry=0
+
+  while [ $retry -lt $max_retries ]; do
+    print_info "Instalando $package desde AUR... (intento $((retry + 1)))"
+    if yay -S --noconfirm "$package"; then
+      print_success "✓ $package instalado correctamente desde AUR"
+      return 0
+    else
+      print_warning "⚠ Error instalando $package desde AUR (intento $((retry + 1)))"
+      retry=$((retry + 1))
+      if [ $retry -lt $max_retries ]; then
+        print_info "Esperando 5 segundos antes del siguiente intento..."
+        sleep 5
+      fi
+    fi
+  done
+
+  print_error "✗ No se pudo instalar $package desde AUR después de $max_retries intentos"
+  return 1
+}
+
 # Instalar paquetes principales
 print_info "Instalando paquetes principales..."
 failed_packages=()
@@ -140,6 +264,57 @@ for package in "${HYPRLAND_PACKAGES[@]}"; do
   fi
 done
 
+# Instalar nuevas dependencias con pacman
+print_info "Instalando nuevas dependencias con pacman..."
+for package in "${NEW_PACMAN_PACKAGES[@]}"; do
+  # Evitar duplicados con paquetes ya definidos
+  if [[ ! " ${MAIN_PACKAGES[@]} " =~ " ${package} " ]] && [[ ! " ${HYPRLAND_PACKAGES[@]} " =~ " ${package} " ]]; then
+    if ! install_package "$package"; then
+      failed_packages+=("$package")
+    fi
+  else
+    print_info "Saltando $package (ya incluido en otra lista)"
+  fi
+done
+
+# AUR helper (yay) - Instalar primero si no existe
+if ! command -v yay >/dev/null 2>&1; then
+  print_info "¿Instalar yay (AUR helper)?"
+  print_warning "Requerido para algunas dependencias adicionales"
+  read -p "Recomendado para algunos paquetes adicionales (y/N): " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    print_info "Instalando yay..."
+    cd /tmp
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd ~
+    rm -rf /tmp/yay
+    print_success "✓ yay instalado"
+  else
+    print_warning "Sin yay, se omitirán paquetes AUR"
+  fi
+fi
+
+# Instalar paquetes AUR si yay está disponible
+if command -v yay >/dev/null 2>&1; then
+  print_info "Instalando dependencias desde AUR..."
+  failed_aur_packages=()
+
+  for package in "${AUR_PACKAGES[@]}"; do
+    if ! install_aur_package "$package"; then
+      failed_aur_packages+=("$package")
+    fi
+  done
+
+  # Agregar paquetes AUR fallidos a la lista general
+  failed_packages+=("${failed_aur_packages[@]}")
+else
+  print_warning "yay no está disponible, omitiendo paquetes AUR"
+  failed_packages+=("${AUR_PACKAGES[@]}")
+fi
+
 # Mostrar paquetes que fallaron
 if [ ${#failed_packages[@]} -ne 0 ]; then
   print_warning "Paquetes que no se pudieron instalar:"
@@ -148,7 +323,8 @@ if [ ${#failed_packages[@]} -ne 0 ]; then
   done
   echo
   print_info "Puedes intentar instalarlos manualmente más tarde:"
-  echo "sudo pacman -S ${failed_packages[*]}"
+  echo "Pacman: sudo pacman -S [paquete]"
+  echo "AUR: yay -S [paquete]"
   echo
 fi
 
@@ -165,23 +341,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   for package in "${OPTIONAL_PACKAGES[@]}"; do
     install_package "$package"
   done
-fi
-
-# AUR helper (yay)
-if ! command -v yay >/dev/null 2>&1; then
-  print_info "¿Instalar yay (AUR helper)?"
-  read -p "Recomendado para algunos paquetes adicionales (y/N): " -n 1 -r
-  echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    print_info "Instalando yay..."
-    cd /tmp
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si --noconfirm
-    cd ~
-    rm -rf /tmp/yay
-    print_success "✓ yay instalado"
-  fi
 fi
 
 # Configurar Fish como shell por defecto
@@ -205,7 +364,9 @@ echo
 # Verificar estado final
 print_info "Verificación final de dependencias principales..."
 all_good=true
-for package in "${MAIN_PACKAGES[@]}"; do
+all_packages=("${MAIN_PACKAGES[@]}" "${HYPRLAND_PACKAGES[@]}" "${NEW_PACMAN_PACKAGES[@]}")
+
+for package in "${all_packages[@]}"; do
   if command -v "$package" >/dev/null 2>&1 || pacman -Qi "$package" >/dev/null 2>&1; then
     print_success "✓ $package"
   else
@@ -221,8 +382,7 @@ if $all_good; then
   echo "  ./install.sh"
 else
   print_warning "⚠ Algunas dependencias fallaron, pero puedes continuar"
-  print_info "Para reintentar solo los paquetes faltantes:"
-  echo "  sudo pacman -S ${failed_packages[*]}"
+  print_info "Para reintentar solo los paquetes faltantes, consulta la lista anterior"
 fi
 
 echo

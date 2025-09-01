@@ -18,7 +18,7 @@ print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 # Variables
 DOTFILES_DIR="$HOME/dotfiles"
-BACKUP_DIR="$HOME/.config_backup_$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR="$HOME/.configbackup$(date +%Y%m%d_%H%M%S)"
 WALLPAPERS_DIR="$HOME/Documents"
 
 print_info "Iniciando instalación de dotfiles..."
@@ -49,178 +49,144 @@ if [ ! -d "$DOTFILES_DIR" ]; then
   exit 1
 fi
 
+# Lista de dependencias requeridas (actualizada)
+DEPENDENCIES=(
+  "fish"                 # Shell
+  "hyprland"             # Window manager
+  "kitty"                # Terminal
+  "neovim"               # Editor
+  "git"                  # Version control
+  "qt5-tools"            # Qt5 tools
+  "starship"             # Cross-shell prompt
+  "dolphin"              # File manager
+  "eza"                  # Modern ls replacement
+  "python-pywal"         # Color scheme generator
+  "cliphist"             # Clipboard manager
+  "ddcutil"              # Display control utility
+  "python-pillow"        # Python imaging library
+  "fuzzel"               # Application launcher
+  "glib2"                # GLib library
+  "hypridle"             # Hyprland idle daemon
+  "hyprutils"            # Hyprland utilities
+  "hyprlock"             # Hyprland lock screen
+  "hyprpicker"           # Color picker for Hyprland
+  "nm-connection-editor" # Network manager connection editor
+  "wlogout"              # Logout menu for Wayland
+  # Nuevas dependencias básicas
+  "geoclue"
+  "brightnessctl"
+  "axel"
+  "bc"
+  "coreutils"
+  "cmake"
+  "curl"
+  "rsync"
+  "wget"
+  "ripgrep"
+  "jq"
+  "meson"
+  "xdg-user-dirs"
+  "fontconfig"
+  "breeze"
+  "tinyxml2"
+  "gtkmm3"
+  "cairomm"
+  "gtk4"
+  "libadwaita"
+  "libsoup3"
+  "gobject-introspection"
+  "sassc"
+  "python-opencv"
+  "tesseract"
+  "tesseract-data-eng"
+  "wf-recorder"
+  "kdialog"
+  "qt6-base"
+  "qt6-declarative"
+  "qt6-imageformats"
+  "qt6-multimedia"
+  "qt6-positioning"
+  "qt6-quicktimeline"
+  "qt6-sensors"
+  "qt6-svg"
+  "qt6-tools"
+  "qt6-translations"
+  "qt6-wayland"
+  "upower"
+  "qt6-5compat"
+  "syntax-highlighting"
+)
+
+# Lista de dependencias de Hyprland
+HYPRLAND_DEPS=(
+  "swww"   # Wallpaper daemon
+  "grim"   # Screenshot utility
+  "slurp"  # Screen selection
+  "waybar" # Status bar
+)
+
+# Lista de dependencias AUR
+AUR_DEPENDENCIES=(
+  "neofetch"                # System info
+  "translate-shell"         # Command-line translator
+  "python-materialyoucolor" # Material You color library
+  "quickshell-git"          # Shell for Qt Quick
+  # Nuevas dependencias AUR
+  "adw-gtk-theme-git"
+  "breeze-plus"
+  "darkly-bin"
+  "kde-material-you-colors"
+  "matugen-bin"
+  "otf-space-grotesk"
+  "ttf-gabarito-git"
+  "ttf-jetbrains-mono-nerd"
+  "ttf-material-symbols-variable-git"
+  "ttf-readex-pro"
+  "ttf-rubik-vf"
+  "ttf-twemoji"
+  "hyprcursor"
+  "hyprland-qtutils"
+  "hyprland-qt-support"
+  "hyprlang"
+  "hyprsunset"
+  "hyprwayland-scanner"
+  "xdg-desktop-portal-hyprland"
+  "wl-clipboard"
+  "bluedevil"
+  "gnome-keyring"
+  "networkmanager"
+  "plasma-nm"
+  "polkit-kde-agent"
+  "systemsettings"
+  "uv"
+  "hyprshot"
+  "swappy"
+  "qt6-avif-image-plugin"
+  "wtype"
+  "ydotool"
+)
+
+# Lista de dependencias opcionales (actualizada)
+OPTIONAL_DEPS=(
+  "mako" # Notification daemon
+)
+
 # Función para verificar si un comando existe
 command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-# Función para verificar si yay está instalado
-check_yay() {
-  if ! command_exists yay; then
-    print_warning "yay (AUR helper) no está instalado"
-    print_info "Para instalar yay, ejecuta:"
-    echo "sudo pacman -S --needed base-devel git"
-    echo "git clone https://aur.archlinux.org/yay.git"
-    echo "cd yay && makepkg -si"
-    return 1
-  fi
-  return 0
-}
-
-# Instalar dependencias con pacman
-install_pacman_deps() {
-  print_info "Instalando dependencias con pacman..."
-
-  local pacman_deps=(
-    "starship"
-    "eza"
-    "python-pywal"
-    "cliphist"
-    "ddcutil"
-    "python-pillow"
-    "python-materialyoucolor"
-    "fuzzel"
-    "glib2"
-    "hypridle"
-    "hyprutils"
-    "hyprlock"
-    "hyprpicker"
-    "nm-connection-editor"
-    "wlogout"
-    "fish"
-    "hyprland"
-    "kitty"
-    "nvim"
-    "git"
-    "dolphin"
-    "mako"
-    "swww"
-    "grim"
-    "slurp"
-    "code"
-  )
-
-  local missing_pacman=()
-
-  # Verificar qué paquetes faltan
-  for dep in "${pacman_deps[@]}"; do
-    if ! pacman -Qi "$dep" >/dev/null 2>&1; then
-      missing_pacman+=("$dep")
-    fi
-  done
-
-  if [ ${#missing_pacman[@]} -ne 0 ]; then
-    print_info "Instalando: ${missing_pacman[*]}"
-    if sudo pacman -S --needed "${missing_pacman[@]}"; then
-      print_success "✓ Dependencias de pacman instaladas"
-    else
-      print_error "✗ Error instalando algunas dependencias de pacman"
-      return 1
-    fi
-  else
-    print_success "✓ Todas las dependencias de pacman ya están instaladas"
-  fi
-}
-
-# Instalar dependencias con yay (AUR)
-install_yay_deps() {
-  if ! check_yay; then
-    print_warning "Saltando instalación de paquetes AUR (yay no disponible)"
-    return 1
-  fi
-
-  print_info "Instalando dependencias con yay (AUR)..."
-
-  local yay_deps=(
-    "neofetch"
-    "translate-shell"
-    "quickshell-git"
-    "discord"
-    "spotify"
-    "brave-bin"
-  )
-
-  local missing_yay=()
-
-  # Verificar qué paquetes AUR faltan
-  for dep in "${yay_deps[@]}"; do
-    if ! yay -Qi "$dep" >/dev/null 2>&1; then
-      missing_yay+=("$dep")
-    fi
-  done
-
-  if [ ${#missing_yay[@]} -ne 0 ]; then
-    print_info "Instalando desde AUR: ${missing_yay[*]}"
-    if yay -S --needed "${missing_yay[@]}"; then
-      print_success "✓ Dependencias de AUR instaladas"
-    else
-      print_error "✗ Error instalando algunas dependencias de AUR"
-      return 1
-    fi
-  else
-    print_success "✓ Todas las dependencias de AUR ya están instaladas"
-  fi
-}
-
-# Instalación de dependencias
-print_info "Comenzando instalación de dependencias..."
-
-# Actualizar base de datos de paquetes
-print_info "Actualizando base de datos de paquetes..."
-sudo pacman -Sy
-
-# Instalar dependencias
-install_pacman_deps
-install_yay_deps
-
-# Lista de dependencias requeridas (actualizada)
-DEPENDENCIES=(
-  "fish"
-  "hyprland"
-  "kitty"
-  "nvim"
-  "starship"
-  "git"
-  "eza"
-  "neofetch"
-  "python-pywal"
-  "cliphist"
-  "ddcutil"
-  "translate-shell"
-  "python-pillow"
-  "python-materialyoucolor"
-  "fuzzel"
-  "glib2"
-  "hypridle"
-  "hyprutils"
-  "hyprlock"
-  "hyprpicker"
-  "nm-connection-editor"
-  "quickshell-git"
-  "wlogout"
-  "dolphin"
-  "mako"
-  "swww"
-  "grim"
-  "slurp"
-)
-
-# Lista de dependencias opcionales (actualizada)
-OPTIONAL_DEPS=(
-  "code"
-  "discord"
-  "spotify"
-  "brave-bin"
-)
-
-# Verificar dependencias instaladas
-print_info "Verificando dependencias instaladas..."
+# Verificar dependencias
+print_info "Verificando dependencias principales..."
 missing_deps=()
+missing_hyprland=()
+missing_aur=()
 missing_optional=()
 
+# Verificar dependencias principales
 for dep in "${DEPENDENCIES[@]}"; do
   # Verificar tanto el comando como el paquete instalado
-  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1 && ! yay -Qi "$dep" >/dev/null 2>&1; then
+  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
     missing_deps+=("$dep")
     print_error "✗ $dep no encontrado"
   else
@@ -228,8 +194,31 @@ for dep in "${DEPENDENCIES[@]}"; do
   fi
 done
 
+# Verificar dependencias de Hyprland
+print_info "Verificando dependencias de Hyprland..."
+for dep in "${HYPRLAND_DEPS[@]}"; do
+  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
+    missing_hyprland+=("$dep")
+    print_error "✗ $dep no encontrado"
+  else
+    print_success "✓ $dep encontrado"
+  fi
+done
+
+# Verificar dependencias AUR
+print_info "Verificando dependencias AUR..."
+for dep in "${AUR_DEPENDENCIES[@]}"; do
+  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
+    missing_aur+=("$dep")
+    print_error "✗ $dep no encontrado"
+  else
+    print_success "✓ $dep encontrado"
+  fi
+done
+
+# Verificar dependencias opcionales
 for dep in "${OPTIONAL_DEPS[@]}"; do
-  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1 && ! yay -Qi "$dep" >/dev/null 2>&1; then
+  if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
     missing_optional+=("$dep")
     print_warning "⚠ $dep no encontrado (opcional)"
   else
@@ -237,13 +226,47 @@ for dep in "${OPTIONAL_DEPS[@]}"; do
   fi
 done
 
-# Mostrar resumen de dependencias faltantes
-if [ ${#missing_deps[@]} -ne 0 ]; then
-  print_warning "Algunas dependencias requeridas aún faltan: ${missing_deps[*]}"
+# Mostrar comandos de instalación si faltan dependencias
+total_missing=$((${#missing_deps[@]} + ${#missing_hyprland[@]} + ${#missing_aur[@]}))
+
+if [ $total_missing -ne 0 ]; then
+  print_error "Faltan dependencias requeridas!"
+  echo
+
+  if [ ${#missing_deps[@]} -ne 0 ]; then
+    print_info "Dependencias principales faltantes:"
+    echo "sudo pacman -S ${missing_deps[*]}"
+    echo
+  fi
+
+  if [ ${#missing_hyprland[@]} -ne 0 ]; then
+    print_info "Dependencias de Hyprland faltantes:"
+    echo "sudo pacman -S ${missing_hyprland[*]}"
+    echo
+  fi
+
+  if [ ${#missing_aur[@]} -ne 0 ]; then
+    print_info "Dependencias AUR faltantes:"
+    echo "yay -S ${missing_aur[*]}"
+    echo
+  fi
+
+  print_info "O ejecuta primero el script de dependencias:"
+  echo "./dependencies.sh"
+  echo
+  read -p "¿Continuar sin las dependencias faltantes? (y/N): " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    print_info "Instalación cancelada. Instala las dependencias primero."
+    exit 1
+  fi
 fi
 
 if [ ${#missing_optional[@]} -ne 0 ]; then
-  print_warning "Algunas dependencias opcionales faltan: ${missing_optional[*]}"
+  echo
+  print_info "Dependencias opcionales faltantes (recomendadas):"
+  echo "sudo pacman -S ${missing_optional[*]}"
+  echo
 fi
 
 # Crear directorio de backup
@@ -322,6 +345,7 @@ install_config "$DOTFILES_DIR/.config/kitty" "$HOME/.config/kitty" "Kitty termin
 install_config "$DOTFILES_DIR/.config/neofetch" "$HOME/.config/neofetch" "Neofetch"
 install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
 install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
+install_config "$DOTFILES_DIR/.config/illogical-impulse" "$HOME/.config/illogical-impulse" "Illogical Impulse (Quickshell design)"
 
 # Configurar starship si está instalado
 if command_exists starship; then
@@ -396,6 +420,8 @@ check_config "$HOME/.config/hypr" "Hyprland"
 check_config "$HOME/.config/kitty" "Kitty"
 check_config "$HOME/.config/neofetch" "Neofetch"
 check_config "$HOME/.config/nvim" "Neovim"
+check_config "$HOME/.config/quickshell" "Quickshell"
+check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
 
 echo
 if $configs_ok; then
