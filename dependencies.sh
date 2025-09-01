@@ -67,7 +67,7 @@ fix_pgp_keys
 print_info "Actualizando sistema..."
 sudo pacman -Syu --noconfirm
 
-# Dependencias principales
+# Dependencias principales (sin wlogout)
 MAIN_PACKAGES=(
   "fish"                 # Shell
   "hyprland"             # Window manager
@@ -89,7 +89,6 @@ MAIN_PACKAGES=(
   "hyprlock"             # Hyprland lock screen
   "hyprpicker"           # Color picker for Hyprland
   "nm-connection-editor" # Network manager connection editor
-  "wlogout"              # Logout menu for Wayland
 )
 
 # Dependencias de Hyprland
@@ -146,12 +145,13 @@ NEW_PACMAN_PACKAGES=(
   "syntax-highlighting"
 )
 
-# Dependencias AUR (yay)
+# Dependencias AUR (yay) - ahora incluye wlogout
 AUR_PACKAGES=(
   "neofetch"                # System info
   "translate-shell"         # Command-line translator
   "python-materialyoucolor" # Material You color library
   "quickshell-git"          # Shell for Qt Quick
+  "wlogout"                 # Logout menu for Wayland (movido de pacman a AUR)
   # Nuevos paquetes AUR
   "adw-gtk-theme-git"
   "breeze-plus"

@@ -71,7 +71,6 @@ DEPENDENCIES=(
   "hyprlock"             # Hyprland lock screen
   "hyprpicker"           # Color picker for Hyprland
   "nm-connection-editor" # Network manager connection editor
-  "wlogout"              # Logout menu for Wayland
   # Nuevas dependencias básicas
   "geoclue"
   "brightnessctl"
@@ -131,6 +130,7 @@ AUR_DEPENDENCIES=(
   "translate-shell"         # Command-line translator
   "python-materialyoucolor" # Material You color library
   "quickshell-git"          # Shell for Qt Quick
+  "wlogout"                 # Logout menu for Wayland (movido desde dependencias principales)
   # Nuevas dependencias AUR
   "adw-gtk-theme-git"
   "breeze-plus"
