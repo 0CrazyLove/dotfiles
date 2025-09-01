@@ -70,12 +70,12 @@ sudo pacman -Syu --noconfirm
 # Dependencias principales (sin wlogout)
 MAIN_PACKAGES=(
   "fish"                 # Shell
+  "starship"             # Cross-shell prompt
   "hyprland"             # Window manager
   "kitty"                # Terminal
   "neovim"               # Editor
   "git"                  # Version control
   "qt5-tools"            # Qt5 tools
-  "starship"             # Cross-shell prompt
   "dolphin"              # File manager
   "eza"                  # Modern ls replacement
   "python-pywal"         # Color scheme generator
@@ -387,3 +387,4 @@ fi
 
 echo
 print_warning "Nota: Algunas configuraciones requieren reiniciar la sesión"
+
