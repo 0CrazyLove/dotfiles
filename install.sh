@@ -379,6 +379,9 @@ install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
 install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
 install_config "$DOTFILES_DIR/.config/illogical-impulse" "$HOME/.config/illogical-impulse" "Illogical Impulse (Quickshell design)"
 
+# NUEVO: Instalar configuración de wal
+install_config "$DOTFILES_DIR/wal" "$HOME/.config/wal" "Wal (Color schemes)"
+
 # Instalar starship.toml sin validaciones
 print_info "Instalando configuración de Starship..."
 install_file "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml" "Starship"
@@ -387,26 +390,26 @@ install_file "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
 configure_wifi_module
 
 # Instalar fondos de pantalla
-if [ -d "$DOTFILES_DIR/FondosPantallas" ]; then
+if [ -d "$DOTFILES_DIR/Wallpapers" ]; then
   print_info "Instalando fondos de pantalla..."
 
   # Crear directorio Documents si no existe
   mkdir -p "$WALLPAPERS_DIR"
 
   # Hacer backup si existe
-  if [ -d "$WALLPAPERS_DIR/FondosPantallas" ]; then
+  if [ -d "$WALLPAPERS_DIR/Wallpapers" ]; then
     print_warning "Backup de fondos existentes"
-    mv "$WALLPAPERS_DIR/FondosPantallas" "$BACKUP_DIR/"
+    mv "$WALLPAPERS_DIR/Wallpapers" "$BACKUP_DIR/"
   fi
 
   # Copiar fondos (no symlink para evitar problemas con aplicaciones)
-  if cp -r "$DOTFILES_DIR/FondosPantallas" "$WALLPAPERS_DIR/"; then
-    print_success "✓ Fondos de pantalla instalados"
+  if cp -r "$DOTFILES_DIR/Wallpapers" "$WALLPAPERS_DIR/"; then
+    print_success "✓ Fondos de pantalla instalados en $WALLPAPERS_DIR/Wallpapers"
   else
     print_warning "⚠ Error copiando fondos de pantalla"
   fi
 else
-  print_warning "Carpeta FondosPantallas no encontrada"
+  print_warning "Carpeta Wallpapers no encontrada en $DOTFILES_DIR"
 fi
 
 # Configurar Fish si está instalado
@@ -451,6 +454,7 @@ check_config "$HOME/.config/nvim" "Neovim"
 check_config "$HOME/.config/quickshell" "Quickshell"
 check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
 check_config "$HOME/.config/starship.toml" "Starship"
+check_config "$HOME/.config/wal" "Wal" # NUEVO: Verificar wal
 
 echo
 if $configs_ok; then
@@ -465,10 +469,10 @@ echo "  • Reinicia tu sesión o recarga Hyprland: Super+Shift+R"
 echo "  • Para Fish: exec fish"
 echo "  • Para Neovim: Los plugins se instalarán automáticamente"
 echo "  • Para Starship: Reinicia tu terminal"
+echo "  • Para Wal: Los esquemas de color están listos para usar"
 echo "  • El módulo WiFi se cargará automáticamente en futuros reinicios"
 echo
 print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."
 echo
 print_warning "Para actualizar en el futuro, usa: ./update.sh desde ~/dotfiles"
-

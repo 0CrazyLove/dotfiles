@@ -129,17 +129,7 @@ Scope {
                                         content: Translation.tr("Reload Hyprland & Quickshell")
                                     }
                                 }
-                                QuickToggleButton {
-                                    toggled: false
-                                    buttonIcon: "settings"
-                                    onClicked: {
-                                        GlobalStates.sidebarRightOpen = false
-                                        Quickshell.execDetached(["qs", "-p", root.settingsQmlPath])
-                                    }
-                                    StyledToolTip {
-                                        content: Translation.tr("Settings")
-                                    }
-                                }
+                               
                                 QuickToggleButton {
                                     toggled: false
                                     buttonIcon: "power_settings_new"

@@ -78,7 +78,7 @@ MAIN_PACKAGES=(
   "qt5-tools"            # Qt5 tools
   "dolphin"              # File manager
   "eza"                  # Modern ls replacement
-  "python-pywal"         # Color scheme generator
+  "python-pywal"         # Color scheme generator (IMPORTANTE para wal)
   "cliphist"             # Clipboard manager
   "ddcutil"              # Display control utility
   "python-pillow"        # Python imaging library
@@ -124,7 +124,7 @@ NEW_PACMAN_PACKAGES=(
   "libsoup3"
   "gobject-introspection"
   "sassc"
-  "python-opencv"
+  "python-opencv" # Para procesamiento de imágenes (útil con wal)
   "tesseract"
   "tesseract-data-eng"
   "wf-recorder"
@@ -143,20 +143,21 @@ NEW_PACMAN_PACKAGES=(
   "upower"
   "qt6-5compat"
   "syntax-highlighting"
+  "imagemagick"       # NUEVO: Para manipulación de imágenes (importante para wal)
+  "python-colorthief" # NUEVO: Para extracción de colores
 )
 
 # Dependencias AUR (yay) - wlogout incluido, kde-material-you-colors REMOVIDO
 AUR_PACKAGES=(
   "neofetch"                # System info
   "translate-shell"         # Command-line translator
-  "python-materialyoucolor" # Material You color library
+  "python-materialyoucolor" # Material You color library (útil para wal)
   "quickshell-git"          # Shell for Qt Quick
   "wlogout"                 # Logout menu for Wayland
-  # Nuevos paquetes AUR (SIN kde-material-you-colors)
   "adw-gtk-theme-git"
   "breeze-plus"
   "darkly-bin"
-  "matugen-bin"
+  "matugen-bin" 
   "otf-space-grotesk"
   "ttf-gabarito-git"
   "ttf-jetbrains-mono-nerd"
@@ -181,17 +182,20 @@ AUR_PACKAGES=(
   "uv"
   "hyprshot"
   "swappy"
-  "qt6-avif-image-plugin"
   "wtype"
   "ydotool"
+  "wallust"         
+  "python-haishoku" 
 )
 
-# Paquetes opcionales (con Brave agregado)
+# Paquetes opcionales 
 OPTIONAL_PACKAGES=(
-  "code"    # VS Code
+  "visual-studio-code-bin"   # VS Code
   "discord" # Communication
   "spotify" # Music
-  "brave"   # Brave browser
+  "brave-bin"   # Brave browser
+  "mako"    # Notification daemon
+  "dunst"   # Alternativa a mako
 )
 
 # Función para instalar paquetes con retry
@@ -360,6 +364,35 @@ if command -v fish >/dev/null 2>&1; then
   fi
 fi
 
+# Configuraciones adicionales para wal
+print_info "Configurando herramientas de color para wal..."
+
+# Verificar que python-pywal esté instalado y funcionando
+if command -v wal >/dev/null 2>&1; then
+  print_success "✓ pywal (wal) está disponible"
+
+  # Crear directorio de cache para wal si no existe
+  mkdir -p "$HOME/.cache/wal"
+  print_success "✓ Directorio cache de wal creado"
+
+  # Verificar si imagemagick está disponible (importante para wal)
+  if command -v convert >/dev/null 2>&1; then
+    print_success "✓ ImageMagick disponible para wal"
+  else
+    print_warning "⚠ ImageMagick no encontrado (recomendado para wal)"
+  fi
+else
+  print_error "✗ pywal no está disponible"
+  print_info "Instala con: sudo pacman -S python-pywal"
+fi
+
+# Verificar matugen (generador de colores Material You)
+if command -v matugen >/dev/null 2>&1; then
+  print_success "✓ matugen disponible para esquemas Material You"
+else
+  print_warning "⚠ matugen no encontrado (se instalará desde AUR si yay está disponible)"
+fi
+
 print_success "🎉 ¡Dependencias instaladas!"
 echo
 
@@ -368,18 +401,36 @@ print_info "Verificación final de dependencias principales..."
 all_good=true
 all_packages=("${MAIN_PACKAGES[@]}" "${HYPRLAND_PACKAGES[@]}" "${NEW_PACMAN_PACKAGES[@]}")
 
-for package in "${all_packages[@]}"; do
+# Verificar paquetes críticos para wal
+WAL_CRITICAL_PACKAGES=("python-pywal" "imagemagick" "python-pillow")
+print_info "Verificando dependencias críticas para wal..."
+
+for package in "${WAL_CRITICAL_PACKAGES[@]}"; do
   if command -v "$package" >/dev/null 2>&1 || pacman -Qi "$package" >/dev/null 2>&1; then
-    print_success "✓ $package"
+    print_success "✓ $package (crítico para wal)"
   else
-    print_error "✗ $package"
+    print_error "✗ $package (crítico para wal)"
     all_good=false
+  fi
+done
+
+# Verificar el resto de paquetes
+for package in "${all_packages[@]}"; do
+  # Saltar los ya verificados arriba
+  if [[ ! " ${WAL_CRITICAL_PACKAGES[@]} " =~ " ${package} " ]]; then
+    if command -v "$package" >/dev/null 2>&1 || pacman -Qi "$package" >/dev/null 2>&1; then
+      print_success "✓ $package"
+    else
+      print_error "✗ $package"
+      all_good=false
+    fi
   fi
 done
 
 echo
 if $all_good; then
   print_success "✅ Todas las dependencias principales están listas"
+  print_success "✅ Dependencias de wal verificadas y listas"
   print_info "Ahora puedes ejecutar:"
   echo "  ./install.sh"
 else
@@ -387,5 +438,11 @@ else
   print_info "Para reintentar solo los paquetes faltantes, consulta la lista anterior"
 fi
 
+echo
+print_info "Información adicional sobre wal:"
+echo "  • pywal generará esquemas de color desde tus wallpapers"
+echo "  • Los archivos de configuración de wal se instalarán en ~/.config/wal"
+echo "  • matugen proporcionará esquemas Material You adicionales"
+echo "  • ImageMagick mejora el procesamiento de imágenes para wal"
 echo
 print_warning "Nota: Algunas configuraciones requieren reiniciar la sesión"
