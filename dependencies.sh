@@ -148,6 +148,7 @@ NEW_PACMAN_PACKAGES=(
   "syntax-highlighting"
   "imagemagick"       # NUEVO: Para manipulación de imágenes (importante para wal)
   "python-colorthief" # NUEVO: Para extracción de colores
+  "base-devel"        # AÑADIDO: Necesario para compilar desde AUR
 )
 
 # Dependencias AUR (yay) - wlogout incluido, kde-material-you-colors REMOVIDO
@@ -300,6 +301,51 @@ is_process_hung() {
   return 1
 }
 
+# Función mejorada para instalar yay (CORREGIDA)
+install_yay() {
+  print_info "Instalando yay (AUR helper)..."
+  print_info "yay es necesario para instalar dependencias adicionales desde AUR"
+
+  # Cambiar a un directorio temporal en HOME del usuario
+  local yay_dir="$HOME/tmp_yay_install"
+  mkdir -p "$yay_dir"
+  cd "$yay_dir"
+
+  # Clonar yay
+  if ! timeout 120 git clone https://aur.archlinux.org/yay.git; then
+    print_error "✗ Error o timeout descargando yay desde AUR"
+    cd "$HOME"
+    rm -rf "$yay_dir"
+    return 1
+  fi
+
+  cd yay
+
+  # CORREGIDO: No usar sudo con makepkg, y manejar la contraseña correctamente
+  print_info "Compilando yay (esto puede tomar unos minutos)..."
+  print_warning "Se te pedirá la contraseña para instalar dependencias si es necesario"
+  
+  # makepkg NO debe ejecutarse con sudo
+  # Usar DEBIAN_FRONTEND=noninteractive para evitar prompts interactivos
+  if DEBIAN_FRONTEND=noninteractive timeout 300 makepkg -si --noconfirm --needed; then
+    print_success "✓ yay instalado correctamente"
+    cd "$HOME"
+    rm -rf "$yay_dir"
+    return 0
+  else
+    local exit_code=$?
+    if [ $exit_code -eq 124 ]; then
+      print_error "✗ Timeout compilando yay"
+    else
+      print_error "✗ Error compilando yay (código: $exit_code)"
+    fi
+    
+    cd "$HOME"
+    rm -rf "$yay_dir"
+    return 1
+  fi
+}
+
 # Instalar paquetes principales
 print_info "Instalando paquetes principales..."
 failed_packages=()
@@ -331,26 +377,27 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   fi
 done
 
-# AUR helper (yay) - Instalar automáticamente si no existe
+# AUR helper (yay) - Instalar automáticamente si no existe (CORREGIDO)
 if ! command -v yay >/dev/null 2>&1; then
-  print_info "Instalando yay (AUR helper)..."
-  print_info "yay es necesario para instalar dependencias adicionales desde AUR"
-
-  cd /tmp
-  if timeout 120 git clone https://aur.archlinux.org/yay.git; then
-    cd yay
-    if timeout 300 makepkg -si --noconfirm; then
-      print_success "✓ yay instalado correctamente"
-    else
-      print_error "✗ Error o timeout instalando yay"
-      print_warning "Sin yay, se omitirán paquetes AUR"
-    fi
-    cd ~
-    rm -rf /tmp/yay
-  else
-    print_error "✗ Error o timeout descargando yay desde AUR"
-    print_warning "Sin yay, se omitirán paquetes AUR"
+  # Verificar si sudo está funcionando correctamente
+  print_info "Verificando acceso sudo..."
+  if ! sudo -v; then
+    print_error "✗ No se puede obtener acceso sudo"
+    print_error "Ejecuta 'sudo -v' manualmente e intenta de nuevo"
+    exit 1
   fi
+
+  # Llamar a la función corregida
+  if ! install_yay; then
+    print_warning "Sin yay, se omitirán paquetes AUR"
+    print_info "Puedes instalarlo manualmente después con:"
+    echo "  cd /tmp"
+    echo "  git clone https://aur.archlinux.org/yay.git"
+    echo "  cd yay"
+    echo "  makepkg -si"
+  fi
+else
+  print_success "✓ yay ya está instalado"
 fi
 
 # Instalar paquetes AUR si yay está disponible
