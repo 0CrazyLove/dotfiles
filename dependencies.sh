@@ -277,22 +277,24 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   fi
 done
 
-# AUR helper (yay) - Instalar primero si no existe
+# AUR helper (yay) - Instalar automáticamente si no existe
 if ! command -v yay >/dev/null 2>&1; then
-  print_info "¿Instalar yay (AUR helper)?"
-  print_warning "Requerido para algunas dependencias adicionales"
-  read -p "Recomendado para algunos paquetes adicionales (y/N): " -n 1 -r
-  echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    print_info "Instalando yay..."
-    cd /tmp
-    git clone https://aur.archlinux.org/yay.git
+  print_info "Instalando yay (AUR helper)..."
+  print_info "yay es necesario para instalar dependencias adicionales desde AUR"
+
+  cd /tmp
+  if git clone https://aur.archlinux.org/yay.git; then
     cd yay
-    makepkg -si --noconfirm
+    if makepkg -si --noconfirm; then
+      print_success "✓ yay instalado correctamente"
+    else
+      print_error "✗ Error instalando yay"
+      print_warning "Sin yay, se omitirán paquetes AUR"
+    fi
     cd ~
     rm -rf /tmp/yay
-    print_success "✓ yay instalado"
   else
+    print_error "✗ Error descargando yay desde AUR"
     print_warning "Sin yay, se omitirán paquetes AUR"
   fi
 fi
