@@ -145,18 +145,17 @@ NEW_PACMAN_PACKAGES=(
   "syntax-highlighting"
 )
 
-# Dependencias AUR (yay) - ahora incluye wlogout
+# Dependencias AUR (yay) - wlogout incluido, kde-material-you-colors REMOVIDO
 AUR_PACKAGES=(
   "neofetch"                # System info
   "translate-shell"         # Command-line translator
   "python-materialyoucolor" # Material You color library
   "quickshell-git"          # Shell for Qt Quick
-  "wlogout"                 # Logout menu for Wayland (movido de pacman a AUR)
-  # Nuevos paquetes AUR
+  "wlogout"                 # Logout menu for Wayland
+  # Nuevos paquetes AUR (SIN kde-material-you-colors)
   "adw-gtk-theme-git"
   "breeze-plus"
   "darkly-bin"
-  "kde-material-you-colors"
   "matugen-bin"
   "otf-space-grotesk"
   "ttf-gabarito-git"
@@ -187,11 +186,12 @@ AUR_PACKAGES=(
   "ydotool"
 )
 
-# Paquetes opcionales
+# Paquetes opcionales (con Brave agregado)
 OPTIONAL_PACKAGES=(
   "code"    # VS Code
   "discord" # Communication
   "spotify" # Music
+  "brave"   # Brave browser
 )
 
 # Función para instalar paquetes con retry
@@ -387,4 +387,3 @@ fi
 
 echo
 print_warning "Nota: Algunas configuraciones requieren reiniciar la sesión"
-

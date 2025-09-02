@@ -49,7 +49,7 @@ if [ ! -d "$DOTFILES_DIR" ]; then
   exit 1
 fi
 
-# Lista de dependencias requeridas (actualizada)
+# Lista de dependencias requeridas (actualizada sin kde-material-you-colors)
 DEPENDENCIES=(
   "fish"                 # Shell
   "hyprland"             # Window manager
@@ -124,18 +124,17 @@ HYPRLAND_DEPS=(
   "waybar" # Status bar
 )
 
-# Lista de dependencias AUR
+# Lista de dependencias AUR (SIN kde-material-you-colors)
 AUR_DEPENDENCIES=(
   "neofetch"                # System info
   "translate-shell"         # Command-line translator
   "python-materialyoucolor" # Material You color library
   "quickshell-git"          # Shell for Qt Quick
-  "wlogout"                 # Logout menu for Wayland (movido desde dependencias principales)
-  # Nuevas dependencias AUR
+  "wlogout"                 # Logout menu for Wayland
+  # Nuevas dependencias AUR (SIN kde-material-you-colors)
   "adw-gtk-theme-git"
   "breeze-plus"
   "darkly-bin"
-  "kde-material-you-colors"
   "matugen-bin"
   "otf-space-grotesk"
   "ttf-gabarito-git"
@@ -166,9 +165,10 @@ AUR_DEPENDENCIES=(
   "ydotool"
 )
 
-# Lista de dependencias opcionales (actualizada)
+# Lista de dependencias opcionales (actualizada con brave)
 OPTIONAL_DEPS=(
-  "mako" # Notification daemon
+  "mako"  # Notification daemon
+  "brave" # Brave browser
 )
 
 # Función para verificar si un comando existe
@@ -333,6 +333,38 @@ install_config() {
   fi
 }
 
+# Función para instalar archivo individual
+install_file() {
+  local source="$1"
+  local target="$2"
+  local name="$3"
+
+  print_info "Instalando $name..."
+
+  # Verificar que el origen existe
+  if [ ! -f "$source" ]; then
+    print_warning "⚠ $source no encontrado, saltando $name"
+    return
+  fi
+
+  # Crear directorio padre si no existe
+  mkdir -p "$(dirname "$target")"
+
+  # Hacer backup si el archivo existe
+  if [ -f "$target" ]; then
+    print_warning "Backup de $target existente"
+    mv "$target" "$BACKUP_DIR/"
+  fi
+
+  # Copiar archivo
+  if cp "$source" "$target"; then
+    print_success "✓ $name configurado"
+  else
+    print_error "✗ Error copiando $name"
+    return 1
+  fi
+}
+
 # Crear directorio .config si no existe
 mkdir -p "$HOME/.config"
 
@@ -347,13 +379,9 @@ install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
 install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
 install_config "$DOTFILES_DIR/.config/illogical-impulse" "$HOME/.config/illogical-impulse" "Illogical Impulse (Quickshell design)"
 
-# Configurar starship si está instalado
-if command_exists starship; then
-  print_info "Configurando Starship..."
-  if [ -f "$DOTFILES_DIR/.config/starship.toml" ]; then
-    install_config "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml" "Starship"
-  fi
-fi
+# Instalar starship.toml sin validaciones
+print_info "Instalando configuración de Starship..."
+install_file "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml" "Starship"
 
 # Configurar módulo WiFi automático
 configure_wifi_module
@@ -422,6 +450,7 @@ check_config "$HOME/.config/neofetch" "Neofetch"
 check_config "$HOME/.config/nvim" "Neovim"
 check_config "$HOME/.config/quickshell" "Quickshell"
 check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
+check_config "$HOME/.config/starship.toml" "Starship"
 
 echo
 if $configs_ok; then
@@ -442,3 +471,4 @@ print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."
 echo
 print_warning "Para actualizar en el futuro, usa: ./update.sh desde ~/dotfiles"
+
