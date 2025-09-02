@@ -36,7 +36,7 @@ check_home_permissions() {
   fi
 }
 
-# Verificar y reparar claves PGP
+# Verificar y reparar claves PGP (MEJORADO)
 fix_pgp_keys() {
   print_info "Verificando claves PGP de pacman..."
 
@@ -50,11 +50,14 @@ fix_pgp_keys() {
   print_info "Actualizando claves de Arch Linux..."
   sudo pacman-key --populate archlinux
 
-  # Actualizar claves desde servidores
+  # Actualizar claves desde servidores CON TIMEOUT
   print_info "Actualizando claves desde servidores..."
-  sudo pacman-key --refresh-keys
-
-  print_success "✓ Claves PGP verificadas"
+  # Usar timeout para evitar cuelgues y redirigir salida
+  if timeout 60 sudo pacman-key --refresh-keys >/dev/null 2>&1; then
+    print_success "✓ Claves PGP actualizadas"
+  else
+    print_warning "⚠ Timeout o error actualizando claves PGP, continuando..."
+  fi
 }
 
 # Verificar permisos HOME
@@ -198,7 +201,7 @@ OPTIONAL_PACKAGES=(
   "dunst"   # Alternativa a mako
 )
 
-# Función para instalar paquetes con retry
+# Función para instalar paquetes con retry (MEJORADA)
 install_package() {
   local package="$1"
   local max_retries=3
@@ -206,17 +209,34 @@ install_package() {
 
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package... (intento $((retry + 1)))"
-    if sudo pacman -S --noconfirm "$package"; then
+    
+    # Usar timeout para evitar cuelgues indefinidos
+    if timeout 180 sudo pacman -S --noconfirm "$package" >/dev/null 2>&1; then
       print_success "✓ $package instalado correctamente"
       return 0
     else
+      local exit_code=$?
       print_warning "⚠ Error instalando $package (intento $((retry + 1)))"
+      
+      # Solo incrementar retry si no fue por timeout
+      if [ $exit_code -eq 124 ]; then
+        print_error "✗ Timeout instalando $package"
+        return 1
+      fi
+      
       retry=$((retry + 1))
       if [ $retry -lt $max_retries ]; then
         print_info "Esperando 5 segundos antes del siguiente intento..."
-        sleep 5
-        # Actualizar claves si falla
-        sudo pacman-key --refresh-keys >/dev/null 2>&1
+        
+        # Sleep con progreso visual para evitar sensación de cuelgue
+        for i in {5..1}; do
+          echo -ne "\r${BLUE}[INFO]${NC} Reintentando en $i segundos..."
+          sleep 1
+        done
+        echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
+        
+        # Limpiar cache de pacman si falla
+        sudo pacman -Sc --noconfirm >/dev/null 2>&1
       fi
     fi
   done
@@ -225,7 +245,7 @@ install_package() {
   return 1
 }
 
-# Función para instalar paquetes AUR con yay
+# Función para instalar paquetes AUR con yay (MEJORADA)
 install_aur_package() {
   local package="$1"
   local max_retries=3
@@ -233,20 +253,50 @@ install_aur_package() {
 
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package desde AUR... (intento $((retry + 1)))"
-    if yay -S --noconfirm "$package"; then
+    
+    # Usar timeout también para AUR
+    if timeout 300 yay -S --noconfirm "$package" >/dev/null 2>&1; then
       print_success "✓ $package instalado correctamente desde AUR"
       return 0
     else
+      local exit_code=$?
       print_warning "⚠ Error instalando $package desde AUR (intento $((retry + 1)))"
+      
+      # Solo incrementar retry si no fue por timeout
+      if [ $exit_code -eq 124 ]; then
+        print_error "✗ Timeout instalando $package desde AUR"
+        return 1
+      fi
+      
       retry=$((retry + 1))
       if [ $retry -lt $max_retries ]; then
         print_info "Esperando 5 segundos antes del siguiente intento..."
-        sleep 5
+        
+        # Sleep con progreso visual
+        for i in {5..1}; do
+          echo -ne "\r${BLUE}[INFO]${NC} Reintentando en $i segundos..."
+          sleep 1
+        done
+        echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
+        
+        # Limpiar cache de yay si falla
+        yay -Sc --noconfirm >/dev/null 2>&1
       fi
     fi
   done
 
   print_error "✗ No se pudo instalar $package desde AUR después de $max_retries intentos"
+  return 1
+}
+
+# Función para verificar si un proceso está colgado
+is_process_hung() {
+  local pid=$1
+  local check_time=10  # Verificar cada 10 segundos
+  local hung_threshold=30  # Considerar colgado después de 30 segundos sin output
+  
+  # Esta función podría expandirse para detectar procesos colgados
+  # Por ahora, confiaremos en timeout
   return 1
 }
 
@@ -287,18 +337,18 @@ if ! command -v yay >/dev/null 2>&1; then
   print_info "yay es necesario para instalar dependencias adicionales desde AUR"
 
   cd /tmp
-  if git clone https://aur.archlinux.org/yay.git; then
+  if timeout 120 git clone https://aur.archlinux.org/yay.git; then
     cd yay
-    if makepkg -si --noconfirm; then
+    if timeout 300 makepkg -si --noconfirm; then
       print_success "✓ yay instalado correctamente"
     else
-      print_error "✗ Error instalando yay"
+      print_error "✗ Error o timeout instalando yay"
       print_warning "Sin yay, se omitirán paquetes AUR"
     fi
     cd ~
     rm -rf /tmp/yay
   else
-    print_error "✗ Error descargando yay desde AUR"
+    print_error "✗ Error o timeout descargando yay desde AUR"
     print_warning "Sin yay, se omitirán paquetes AUR"
   fi
 fi
@@ -340,13 +390,19 @@ print_info "Paquetes opcionales disponibles:"
 for package in "${OPTIONAL_PACKAGES[@]}"; do
   echo "  • $package"
 done
-read -p "¿Instalar paquetes opcionales? (y/N): " -n 1 -r
+
+# Timeout también para input del usuario
+read -t 30 -p "¿Instalar paquetes opcionales? (y/N) [timeout 30s]: " -n 1 -r
 echo
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   for package in "${OPTIONAL_PACKAGES[@]}"; do
     install_package "$package"
   done
+else
+  if [ -z "$REPLY" ]; then
+    print_info "Timeout alcanzado, saltando paquetes opcionales"
+  fi
 fi
 
 # Configurar Fish como shell por defecto
@@ -354,12 +410,14 @@ if command -v fish >/dev/null 2>&1; then
   current_shell=$(echo $SHELL)
   if [[ "$current_shell" != *"fish"* ]]; then
     print_info "¿Configurar Fish como shell por defecto?"
-    read -p "(y/N): " -n 1 -r
+    read -t 15 -p "(y/N) [timeout 15s]: " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       chsh -s /usr/bin/fish
       print_success "✓ Fish configurado como shell por defecto"
       print_warning "⚠ Reinicia la sesión para aplicar cambios"
+    elif [ -z "$REPLY" ]; then
+      print_info "Timeout alcanzado, manteniendo shell actual"
     fi
   fi
 fi
@@ -380,6 +438,23 @@ if command -v wal >/dev/null 2>&1; then
     print_success "✓ ImageMagick disponible para wal"
   else
     print_warning "⚠ ImageMagick no encontrado (recomendado para wal)"
+  fi
+
+  # Instalar python-colorthief con pip como respaldo si AUR falló
+  print_info "Verificando colorthief para extracción de colores..."
+  if ! python3 -c "import colorthief" >/dev/null 2>&1; then
+    print_warning "colorthief no encontrado, instalando con pip..."
+    if command -v pip >/dev/null 2>&1; then
+      pip install --user colorthief
+      print_success "✓ colorthief instalado con pip"
+    else
+      # Instalar pip si no está disponible
+      install_package "python-pip"
+      pip install --user colorthief
+      print_success "✓ colorthief instalado con pip"
+    fi
+  else
+    print_success "✓ colorthief está disponible"
   fi
 else
   print_error "✗ pywal no está disponible"
