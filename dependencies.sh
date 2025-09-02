@@ -104,6 +104,7 @@ HYPRLAND_PACKAGES=(
 
 # Nuevas dependencias con pacman
 NEW_PACMAN_PACKAGES=(
+  "nano"
   "geoclue"
   "brightnessctl"
   "axel"
