@@ -52,8 +52,8 @@ fix_pgp_keys() {
 
   # Actualizar claves desde servidores CON TIMEOUT
   print_info "Actualizando claves desde servidores..."
-  # Usar timeout para evitar cuelgues y redirigir salida
-  if timeout 60 sudo pacman-key --refresh-keys >/dev/null 2>&1; then
+  # Usar timeout para evitar cuelgues y mostrar salida
+  if timeout 60 sudo pacman-key --refresh-keys; then
     print_success "✓ Claves PGP actualizadas"
   else
     print_warning "⚠ Timeout o error actualizando claves PGP, continuando..."
@@ -210,8 +210,8 @@ install_package() {
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package... (intento $((retry + 1)))"
     
-    # Usar timeout para evitar cuelgues indefinidos
-    if timeout 180 sudo pacman -S --noconfirm "$package" >/dev/null 2>&1; then
+    # Usar timeout para evitar cuelgues indefinidos - MOSTRAR OUTPUT
+    if timeout 180 sudo pacman -S --noconfirm "$package"; then
       print_success "✓ $package instalado correctamente"
       return 0
     else
@@ -236,7 +236,7 @@ install_package() {
         echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
         
         # Limpiar cache de pacman si falla
-        sudo pacman -Sc --noconfirm >/dev/null 2>&1
+        sudo pacman -Sc --noconfirm
       fi
     fi
   done
@@ -254,8 +254,8 @@ install_aur_package() {
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package desde AUR... (intento $((retry + 1)))"
     
-    # Usar timeout también para AUR
-    if timeout 300 yay -S --noconfirm "$package" >/dev/null 2>&1; then
+    # Usar timeout también para AUR - MOSTRAR OUTPUT
+    if timeout 300 yay -S --noconfirm "$package"; then
       print_success "✓ $package instalado correctamente desde AUR"
       return 0
     else
@@ -280,7 +280,7 @@ install_aur_package() {
         echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
         
         # Limpiar cache de yay si falla
-        yay -Sc --noconfirm >/dev/null 2>&1
+        yay -Sc --noconfirm
       fi
     fi
   done
