@@ -118,8 +118,8 @@ dotfiles/
 │   ├── nvim/                   # Neovim (LazyVim setup)
 │   ├── quickshell/             # Shell Qt Quick personalizado
 │   └── starship.toml           # Configuración del prompt
-├── Wallpapers/            # Wallpapers personalizados
-├── dependencies.sh             # Script de instalación de dependencias
+├── Wallpapers/                 # Wallpapers personalizados
+├── dependencies.sh            # Script de instalación de dependencias
 ├── install.sh                 # Script de instalación principal
 └── update.sh                  # Script de sincronización
 ```
