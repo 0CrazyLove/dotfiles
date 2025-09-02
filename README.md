@@ -34,6 +34,7 @@ Mi configuración personal para Arch Linux con Hyprland, basada en el excelente 
 ### Configuraciones adicionales
 - **Illogical Impulse** - Configuraciones de tema adicionales
 - **Material You Colors** - Paletas de colores dinámicas
+- **Waybar** - Barra de estado personalizable
 - **Fonts** - JetBrains Mono Nerd, Space Grotesk, y más
 
 ## Dependencias
@@ -76,7 +77,7 @@ chmod +x install.sh
 Este script:
 - Crea backups de configuraciones existentes
 - Copia todas las configuraciones a `~/.config/`
-- Instala wallpapers en `~/Documents/FondosPantallas/`
+- Instala wallpapers en `~/Documents/Wallpapers/`
 - Aplica permisos correctos
 
 ## Gestión de configuraciones
@@ -117,7 +118,7 @@ dotfiles/
 │   ├── nvim/                   # Neovim (LazyVim setup)
 │   ├── quickshell/             # Shell Qt Quick personalizado
 │   └── starship.toml           # Configuración del prompt
-├── FondosPantallas/            # Wallpapers personalizados
+├── Wallpapers/            # Wallpapers personalizados
 ├── dependencies.sh             # Script de instalación de dependencias
 ├── install.sh                 # Script de instalación principal
 └── update.sh                  # Script de sincronización

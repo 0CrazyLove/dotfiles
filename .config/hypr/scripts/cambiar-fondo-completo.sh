@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 # Configuración
-set FONDOS $HOME/Documents/FondosPantallas
+set FONDOS $HOME/Documents/Wallpapers
 set HISTORIAL_FILE $HOME/.cache/fondos_historial
 set MAX_HISTORIAL 50  # Máximo de fondos a recordar
 
