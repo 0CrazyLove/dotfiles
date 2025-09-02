@@ -177,7 +177,7 @@ cp -r ~/.config_backup_FECHA/* ~/.config/
 ### Cambiar wallpapers
 ```bash
 # Los wallpapers están en:
-~/Documents/FondosPantallas/
+~/Documents/Wallpapers/
 # Usa el script personalizado:
 ~/.config/hypr/scripts/cambiar-fondo-completo.sh
 ```
