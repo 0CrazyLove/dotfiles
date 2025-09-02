@@ -332,19 +332,27 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   fi
 done
 
-# AUR helper (yay) - VERSIÓN ARREGLADA
+# AUR helper (yay) - VERSIÓN COMPLETAMENTE ARREGLADA
 install_yay_safe() {
   print_info "Instalando yay (AUR helper)..."
   print_info "yay es necesario para instalar dependencias adicionales desde AUR"
 
-  # Crear directorio temporal único
-  local temp_dir="/tmp/yay-install-$$"
+  # Crear directorio temporal único en el HOME del usuario
+  local temp_dir="$HOME/tmp-yay-install-$"
   mkdir -p "$temp_dir"
   
   cd "$temp_dir" || {
     print_error "No se pudo crear directorio temporal"
     return 1
   }
+
+  # Verificar que no estamos como root
+  if [ "$EUID" -eq 0 ]; then
+    print_error "Este script no debe ejecutarse como root para instalar yay"
+    print_info "Ejecuta el script como usuario normal (sin sudo)"
+    cd ~ && rm -rf "$temp_dir"
+    return 1
+  fi
 
   # Clonar yay con timeout y mejor manejo de errores
   print_info "Descargando yay desde AUR..."
@@ -361,30 +369,36 @@ install_yay_safe() {
   }
 
   print_info "Compilando yay (esto puede tomar varios minutos)..."
-  print_warning "NOTA: makepkg no debe ejecutarse como root"
+  print_warning "Se te pedirá la contraseña de sudo SOLO para la instalación final"
   
-  # Verificar que no estamos como root
-  if [ "$EUID" -eq 0 ]; then
-    print_error "Este script no debe ejecutarse como root para instalar yay"
-    print_info "Ejecuta el script como usuario normal (sin sudo)"
+  # PASO 1: Compilar sin instalar (no necesita sudo)
+  print_info "Paso 1/2: Compilando yay..."
+  if ! timeout 300 makepkg --noconfirm; then
+    print_error "Error compilando yay"
     cd ~ && rm -rf "$temp_dir"
     return 1
   fi
 
-  # Compilar yay sin --noconfirm para manejar input correctamente
-  # y con timeout más largo para compilación
-  print_info "Iniciando compilación de yay..."
-  if timeout 600 makepkg -si --needed; then
+  # PASO 2: Instalar el paquete compilado
+  print_info "Paso 2/2: Instalando yay compilado..."
+  print_warning "Ahora se pedirá tu contraseña de sudo para instalar yay"
+  
+  # Encontrar el paquete compilado
+  local yay_package=$(ls yay-*.pkg.tar.* 2>/dev/null | head -n1)
+  
+  if [ -z "$yay_package" ]; then
+    print_error "No se encontró el paquete compilado de yay"
+    cd ~ && rm -rf "$temp_dir"
+    return 1
+  fi
+
+  # Instalar con pacman (más confiable que makepkg -i)
+  if sudo pacman -U --noconfirm "$yay_package"; then
     print_success "✓ yay instalado correctamente"
     cd ~ && rm -rf "$temp_dir"
     return 0
   else
-    local exit_code=$?
-    if [ $exit_code -eq 124 ]; then
-      print_error "✗ Timeout compilando yay (>10 minutos)"
-    else
-      print_error "✗ Error compilando yay"
-    fi
+    print_error "✗ Error instalando yay"
     cd ~ && rm -rf "$temp_dir"
     return 1
   fi
