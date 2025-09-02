@@ -104,7 +104,6 @@ HYPRLAND_PACKAGES=(
 
 # Nuevas dependencias con pacman
 NEW_PACMAN_PACKAGES=(
-  "nano"
   "geoclue"
   "brightnessctl"
   "axel"
@@ -446,13 +445,22 @@ if command -v wal >/dev/null 2>&1; then
   if ! python3 -c "import colorthief" >/dev/null 2>&1; then
     print_warning "colorthief no encontrado, instalando con pip..."
     if command -v pip >/dev/null 2>&1; then
-      pip install --user colorthief
-      print_success "✓ colorthief instalado con pip"
+      if pip install --user colorthief; then
+        print_success "✓ colorthief instalado con pip"
+      else
+        print_warning "⚠ Error instalando colorthief con pip"
+      fi
     else
       # Instalar pip si no está disponible
-      install_package "python-pip"
-      pip install --user colorthief
-      print_success "✓ colorthief instalado con pip"
+      if install_package "python-pip"; then
+        if pip install --user colorthief; then
+          print_success "✓ colorthief instalado con pip"
+        else
+          print_warning "⚠ Error instalando colorthief con pip"
+        fi
+      else
+        print_warning "⚠ No se pudo instalar pip ni colorthief"
+      fi
     fi
   else
     print_success "✓ colorthief está disponible"
