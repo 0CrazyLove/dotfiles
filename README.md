@@ -34,7 +34,6 @@ Mi configuración personal para Arch Linux con Hyprland, basada en el excelente 
 ### Configuraciones adicionales
 - **Illogical Impulse** - Configuraciones de tema adicionales
 - **Material You Colors** - Paletas de colores dinámicas
-- **Waybar** - Barra de estado personalizable
 - **Fonts** - JetBrains Mono Nerd, Space Grotesk, y más
 
 ## Dependencias
