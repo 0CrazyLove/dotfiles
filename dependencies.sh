@@ -59,6 +59,97 @@ fix_pgp_keys() {
   fi
 }
 
+# Función mejorada para instalar yay
+install_yay() {
+  print_info "Instalando yay (AUR helper)..."
+  
+  # Verificar si ya está instalado
+  if command -v yay >/dev/null 2>&1; then
+    print_success "✓ yay ya está instalado"
+    return 0
+  fi
+
+  # Verificar dependencias críticas para yay
+  local yay_deps=("git" "base-devel" "go")
+  local missing_deps=()
+  
+  for dep in "${yay_deps[@]}"; do
+    if ! is_package_installed "$dep"; then
+      missing_deps+=("$dep")
+    fi
+  done
+  
+  if [ ${#missing_deps[@]} -ne 0 ]; then
+    print_info "Instalando dependencias para yay: ${missing_deps[*]}"
+    for dep in "${missing_deps[@]}"; do
+      if ! install_package "$dep"; then
+        print_error "✗ No se pudo instalar dependencia crítica: $dep"
+        return 1
+      fi
+    done
+  fi
+
+  # Crear directorio temporal único
+  local temp_dir="/tmp/yay_install_$$_$(date +%s)"
+  mkdir -p "$temp_dir"
+  
+  print_info "Clonando repositorio de yay..."
+  cd "$temp_dir"
+  
+  if ! timeout 180 git clone https://aur.archlinux.org/yay.git; then
+    print_error "✗ Error o timeout clonando yay"
+    rm -rf "$temp_dir"
+    return 1
+  fi
+
+  cd yay
+
+  # Verificar que el PKGBUILD existe
+  if [ ! -f PKGBUILD ]; then
+    print_error "✗ PKGBUILD no encontrado en el repositorio de yay"
+    rm -rf "$temp_dir"
+    return 1
+  fi
+
+  print_info "Compilando yay... (esto puede tomar varios minutos)"
+  
+  # Usar makepkg con opciones más robustas y timeout mayor
+  # --noconfirm: no pedir confirmación
+  # --needed: solo instalar si no está instalado
+  # --noprogressbar: evitar problemas de salida
+  if timeout 900 makepkg -si --noconfirm --needed --noprogressbar; then
+    print_success "✓ yay instalado correctamente"
+    cd "$HOME"
+    rm -rf "$temp_dir"
+    return 0
+  else
+    local exit_code=$?
+    print_error "✗ Error instalando yay"
+    
+    if [ $exit_code -eq 124 ]; then
+      print_error "✗ Timeout durante la compilación de yay (15 minutos)"
+    else
+      print_error "✗ Error durante la compilación (código: $exit_code)"
+    fi
+    
+    # Intentar limpiar y reintentar UNA vez más
+    print_info "Limpiando y reintentando instalación de yay..."
+    make clean >/dev/null 2>&1
+    
+    if timeout 900 makepkg -si --noconfirm --needed --noprogressbar --force; then
+      print_success "✓ yay instalado correctamente en segundo intento"
+      cd "$HOME"
+      rm -rf "$temp_dir"
+      return 0
+    else
+      print_error "✗ Falló segundo intento de instalación de yay"
+      cd "$HOME"
+      rm -rf "$temp_dir"
+      return 1
+    fi
+  fi
+}
+
 # Verificar permisos HOME
 check_home_permissions
 
@@ -148,6 +239,7 @@ NEW_PACMAN_PACKAGES=(
   "syntax-highlighting"
   "imagemagick"           # Para manipulación de imágenes (importante para wal)
   "python-pip"            # AGREGADO: Para instalar paquetes Python adicionales
+  "go"                    # AGREGADO: Necesario para compilar yay
 )
 
 # Dependencias AUR (yay)
@@ -337,30 +429,14 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   fi
 done
 
-# AUR helper (yay) - Instalar automáticamente si no existe
-if ! command -v yay >/dev/null 2>&1; then
-  print_info "Instalando yay (AUR helper)..."
-  print_info "yay es necesario para instalar dependencias adicionales desde AUR"
-
-  cd /tmp
-  if timeout 120 git clone https://aur.archlinux.org/yay.git; then
-    cd yay
-    if timeout 300 makepkg -si --noconfirm; then
-      print_success "✓ yay instalado correctamente"
-    else
-      print_error "✗ Error o timeout instalando yay"
-      print_warning "Sin yay, se omitirán paquetes AUR"
-    fi
-    cd ~
-    rm -rf /tmp/yay
-  else
-    print_error "✗ Error o timeout descargando yay desde AUR"
-    print_warning "Sin yay, se omitirán paquetes AUR"
-  fi
-fi
-
-# Instalar paquetes AUR si yay está disponible
-if command -v yay >/dev/null 2>&1; then
+# Instalar yay con la función mejorada
+if ! install_yay; then
+  print_error "✗ No se pudo instalar yay"
+  print_warning "⚠ Se omitirán todos los paquetes AUR"
+  print_info "💡 Puedes instalar yay manualmente después y ejecutar el script de nuevo"
+  failed_packages+=("${AUR_PACKAGES[@]}")
+else
+  # Instalar paquetes AUR solo si yay se instaló correctamente
   print_info "Instalando dependencias desde AUR..."
   failed_aur_packages=()
 
@@ -372,9 +448,6 @@ if command -v yay >/dev/null 2>&1; then
 
   # Agregar paquetes AUR fallidos a la lista general
   failed_packages+=("${failed_aur_packages[@]}")
-else
-  print_warning "yay no está disponible, omitiendo paquetes AUR"
-  failed_packages+=("${AUR_PACKAGES[@]}")
 fi
 
 # Mostrar paquetes que fallaron
