@@ -36,7 +36,7 @@ check_home_permissions() {
   fi
 }
 
-# Verificar y reparar claves PGP (MEJORADO)
+# Verificar y reparar claves PGP
 fix_pgp_keys() {
   print_info "Verificando claves PGP de pacman..."
 
@@ -50,104 +50,11 @@ fix_pgp_keys() {
   print_info "Actualizando claves de Arch Linux..."
   sudo pacman-key --populate archlinux
 
-  # Actualizar claves desde servidores CON TIMEOUT
+  # Actualizar claves desde servidores
   print_info "Actualizando claves desde servidores..."
-  if timeout 60 sudo pacman-key --refresh-keys; then
-    print_success "✓ Claves PGP actualizadas"
-  else
-    print_warning "⚠ Timeout o error actualizando claves PGP, continuando..."
-  fi
-}
+  sudo pacman-key --refresh-keys
 
-# Función mejorada para instalar yay
-install_yay() {
-  print_info "Instalando yay (AUR helper)..."
-  
-  # Verificar si ya está instalado
-  if command -v yay >/dev/null 2>&1; then
-    print_success "✓ yay ya está instalado"
-    return 0
-  fi
-
-  # Verificar dependencias críticas para yay
-  local yay_deps=("git" "base-devel" "go")
-  local missing_deps=()
-  
-  for dep in "${yay_deps[@]}"; do
-    if ! is_package_installed "$dep"; then
-      missing_deps+=("$dep")
-    fi
-  done
-  
-  if [ ${#missing_deps[@]} -ne 0 ]; then
-    print_info "Instalando dependencias para yay: ${missing_deps[*]}"
-    for dep in "${missing_deps[@]}"; do
-      if ! install_package "$dep"; then
-        print_error "✗ No se pudo instalar dependencia crítica: $dep"
-        return 1
-      fi
-    done
-  fi
-
-  # Crear directorio temporal único
-  local temp_dir="/tmp/yay_install_$$_$(date +%s)"
-  mkdir -p "$temp_dir"
-  
-  print_info "Clonando repositorio de yay..."
-  cd "$temp_dir"
-  
-  if ! timeout 180 git clone https://aur.archlinux.org/yay.git; then
-    print_error "✗ Error o timeout clonando yay"
-    rm -rf "$temp_dir"
-    return 1
-  fi
-
-  cd yay
-
-  # Verificar que el PKGBUILD existe
-  if [ ! -f PKGBUILD ]; then
-    print_error "✗ PKGBUILD no encontrado en el repositorio de yay"
-    rm -rf "$temp_dir"
-    return 1
-  fi
-
-  print_info "Compilando yay... (esto puede tomar varios minutos)"
-  
-  # Usar makepkg con opciones más robustas y timeout mayor
-  # --noconfirm: no pedir confirmación
-  # --needed: solo instalar si no está instalado
-  # --noprogressbar: evitar problemas de salida
-  if timeout 900 makepkg -si --noconfirm --needed --noprogressbar; then
-    print_success "✓ yay instalado correctamente"
-    cd "$HOME"
-    rm -rf "$temp_dir"
-    return 0
-  else
-    local exit_code=$?
-    print_error "✗ Error instalando yay"
-    
-    if [ $exit_code -eq 124 ]; then
-      print_error "✗ Timeout durante la compilación de yay (15 minutos)"
-    else
-      print_error "✗ Error durante la compilación (código: $exit_code)"
-    fi
-    
-    # Intentar limpiar y reintentar UNA vez más
-    print_info "Limpiando y reintentando instalación de yay..."
-    make clean >/dev/null 2>&1
-    
-    if timeout 900 makepkg -si --noconfirm --needed --noprogressbar --force; then
-      print_success "✓ yay instalado correctamente en segundo intento"
-      cd "$HOME"
-      rm -rf "$temp_dir"
-      return 0
-    else
-      print_error "✗ Falló segundo intento de instalación de yay"
-      cd "$HOME"
-      rm -rf "$temp_dir"
-      return 1
-    fi
-  fi
+  print_success "✓ Claves PGP verificadas"
 }
 
 # Verificar permisos HOME
@@ -160,9 +67,8 @@ fix_pgp_keys
 print_info "Actualizando sistema..."
 sudo pacman -Syu --noconfirm
 
-# Dependencias principales
+# Dependencias principales (sin wlogout)
 MAIN_PACKAGES=(
-  "base-devel"           # AGREGADO: Necesario para compilar desde AUR
   "fish"                 # Shell
   "starship"             # Cross-shell prompt
   "hyprland"             # Window manager
@@ -172,7 +78,7 @@ MAIN_PACKAGES=(
   "qt5-tools"            # Qt5 tools
   "dolphin"              # File manager
   "eza"                  # Modern ls replacement
-  "python-pywal"         # Color scheme generator
+  "python-pywal"         # Color scheme generator (IMPORTANTE para wal)
   "cliphist"             # Clipboard manager
   "ddcutil"              # Display control utility
   "python-pillow"        # Python imaging library
@@ -218,7 +124,7 @@ NEW_PACMAN_PACKAGES=(
   "libsoup3"
   "gobject-introspection"
   "sassc"
-  "python-opencv"
+  "python-opencv" # Para procesamiento de imágenes (útil con wal)
   "tesseract"
   "tesseract-data-eng"
   "wf-recorder"
@@ -237,18 +143,17 @@ NEW_PACMAN_PACKAGES=(
   "upower"
   "qt6-5compat"
   "syntax-highlighting"
-  "imagemagick"           # Para manipulación de imágenes (importante para wal)
-  "python-pip"            # AGREGADO: Para instalar paquetes Python adicionales
-  "go"                    # AGREGADO: Necesario para compilar yay
+  "imagemagick"       # NUEVO: Para manipulación de imágenes (importante para wal)
+  "python-colorthief" # NUEVO: Para extracción de colores
 )
 
-# Dependencias AUR (yay)
+# Dependencias AUR (yay) - wlogout incluido, kde-material-you-colors REMOVIDO
 AUR_PACKAGES=(
-  "neofetch"
-  "translate-shell"
-  "python-materialyoucolor"
-  "quickshell-git"
-  "wlogout"
+  "neofetch"                # System info
+  "translate-shell"         # Command-line translator
+  "python-materialyoucolor" # Material You color library (útil para wal)
+  "quickshell-git"          # Shell for Qt Quick
+  "wlogout"                 # Logout menu for Wayland
   "adw-gtk-theme-git"
   "breeze-plus"
   "darkly-bin"
@@ -279,65 +184,39 @@ AUR_PACKAGES=(
   "swappy"
   "wtype"
   "ydotool"
-  "wallust"
-  "python-colorthief"     # Movido de NEW_PACMAN_PACKAGES a AUR
-  "python-haishoku"
+  "wallust"         
+  "python-haishoku" 
 )
 
 # Paquetes opcionales 
 OPTIONAL_PACKAGES=(
-  "visual-studio-code-bin"
-  "discord"
-  "spotify"
-  "brave-bin"
-  "mako"
-  "dunst"
+  "visual-studio-code-bin"   # VS Code
+  "discord" # Communication
+  "spotify" # Music
+  "brave-bin"   # Brave browser
+  "mako"    # Notification daemon
+  "dunst"   # Alternativa a mako
 )
 
-# Función para verificar si un paquete está instalado
-is_package_installed() {
-  local package="$1"
-  pacman -Qi "$package" >/dev/null 2>&1
-}
-
-# Función para instalar paquetes con retry (MEJORADA)
+# Función para instalar paquetes con retry
 install_package() {
   local package="$1"
   local max_retries=3
   local retry=0
 
-  # Verificar si ya está instalado
-  if is_package_installed "$package"; then
-    print_success "✓ $package ya está instalado"
-    return 0
-  fi
-
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package... (intento $((retry + 1)))"
-    
-    if timeout 180 sudo pacman -S --noconfirm "$package"; then
+    if sudo pacman -S --noconfirm "$package"; then
       print_success "✓ $package instalado correctamente"
       return 0
     else
-      local exit_code=$?
       print_warning "⚠ Error instalando $package (intento $((retry + 1)))"
-      
-      if [ $exit_code -eq 124 ]; then
-        print_error "✗ Timeout instalando $package"
-        return 1
-      fi
-      
       retry=$((retry + 1))
       if [ $retry -lt $max_retries ]; then
         print_info "Esperando 5 segundos antes del siguiente intento..."
-        
-        for i in {5..1}; do
-          echo -ne "\r${BLUE}[INFO]${NC} Reintentando en $i segundos..."
-          sleep 1
-        done
-        echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
-        
-        sudo pacman -Sc --noconfirm
+        sleep 5
+        # Actualizar claves si falla
+        sudo pacman-key --refresh-keys >/dev/null 2>&1
       fi
     fi
   done
@@ -346,50 +225,23 @@ install_package() {
   return 1
 }
 
-# Función para verificar si un paquete AUR está instalado
-is_aur_package_installed() {
-  local package="$1"
-  yay -Qi "$package" 2>/dev/null >/dev/null
-}
-
-# Función para instalar paquetes AUR con yay (MEJORADA)
+# Función para instalar paquetes AUR con yay
 install_aur_package() {
   local package="$1"
   local max_retries=3
   local retry=0
 
-  # Verificar si ya está instalado
-  if is_aur_package_installed "$package"; then
-    print_success "✓ $package ya está instalado"
-    return 0
-  fi
-
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package desde AUR... (intento $((retry + 1)))"
-    
-    if timeout 300 yay -S --noconfirm "$package"; then
+    if yay -S --noconfirm "$package"; then
       print_success "✓ $package instalado correctamente desde AUR"
       return 0
     else
-      local exit_code=$?
       print_warning "⚠ Error instalando $package desde AUR (intento $((retry + 1)))"
-      
-      if [ $exit_code -eq 124 ]; then
-        print_error "✗ Timeout instalando $package desde AUR"
-        return 1
-      fi
-      
       retry=$((retry + 1))
       if [ $retry -lt $max_retries ]; then
         print_info "Esperando 5 segundos antes del siguiente intento..."
-        
-        for i in {5..1}; do
-          echo -ne "\r${BLUE}[INFO]${NC} Reintentando en $i segundos..."
-          sleep 1
-        done
-        echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
-        
-        yay -Sc --noconfirm
+        sleep 5
       fi
     fi
   done
@@ -429,21 +281,45 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   fi
 done
 
-# Instalar yay - OBLIGATORIO
-install_yay
+# AUR helper (yay) - Instalar automáticamente si no existe
+if ! command -v yay >/dev/null 2>&1; then
+  print_info "Instalando yay (AUR helper)..."
+  print_info "yay es necesario para instalar dependencias adicionales desde AUR"
 
-# Instalar paquetes AUR (yay debe estar instalado en este punto)
-print_info "Instalando dependencias desde AUR..."
-failed_aur_packages=()
-
-for package in "${AUR_PACKAGES[@]}"; do
-  if ! install_aur_package "$package"; then
-    failed_aur_packages+=("$package")
+  cd /tmp
+  if git clone https://aur.archlinux.org/yay.git; then
+    cd yay
+    if makepkg -si --noconfirm; then
+      print_success "✓ yay instalado correctamente"
+    else
+      print_error "✗ Error instalando yay"
+      print_warning "Sin yay, se omitirán paquetes AUR"
+    fi
+    cd ~
+    rm -rf /tmp/yay
+  else
+    print_error "✗ Error descargando yay desde AUR"
+    print_warning "Sin yay, se omitirán paquetes AUR"
   fi
-done
+fi
 
-# Agregar paquetes AUR fallidos a la lista general
-failed_packages+=("${failed_aur_packages[@]}")
+# Instalar paquetes AUR si yay está disponible
+if command -v yay >/dev/null 2>&1; then
+  print_info "Instalando dependencias desde AUR..."
+  failed_aur_packages=()
+
+  for package in "${AUR_PACKAGES[@]}"; do
+    if ! install_aur_package "$package"; then
+      failed_aur_packages+=("$package")
+    fi
+  done
+
+  # Agregar paquetes AUR fallidos a la lista general
+  failed_packages+=("${failed_aur_packages[@]}")
+else
+  print_warning "yay no está disponible, omitiendo paquetes AUR"
+  failed_packages+=("${AUR_PACKAGES[@]}")
+fi
 
 # Mostrar paquetes que fallaron
 if [ ${#failed_packages[@]} -ne 0 ]; then
@@ -464,22 +340,13 @@ print_info "Paquetes opcionales disponibles:"
 for package in "${OPTIONAL_PACKAGES[@]}"; do
   echo "  • $package"
 done
-
-read -t 30 -p "¿Instalar paquetes opcionales? (y/N) [timeout 30s]: " -n 1 -r
+read -p "¿Instalar paquetes opcionales? (y/N): " -n 1 -r
 echo
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   for package in "${OPTIONAL_PACKAGES[@]}"; do
-    if command -v yay >/dev/null 2>&1; then
-      install_aur_package "$package"
-    else
-      install_package "$package"
-    fi
+    install_package "$package"
   done
-else
-  if [ -z "$REPLY" ]; then
-    print_info "Timeout alcanzado, saltando paquetes opcionales"
-  fi
 fi
 
 # Configurar Fish como shell por defecto
@@ -487,14 +354,12 @@ if command -v fish >/dev/null 2>&1; then
   current_shell=$(echo $SHELL)
   if [[ "$current_shell" != *"fish"* ]]; then
     print_info "¿Configurar Fish como shell por defecto?"
-    read -t 15 -p "(y/N) [timeout 15s]: " -n 1 -r
+    read -p "(y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       chsh -s /usr/bin/fish
       print_success "✓ Fish configurado como shell por defecto"
       print_warning "⚠ Reinicia la sesión para aplicar cambios"
-    elif [ -z "$REPLY" ]; then
-      print_info "Timeout alcanzado, manteniendo shell actual"
     fi
   fi
 fi
@@ -516,23 +381,6 @@ if command -v wal >/dev/null 2>&1; then
   else
     print_warning "⚠ ImageMagick no encontrado (recomendado para wal)"
   fi
-
-  # Instalar python-colorthief con pip como respaldo si AUR falló
-  print_info "Verificando colorthief para extracción de colores..."
-  if ! python3 -c "import colorthief" >/dev/null 2>&1; then
-    print_warning "colorthief no encontrado, instalando con pip..."
-    if command -v pip3 >/dev/null 2>&1; then
-      if pip3 install --user colorthief; then
-        print_success "✓ colorthief instalado con pip3"
-      else
-        print_warning "⚠ Error instalando colorthief con pip3"
-      fi
-    else
-      print_warning "⚠ pip3 no está disponible"
-    fi
-  else
-    print_success "✓ colorthief está disponible"
-  fi
 else
   print_error "✗ pywal no está disponible"
   print_info "Instala con: sudo pacman -S python-pywal"
@@ -548,86 +396,33 @@ fi
 print_success "🎉 ¡Dependencias instaladas!"
 echo
 
-# Verificación final mejorada
+# Verificar estado final
 print_info "Verificación final de dependencias principales..."
-
-# Mapeo de paquetes a comandos para verificación
-declare -A PACKAGE_TO_COMMAND=(
-  ["python-pywal"]="wal"
-  ["imagemagick"]="convert"
-  ["python-pillow"]="python3 -c 'import PIL'"
-  ["fish"]="fish"
-  ["starship"]="starship"
-  ["hyprland"]="Hyprland"
-  ["kitty"]="kitty"
-  ["neovim"]="nvim"
-  ["git"]="git"
-  ["dolphin"]="dolphin"
-  ["eza"]="eza"
-  ["cliphist"]="cliphist"
-  ["ddcutil"]="ddcutil"
-  ["fuzzel"]="fuzzel"
-  ["brightnessctl"]="brightnessctl"
-  ["ripgrep"]="rg"
-  ["jq"]="jq"
-  ["curl"]="curl"
-  ["wget"]="wget"
-  ["rsync"]="rsync"
-  ["bc"]="bc"
-  ["matugen-bin"]="matugen"
-)
-
 all_good=true
 all_packages=("${MAIN_PACKAGES[@]}" "${HYPRLAND_PACKAGES[@]}" "${NEW_PACMAN_PACKAGES[@]}")
 
+# Verificar paquetes críticos para wal
+WAL_CRITICAL_PACKAGES=("python-pywal" "imagemagick" "python-pillow")
 print_info "Verificando dependencias críticas para wal..."
-WAL_CRITICAL=("python-pywal" "imagemagick" "python-pillow")
 
-for package in "${WAL_CRITICAL[@]}"; do
-  if [[ -n "${PACKAGE_TO_COMMAND[$package]}" ]]; then
-    # Verificar por comando
-    if eval "${PACKAGE_TO_COMMAND[$package]}" --version >/dev/null 2>&1 || eval "${PACKAGE_TO_COMMAND[$package]}" >/dev/null 2>&1; then
-      print_success "✓ $package (crítico para wal)"
-    elif is_package_installed "$package"; then
-      print_success "✓ $package instalado (crítico para wal)"
-    else
-      print_error "✗ $package (crítico para wal)"
-      all_good=false
-    fi
+for package in "${WAL_CRITICAL_PACKAGES[@]}"; do
+  if command -v "$package" >/dev/null 2>&1 || pacman -Qi "$package" >/dev/null 2>&1; then
+    print_success "✓ $package (crítico para wal)"
   else
-    # Verificar solo por paquete
-    if is_package_installed "$package"; then
-      print_success "✓ $package (crítico para wal)"
-    else
-      print_error "✗ $package (crítico para wal)"
-      all_good=false
-    fi
+    print_error "✗ $package (crítico para wal)"
+    all_good=false
   fi
 done
 
-# Verificar el resto de paquetes principales
-print_info "Verificando otras dependencias..."
+# Verificar el resto de paquetes
 for package in "${all_packages[@]}"; do
   # Saltar los ya verificados arriba
-  if [[ ! " ${WAL_CRITICAL[@]} " =~ " ${package} " ]]; then
-    if [[ -n "${PACKAGE_TO_COMMAND[$package]}" ]]; then
-      # Verificar por comando si está mapeado
-      if eval "${PACKAGE_TO_COMMAND[$package]}" --version >/dev/null 2>&1 || eval "${PACKAGE_TO_COMMAND[$package]}" >/dev/null 2>&1; then
-        print_success "✓ $package"
-      elif is_package_installed "$package"; then
-        print_success "✓ $package instalado"
-      else
-        print_error "✗ $package"
-        all_good=false
-      fi
+  if [[ ! " ${WAL_CRITICAL_PACKAGES[@]} " =~ " ${package} " ]]; then
+    if command -v "$package" >/dev/null 2>&1 || pacman -Qi "$package" >/dev/null 2>&1; then
+      print_success "✓ $package"
     else
-      # Verificar solo por paquete
-      if is_package_installed "$package"; then
-        print_success "✓ $package"
-      else
-        print_error "✗ $package"
-        all_good=false
-      fi
+      print_error "✗ $package"
+      all_good=false
     fi
   fi
 done
