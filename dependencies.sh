@@ -1,4 +1,4 @@
-=#!/bin/bash
+#!/bin/bash
 # Script para instalar todas las dependencias necesarias
 # Arch Linux + Hyprland Setup
 
@@ -71,6 +71,7 @@ sudo pacman -Syu --noconfirm
 
 # Dependencias principales
 MAIN_PACKAGES=(
+  "base-devel"           # AGREGADO: Necesario para compilar desde AUR
   "fish"                 # Shell
   "starship"             # Cross-shell prompt
   "hyprland"             # Window manager
