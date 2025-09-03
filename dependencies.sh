@@ -429,26 +429,21 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   fi
 done
 
-# Instalar yay con la función mejorada
-if ! install_yay; then
-  print_error "✗ No se pudo instalar yay"
-  print_warning "⚠ Se omitirán todos los paquetes AUR"
-  print_info "💡 Puedes instalar yay manualmente después y ejecutar el script de nuevo"
-  failed_packages+=("${AUR_PACKAGES[@]}")
-else
-  # Instalar paquetes AUR solo si yay se instaló correctamente
-  print_info "Instalando dependencias desde AUR..."
-  failed_aur_packages=()
+# Instalar yay - OBLIGATORIO
+install_yay
 
-  for package in "${AUR_PACKAGES[@]}"; do
-    if ! install_aur_package "$package"; then
-      failed_aur_packages+=("$package")
-    fi
-  done
+# Instalar paquetes AUR (yay debe estar instalado en este punto)
+print_info "Instalando dependencias desde AUR..."
+failed_aur_packages=()
 
-  # Agregar paquetes AUR fallidos a la lista general
-  failed_packages+=("${failed_aur_packages[@]}")
-fi
+for package in "${AUR_PACKAGES[@]}"; do
+  if ! install_aur_package "$package"; then
+    failed_aur_packages+=("$package")
+  fi
+done
+
+# Agregar paquetes AUR fallidos a la lista general
+failed_packages+=("${failed_aur_packages[@]}")
 
 # Mostrar paquetes que fallaron
 if [ ${#failed_packages[@]} -ne 0 ]; then
