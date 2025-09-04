@@ -3,6 +3,7 @@ import qs.modules.common
 import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Effects
+import "../../../colors.qml" as Colors
 
 Canvas { // Visualizer
     id: root

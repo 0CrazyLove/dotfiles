@@ -2,6 +2,7 @@ import qs.modules.common
 import qs.services
 import QtQuick
 import Quickshell.Services.Notifications
+import "../../../colors.qml" as Colors
 
 RippleButton {
     id: button

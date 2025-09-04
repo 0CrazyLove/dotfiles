@@ -4,6 +4,7 @@ import qs.modules.common.functions
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../../../colors.qml" as Colors
 
 /**
  * Material 3 button with expressive bounciness. 

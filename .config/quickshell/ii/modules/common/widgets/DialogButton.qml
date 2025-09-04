@@ -1,5 +1,6 @@
 import qs.modules.common
 import QtQuick
+import "../../../colors.qml" as Colors
 
 /**
  * Material 3 dialog button. See https://m3.material.io/components/dialogs/overview

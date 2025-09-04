@@ -4,6 +4,7 @@ import qs
 import QtQuick
 import Quickshell.Io
 import Quickshell
+import "../../../colors.qml" as Colors
 
 QuickToggleButton {
     id: root

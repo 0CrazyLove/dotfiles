@@ -6,6 +6,7 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import "../../../colors.qml" as Colors
 
 ContentPage {
     forceWidth: true

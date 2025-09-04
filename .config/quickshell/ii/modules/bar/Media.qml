@@ -8,6 +8,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 import Quickshell.Hyprland
+import "../../../colors.qml" as Colors
 
 Item {
     id: root

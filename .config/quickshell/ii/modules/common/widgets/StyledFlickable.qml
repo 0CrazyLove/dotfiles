@@ -1,5 +1,6 @@
 import QtQuick
 import qs.modules.common
+import "../../../colors.qml" as Colors
 
 Flickable {
     id: root

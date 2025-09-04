@@ -8,6 +8,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 // import Qt5Compat.GraphicalEffects
+import "../../../colors.qml" as Colors
 
 Item {
     id: root

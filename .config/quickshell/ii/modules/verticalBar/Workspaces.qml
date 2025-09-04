@@ -11,6 +11,7 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Widgets
 import Qt5Compat.GraphicalEffects
+import "../../../colors.qml" as Colors
 
 Item {
     id: root

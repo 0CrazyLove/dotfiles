@@ -8,6 +8,7 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.functions
 import "../bar" as Bar
+import "../../../colors.qml" as Colors
 
 Item { // Bar content region
     id: root

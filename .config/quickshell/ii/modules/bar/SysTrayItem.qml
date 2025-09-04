@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 import Qt5Compat.GraphicalEffects
+import "../../../colors.qml" as Colors
 
 MouseArea {
     id: root

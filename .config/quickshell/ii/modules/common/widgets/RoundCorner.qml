@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Shapes
+import "../../../colors.qml" as Colors
 
 Item {
     id: root

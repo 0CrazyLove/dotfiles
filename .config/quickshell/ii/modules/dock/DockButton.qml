@@ -4,6 +4,7 @@ import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../../../colors.qml" as Colors
 
 RippleButton {
     Layout.fillHeight: true

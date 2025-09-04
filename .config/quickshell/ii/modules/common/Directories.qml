@@ -5,6 +5,7 @@ import qs.modules.common.functions
 import Qt.labs.platform
 import QtQuick
 import Quickshell
+import "../../../colors.qml" as Colors
 
 Singleton {
     // XDG Dirs, with "file://"

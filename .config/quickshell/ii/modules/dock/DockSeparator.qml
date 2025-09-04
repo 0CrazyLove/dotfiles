@@ -3,6 +3,7 @@ import qs.modules.common
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../../../colors.qml" as Colors
 
 Rectangle {
     Layout.topMargin: Appearance.sizes.elevationMargin + dockRow.padding + Appearance.rounding.normal

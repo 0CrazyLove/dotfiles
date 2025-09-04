@@ -3,6 +3,7 @@ import qs.modules.common.widgets
 import qs
 import Quickshell
 import Quickshell.Io
+import "../../../colors.qml" as Colors
 
 QuickToggleButton {
     id: root

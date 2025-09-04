@@ -8,6 +8,7 @@ import qs
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
+import "../../../colors.qml" as Colors
 
 Rectangle {
     id: root

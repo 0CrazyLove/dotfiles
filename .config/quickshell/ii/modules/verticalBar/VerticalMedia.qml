@@ -9,6 +9,7 @@ import QtQuick.Layouts
 import Quickshell.Services.Mpris
 
 import "../bar" as Bar
+import "../../../colors.qml" as Colors
 
 MouseArea {
     id: root

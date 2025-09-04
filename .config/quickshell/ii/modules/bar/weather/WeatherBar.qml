@@ -6,6 +6,7 @@ import qs
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
+import "../../../colors.qml" as Colors
 
 MouseArea {
     id: root

@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
+import "../../../colors.qml" as Colors
 
 /**
  * Material 3 switch. See https://m3.material.io/components/switch/overview

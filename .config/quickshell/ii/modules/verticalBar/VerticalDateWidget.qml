@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Shapes
 import QtQuick.Layouts
 import "../bar" as Bar
+import "../../../colors.qml" as Colors
 
 Item { // Full hitbox
     id: root

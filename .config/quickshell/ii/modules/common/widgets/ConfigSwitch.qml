@@ -3,6 +3,7 @@ import qs.modules.common
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import "../../../colors.qml" as Colors
 
 RippleButton {
     id: root

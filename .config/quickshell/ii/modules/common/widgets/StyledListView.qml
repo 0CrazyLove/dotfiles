@@ -3,6 +3,7 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
 import QtQuick
+import "../../../colors.qml" as Colors
 
 /**
  * A ListView with animations.

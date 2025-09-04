@@ -6,6 +6,7 @@ import Qt5Compat.GraphicalEffects
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import "../../../colors.qml" as Colors
 
 Rectangle {
     id: root

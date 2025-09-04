@@ -10,6 +10,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Hyprland
+import "../../../colors.qml" as Colors
 
 Item {
     id: root    

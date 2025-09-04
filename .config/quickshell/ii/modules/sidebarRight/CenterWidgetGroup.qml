@@ -8,6 +8,7 @@ import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../../../colors.qml" as Colors
 
 Rectangle {
     id: root

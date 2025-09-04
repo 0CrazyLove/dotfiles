@@ -8,6 +8,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
+import "../../../colors.qml" as Colors
 
 QuickToggleButton {
     toggled: Network.networkName.length > 0 && Network.networkName != "lo"

@@ -2,6 +2,7 @@ import qs.modules.common
 import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Layouts
+import "../../../colors.qml" as Colors
 
 /**
  * A container that supports GroupButton children for bounciness.

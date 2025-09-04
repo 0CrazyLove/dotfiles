@@ -5,6 +5,7 @@ import "./calendar_layout.js" as CalendarLayout
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "../../../colors.qml" as Colors
 
 Item {
     // Layout.topMargin: 10

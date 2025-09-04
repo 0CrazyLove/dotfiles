@@ -6,6 +6,7 @@ import Qt5Compat.GraphicalEffects
 import QtQuick
 import Quickshell.Io
 import Quickshell.Widgets
+import "../../../colors.qml" as Colors
 
 IconImage {
     id: root

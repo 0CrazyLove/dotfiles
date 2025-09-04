@@ -5,6 +5,7 @@ import "./notification_utils.js" as NotificationUtils
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import "../../../colors.qml" as Colors
 
 /**
  * A group of notifications from the same app.

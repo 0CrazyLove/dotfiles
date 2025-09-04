@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Effects
 import Quickshell
 import Quickshell.Wayland
+import "../../../colors.qml" as Colors
 
 LazyLoader {
     id: root

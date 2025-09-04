@@ -6,6 +6,7 @@ import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Layouts
 import "../"
+import "../../../colors.qml" as Colors
 
 StyledPopup {
     id: root

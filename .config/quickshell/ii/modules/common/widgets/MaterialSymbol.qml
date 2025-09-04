@@ -1,5 +1,6 @@
 import qs.modules.common
 import QtQuick
+import "../../../colors.qml" as Colors
 
 StyledText {
     id: root

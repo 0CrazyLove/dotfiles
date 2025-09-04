@@ -1,4 +1,5 @@
 import QtQuick
+import "../../../colors.qml" as Colors
 
 MouseArea {
     anchors.fill: parent
