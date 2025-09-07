@@ -12,7 +12,7 @@ import "../../../colors.qml" as Colors
 Rectangle {
     id: root
     radius: Appearance.rounding.normal
-    color: Appearance.colors.colLayer1
+    color: "#181818"
     clip: true
     implicitHeight: collapsed ? collapsedBottomWidgetGroupRow.implicitHeight : bottomWidgetGroupRow.implicitHeight
     property int selectedTab: Persistent.states.sidebar.bottomGroup.tab
@@ -91,7 +91,7 @@ Rectangle {
                 text: "keyboard_arrow_up"
                 iconSize: Appearance.font.pixelSize.larger
                 horizontalAlignment: Text.AlignHCenter
-                color: Appearance.colors.colOnLayer1
+                color: "#F2F2F2"
             }
         }
 
@@ -102,7 +102,7 @@ Rectangle {
             // text: `${DateTime.collapsedCalendarFormat}   •   ${remainingTasks} task${remainingTasks > 1 ? "s" : ""}`
             text: Translation.tr("%1   •   %2 tasks").arg(DateTime.collapsedCalendarFormat).arg(remainingTasks)
             font.pixelSize: Appearance.font.pixelSize.large
-            color: Appearance.colors.colOnLayer1
+            color: "#F2F2F2"
         }
     }
 
@@ -166,7 +166,7 @@ Rectangle {
                     text: "keyboard_arrow_down"
                     iconSize: Appearance.font.pixelSize.larger
                     horizontalAlignment: Text.AlignHCenter
-                    color: Appearance.colors.colOnLayer1
+                    color: "#F2F2F2"
                 }
             }
         }

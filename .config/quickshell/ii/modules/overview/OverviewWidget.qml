@@ -23,7 +23,7 @@ Item {
     property var windowAddresses: HyprlandData.addresses
     property var monitorData: HyprlandData.monitors.find(m => m.id === root.monitor?.id)
     property real scale: Config.options.overview.scale
-    property color activeBorderColor: Appearance.colors.colSecondary
+    property color activeBorderColor: "#AAAAAA"
 
     property real workspaceImplicitWidth: (monitorData?.transform % 2 === 1) ? 
         ((monitor.height - monitorData?.reserved[0] - monitorData?.reserved[2]) * root.scale / monitor.scale) :
@@ -60,9 +60,9 @@ Item {
         implicitWidth: workspaceColumnLayout.implicitWidth + padding * 2
         implicitHeight: workspaceColumnLayout.implicitHeight + padding * 2
         radius: Appearance.rounding.screenRounding * root.scale + padding
-        color: Appearance.colors.colLayer0
+        color: "#303030"
         border.width: 1
-        border.color: Appearance.colors.colLayer0Border
+        border.color: "#797979"
 
         ColumnLayout { // Workspaces
             id: workspaceColumnLayout
@@ -83,7 +83,7 @@ Item {
                             id: workspace
                             property int colIndex: index
                             property int workspaceValue: root.workspaceGroup * workspacesShown + rowIndex * Config.options.overview.columns + colIndex + 1
-                            property color defaultWorkspaceColor: Appearance.colors.colLayer1 // TODO: reconsider this color for a cleaner look
+                            property color defaultWorkspaceColor: "#181818"// TODO: reconsider this color for a cleaner look
                             property color hoveredWorkspaceColor: ColorUtils.mix(defaultWorkspaceColor, Appearance.colors.colLayer1Hover, 0.1)
                             property color hoveredBorderColor: Appearance.colors.colLayer2Hover
                             property bool hoveredWhileDragging: false

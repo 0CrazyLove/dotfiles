@@ -102,7 +102,7 @@ Item {
 
                 x: tabBar.currentIndex * fullTabSize + (fullTabSize - targetWidth) / 2
 
-                color: Appearance.colors.colPrimary
+                color: "#F2F2F2"
                 radius: Appearance.rounding.full
 
                 Behavior on x {
@@ -121,7 +121,7 @@ Item {
             id: tabBarBottomBorder
             Layout.fillWidth: true
             height: 1
-            color: Appearance.colors.colOutlineVariant
+            color:"#AAAAAA" 
         }
 
         SwipeView {

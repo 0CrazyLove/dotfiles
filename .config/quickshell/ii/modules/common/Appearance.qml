@@ -39,82 +39,27 @@ Singleton {
     m3colors: QtObject {
         property bool darkmode: false
         property bool transparent: false
-        property color m3primary_paletteKeyColor: "#9F6D2B"
-        property color m3secondary_paletteKeyColor: "#8B7358"
-        property color m3tertiary_paletteKeyColor: "#6D7D54"
-        property color m3neutral_paletteKeyColor: "#7F756C"
-        property color m3neutral_variant_paletteKeyColor: "#827568"
-        property color m3background: "#180a0a"
-        property color m3onBackground: "#d4d4d8"
-        property color m3surface: "#18120C"
-        property color m3surfaceDim: "#18120C"
-        property color m3surfaceBright: "#403830"
-        property color m3surfaceContainerLowest: "#130D07"
-        property color m3surfaceContainerLow: "#211A13"
-        property color m3surfaceContainer: "#251E17"
-        property color m3surfaceContainerHigh: "#302921"
-        property color m3surfaceContainerHighest: "#3B332B"
-        property color m3onSurface: "#EEE0D4"
-        property color m3surfaceVariant: "#504539"
-        property color m3onSurfaceVariant: "#d4d4d8"
-        property color m3inverseSurface: "#EEE0D4"
-        property color m3inverseOnSurface: "#372F27"
-        property color m3outline: "#d4d4d8"
-        property color m3outlineVariant: "#71717b"
-        property color m3shadow: "#000000"
-        property color m3scrim: "#000000"
-        property color m3surfaceTint: "#F8BB71"
-        property color m3primary: "#cad5e2"
-        property color m3onPrimary: "black"
-        property color m3primaryContainer: "#653E00"
-        property color m3onPrimaryContainer: "#FFDDB8"
-        property color m3inversePrimary: "#825513"
-        property color m3secondary: "#DFC2A2"
-        property color m3onSecondary: "#3F2D17"
-        property color m3secondaryContainer: "#4a5565"
-        property color m3onSecondaryContainer: "#d4d4d8"
-        property color m3tertiary: "#BBCD9E"
-        property color m3onTertiary: "#273513"
-        property color m3tertiaryContainer: "#86976C"
-        property color m3onTertiaryContainer: "#000000"
-        property color m3error: "#FFB4AB"
-        property color m3onError: "#690005"
-        property color m3errorContainer: "#93000A"
-        property color m3onErrorContainer: "#FFDAD6"
-        property color m3primaryFixed: "#F9D8FF"
-        property color m3primaryFixedDim: "#E5B6F2"
-        property color m3onPrimaryFixed: "#2E0A3C"
-        property color m3onPrimaryFixedVariant: "#5D386A"
-        property color m3secondaryFixed: "#F2DCF3"
-        property color m3secondaryFixedDim: "#D5C0D7"
-        property color m3onSecondaryFixed: "#241727"
-        property color m3onSecondaryFixedVariant: "#514254"
-        property color m3tertiaryFixed: "#FFDAD7"
-        property color m3tertiaryFixedDim: "#F5B7B3"
-        property color m3onTertiaryFixed: "#331110"
-        property color m3onTertiaryFixedVariant: "#663B39"
-        property color m3success: "#B5CCBA"
-        property color m3onSuccess: "#213528"
-        property color m3successContainer: "#374B3E"
-        property color m3onSuccessContainer: "#D1E9D6"
+
+        property color m3background: "#202020"//
+        property color m3onBackground: "#DADADA"//
+        property color m3surfaceContainerLow: "#181818" //
+        property color m3surfaceContainer: "#303030" //
+        property color m3onSurface: "#AAAAAA" //
+        property color m3onSurfaceVariant: "#AAAAAA" //
+        property color m3inverseSurface: "#FFFFFF" //
+        property color m3inverseOnSurface: "#000000" //
+        property color m3outline: "#F2F2F2" //
+        property color m3outlineVariant: "#797979" //
+        property color m3shadow: "#000000"//
+        property color m3primary: "#E7E7E7" //
+        property color m3onPrimary: "#000000" //
+        property color m3secondary: "#E7E7E7" //
+        property color m3secondaryContainer: "#303030" //
+        property color m3onSecondaryContainer: "#B6B6B6" //
+        property color m3onTertiaryContainer: "#000000" //
+
         
-        //no tocar
-        property color term0: "#EDE4E4"
-        property color term1: "#B52755"
-        property color term2: "#A97363"
-        property color term3: "#AF535D"
-        property color term4: "#A67F7C"
-        property color term5: "#B2416B"
-        property color term6: "#8D76AD"
-        property color term7: "#272022"
-        property color term8: "#0E0D0D"
-        property color term9: "#B52755"
-        property color term10: "#A97363"
-        property color term11: "#AF535D"
-        property color term12: "#A67F7C"
-        property color term13: "#B2416B"
-        property color term14: "#8D76AD"
-        property color term15: "#221A1A"
+
     }
 
     colors: QtObject {

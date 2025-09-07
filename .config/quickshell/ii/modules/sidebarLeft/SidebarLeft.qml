@@ -95,9 +95,9 @@ Scope { // Scope
                 anchors.leftMargin: Appearance.sizes.hyprlandGapsOut
                 width: sidebarRoot.sidebarWidth - Appearance.sizes.hyprlandGapsOut - Appearance.sizes.elevationMargin
                 height: parent.height - Appearance.sizes.hyprlandGapsOut * 2
-                color: Appearance.colors.colLayer0
+                color: "#000000"
                 border.width: 1
-                border.color: Appearance.colors.colLayer0Border
+                border.color: "#303030"
                 radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
 
                 Behavior on width {

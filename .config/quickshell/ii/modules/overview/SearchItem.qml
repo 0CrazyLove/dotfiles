@@ -35,9 +35,9 @@ RippleButton {
     implicitWidth: rowLayout.implicitWidth + root.buttonHorizontalPadding * 2
     buttonRadius: Appearance.rounding.normal
     colBackground: (root.down || root.keyboardDown) ? Appearance.colors.colSecondaryContainerActive : 
-        ((root.hovered || root.focus) ? Appearance.colors.colSecondaryContainerHover : 
+        ((root.hovered || root.focus) ? "#494949": 
         ColorUtils.transparentize(Appearance.colors.colSecondaryContainer, 1))
-    colBackgroundHover: Appearance.colors.colSecondaryContainerHover
+    colBackgroundHover: "#303030"
     colRipple: Appearance.colors.colSecondaryContainerActive
 
     property string highlightPrefix: `<u><font color="${Appearance.colors.colPrimary}">`
@@ -138,7 +138,7 @@ RippleButton {
             MaterialSymbol {
                 text: root.materialSymbol
                 iconSize: 30
-                color: Appearance.m3colors.m3onSurface
+                color: "#F2F2F2"
             }
         }
 
@@ -159,7 +159,7 @@ RippleButton {
             spacing: 0
             StyledText {
                 font.pixelSize: Appearance.font.pixelSize.smaller
-                color: Appearance.colors.colSubtext
+                color: Appearance.colors.colSubtext //sub texto shell
                 visible: root.itemType && root.itemType != Translation.tr("App")
                 text: root.itemType
             }
@@ -195,7 +195,7 @@ RippleButton {
                     textFormat: Text.StyledText // RichText also works, but StyledText ensures elide work
                     font.pixelSize: Appearance.font.pixelSize.small
                     font.family: Appearance.font.family[root.fontType]
-                    color: Appearance.m3colors.m3onSurface
+                    color: "#F2F2F2"
                     horizontalAlignment: Text.AlignLeft
                     elide: Text.ElideRight
                     text: `${root.displayContent}`
@@ -218,7 +218,7 @@ RippleButton {
             visible: (root.hovered || root.focus)
             id: clickAction
             font.pixelSize: Appearance.font.pixelSize.normal
-            color: Appearance.colors.colSubtext
+            color:Appearance.colors.colSubtext
             horizontalAlignment: Text.AlignRight
             text: root.itemClickActionName
         }

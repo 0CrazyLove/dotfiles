@@ -13,7 +13,7 @@ import "../../../colors.qml" as Colors
 Rectangle {
     id: root
     radius: Appearance.rounding.normal
-    color: Appearance.colors.colLayer1
+    color: "#181818"
 
     property int selectedTab: 0
     property var tabButtonList: [{"icon": "notifications", "name": Translation.tr("Notifications")}, {"icon": "volume_up", "name": Translation.tr("Audio")}]

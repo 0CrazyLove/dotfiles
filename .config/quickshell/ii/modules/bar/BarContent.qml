@@ -46,7 +46,7 @@ Item { // Bar content region
         color: "transparent"
         radius: Config.options.bar.cornerStyle === 1 ? Appearance.rounding.windowRounding : 0
         border.width: Config.options.bar.cornerStyle === 1 ? 1 : 0
-        border.color: Appearance.colors.colLayer0Border
+        border.color: "#494949"
     }
 
     FocusedScrollMouseArea { // Left side | scroll to change brightness
@@ -113,10 +113,7 @@ Item { // Bar content region
             Layout.preferredWidth: root.centerSideModuleWidth
             Layout.fillHeight: false
 
-            Resources {
-                alwaysShowAllResources: root.useShortenedForm === 2
-                Layout.fillWidth: root.useShortenedForm === 2
-            }
+          
 
             Media {
                 visible: root.useShortenedForm < 2

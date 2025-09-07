@@ -81,9 +81,9 @@ Scope {
                     anchors.fill: parent
                     implicitHeight: parent.height - Appearance.sizes.hyprlandGapsOut * 2
                     implicitWidth: sidebarWidth - Appearance.sizes.hyprlandGapsOut * 2
-                    color: Appearance.colors.colLayer0
+                    color: "#000000"
                     border.width: 1
-                    border.color: Appearance.colors.colLayer0Border
+                    border.color: "#303030"
                     radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
 
                     ColumnLayout {
@@ -104,14 +104,7 @@ Scope {
                                 height: 25
                                 source: SystemInfo.distroIcon
                                 colorize: true
-                                color: Appearance.colors.colOnLayer0
-                            }
-
-                            StyledText {
-                                font.pixelSize: Appearance.font.pixelSize.normal
-                                color: Appearance.colors.colOnLayer0
-                                text: Translation.tr("Up %1").arg(DateTime.uptime)
-                                textFormat: Text.MarkdownText
+                                color: "#F2F2F2"
                             }
 
                             Item {
@@ -148,7 +141,7 @@ Scope {
                             Layout.alignment: Qt.AlignHCenter
                             spacing: 5
                             padding: 5
-                            color: Appearance.colors.colLayer1
+                            color: "#181818"
 
                             NetworkToggle {}
                             BluetoothToggle {}

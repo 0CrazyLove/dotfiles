@@ -42,19 +42,19 @@ Item {
                         return `${minutes}:${seconds}`;
                     }
                     font.pixelSize: 40
-                    color: Appearance.m3colors.m3onSurface
+                    color: "#F2F2F2"
                 }
                 StyledText {
                     Layout.alignment: Qt.AlignHCenter
                     text: TimerService.pomodoroLongBreak ? Translation.tr("Long break") : TimerService.pomodoroBreak ? Translation.tr("Break") : Translation.tr("Focus")
                     font.pixelSize: Appearance.font.pixelSize.normal
-                    color: Appearance.colors.colSubtext
+                    color: "#C2C2C2"
                 }
             }
 
             Rectangle {
                 radius: Appearance.rounding.full
-                color: Appearance.colors.colLayer2
+                color: "#181818"
                 
                 anchors {
                     right: parent.right
@@ -66,7 +66,7 @@ Item {
                 StyledText {
                     id: cycleText
                     anchors.centerIn: parent
-                    color: Appearance.colors.colOnLayer2
+                    color: "#F2F2F2"
                     text: TimerService.pomodoroCycle + 1
                 }
             }
@@ -88,8 +88,8 @@ Item {
                 implicitWidth: 90
                 font.pixelSize: Appearance.font.pixelSize.larger
                 onClicked: TimerService.togglePomodoro()
-                colBackground: TimerService.pomodoroRunning ? Appearance.colors.colSecondaryContainer : Appearance.colors.colPrimary
-                colBackgroundHover: TimerService.pomodoroRunning ? Appearance.colors.colSecondaryContainer : Appearance.colors.colPrimary
+                colBackground: TimerService.pomodoroRunning ? "#303030" : Appearance.colors.colPrimary
+                colBackgroundHover: TimerService.pomodoroRunning ? "#494949"  : Appearance.colors.colPrimary
             }
 
             RippleButton {
@@ -100,15 +100,15 @@ Item {
                 enabled: (TimerService.pomodoroSecondsLeft < TimerService.pomodoroLapDuration) || TimerService.pomodoroCycle > 0 || TimerService.pomodoroBreak
 
                 font.pixelSize: Appearance.font.pixelSize.larger
-                colBackground: Appearance.colors.colErrorContainer
-                colBackgroundHover: Appearance.colors.colErrorContainerHover
-                colRipple: Appearance.colors.colErrorContainerActive
+                colBackground: "#303030"
+                colBackgroundHover: "#494949"
+                colRipple: "#000000"
 
                 contentItem: StyledText {
                     anchors.centerIn: parent
                     horizontalAlignment: Text.AlignHCenter
                     text: Translation.tr("Reset")
-                    color: Appearance.colors.colOnErrorContainer
+                    color: "#F2F2F2"
                 }
             }
         }

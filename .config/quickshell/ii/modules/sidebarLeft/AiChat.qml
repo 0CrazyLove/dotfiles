@@ -244,11 +244,6 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
         RowLayout {
             id: statusItemRowLayout
             spacing: 0
-            MaterialSymbol {
-                text: statusItem.icon
-                iconSize: Appearance.font.pixelSize.huge
-                color: Appearance.colors.colSubtext
-            }
             StyledText {
                 font.pixelSize: Appearance.font.pixelSize.small
                 text: statusItem.statusText
@@ -265,10 +260,7 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
     }
 
     component StatusSeparator: Rectangle {
-        implicitWidth: 4
-        implicitHeight: 4
-        radius: implicitWidth / 2
-        color: Appearance.colors.colOutlineVariant
+        
     }
 
     ColumnLayout {
@@ -285,11 +277,7 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
                 description: Ai.currentModelHasApiKey ? Translation.tr("API key is set\nChange with /key YOUR_API_KEY") : Translation.tr("No API key\nSet it with /key YOUR_API_KEY")
             }
             StatusSeparator {}
-            StatusItem {
-                icon: "device_thermostat"
-                statusText: Ai.temperature.toFixed(1)
-                description: Translation.tr("Temperature\nChange with /temp VALUE")
-            }
+            
             StatusSeparator {
                 visible: Ai.tokenCount.total > 0
             }
@@ -362,7 +350,7 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
                     MaterialSymbol {
                         Layout.alignment: Qt.AlignHCenter
                         iconSize: 60
-                        color: Appearance.m3colors.m3outline
+                        color: "#AAAAAA"
                         text: "neurology"
                     }
                     StyledText {
@@ -370,7 +358,7 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
                         Layout.alignment: Qt.AlignHCenter
                         font.pixelSize: Appearance.font.pixelSize.larger
                         font.family: Appearance.font.family.title
-                        color: Appearance.m3colors.m3outline
+                        color: "#AAAAAA"
                         horizontalAlignment: Text.AlignHCenter
                         text: Translation.tr("Large language models")
                     }
@@ -378,7 +366,7 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
                         id: widgetDescriptionText
                         Layout.fillWidth: true
                         font.pixelSize: Appearance.font.pixelSize.small
-                        color: Appearance.m3colors.m3outline
+                        color: "#C2C2C2"
                         horizontalAlignment: Text.AlignLeft
                         wrapMode: Text.Wrap
                         text: Translation.tr("Type /key to get started with online models\nCtrl+O to expand the sidebar\nCtrl+P to detach sidebar into a window")
