@@ -14,7 +14,7 @@ print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
-print_info "🚀 Instalando dependencias para dotfiles..."
+print_info "Instalando dependencias para dotfiles..."
 
 # Verificar si estamos en Arch Linux
 if ! command -v pacman >/dev/null 2>&1; then
@@ -36,7 +36,7 @@ check_home_permissions() {
   fi
 }
 
-# Verificar y reparar claves PGP (MEJORADO)
+# Verificar y reparar claves PGP 
 fix_pgp_keys() {
   print_info "Verificando claves PGP de pacman..."
 
@@ -108,34 +108,34 @@ sudo pacman -Syu --noconfirm
 
 # Dependencias principales
 MAIN_PACKAGES=(
-  "base-devel"           # AGREGADO: Necesario para compilar desde AUR
-  "fish"                 # Shell
-  "starship"             # Cross-shell prompt
-  "hyprland"             # Window manager
-  "kitty"                # Terminal
-  "neovim"               # Editor
-  "git"                  # Version control
-  "qt5-tools"            # Qt5 tools
-  "dolphin"              # File manager
-  "eza"                  # Modern ls replacement
-  "python-pywal"         # Color scheme generator
-  "cliphist"             # Clipboard manager
-  "ddcutil"              # Display control utility
-  "python-pillow"        # Python imaging library
-  "fuzzel"               # Application launcher
-  "glib2"                # GLib library
-  "hypridle"             # Hyprland idle daemon
-  "hyprutils"            # Hyprland utilities
-  "hyprlock"             # Hyprland lock screen
-  "hyprpicker"           # Color picker for Hyprland
-  "nm-connection-editor" # Network manager connection editor
+  "base-devel"         
+  "fish"                
+  "starship"            
+  "hyprland"             
+  "kitty"               
+  "neovim"              
+  "git"                 
+  "qt5-tools"           
+  "dolphin"             
+  "eza"                  
+  "python-pywal"        
+  "cliphist"             
+  "ddcutil"            
+  "python-pillow"      
+  "fuzzel"             
+  "glib2"              
+  "hypridle"         
+  "hyprutils"            
+  "hyprlock"         
+  "hyprpicker"        
+  "nm-connection-editor" 
 )
 
 # Dependencias de Hyprland
 HYPRLAND_PACKAGES=(
-  "swww"   # Wallpaper daemon
-  "grim"   # Screenshot utility
-  "slurp"  # Screen selection
+  "swww"  
+  "grim"  
+  "slurp"  
 )
 
 # Nuevas dependencias con pacman

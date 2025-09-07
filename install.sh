@@ -49,29 +49,29 @@ if [ ! -d "$DOTFILES_DIR" ]; then
   exit 1
 fi
 
-# Lista de dependencias requeridas (actualizada sin kde-material-you-colors)
+# Lista de dependencias requeridas 
 DEPENDENCIES=(
-  "fish"                 # Shell
-  "hyprland"             # Window manager
-  "kitty"                # Terminal
-  "neovim"               # Editor
-  "git"                  # Version control
-  "qt5-tools"            # Qt5 tools
-  "starship"             # Cross-shell prompt
-  "dolphin"              # File manager
-  "eza"                  # Modern ls replacement
-  "python-pywal"         # Color scheme generator
-  "cliphist"             # Clipboard manager
-  "ddcutil"              # Display control utility
-  "python-pillow"        # Python imaging library
-  "fuzzel"               # Application launcher
-  "glib2"                # GLib library
-  "hypridle"             # Hyprland idle daemon
-  "hyprutils"            # Hyprland utilities
-  "hyprlock"             # Hyprland lock screen
-  "hyprpicker"           # Color picker for Hyprland
-  "nm-connection-editor" # Network manager connection editor
-  # Nuevas dependencias básicas
+  "nano"
+  "fish"               
+  "hyprland"             
+  "kitty"               
+  "neovim"             
+  "git"                
+  "qt5-tools"         
+  "starship"             
+  "dolphin"              
+  "eza"                 
+  "python-pywal"         
+  "cliphist"            
+  "ddcutil"           
+  "python-pillow"      
+  "fuzzel"              
+  "glib2"                
+  "hypridle"           
+  "hyprutils"       
+  "hyprlock"           
+  "hyprpicker"        
+  "nm-connection-editor"
   "geoclue"
   "brightnessctl"
   "axel"
@@ -118,20 +118,20 @@ DEPENDENCIES=(
 
 # Lista de dependencias de Hyprland
 HYPRLAND_DEPS=(
-  "swww"   # Wallpaper daemon
-  "grim"   # Screenshot utility
-  "slurp"  # Screen selection
-  "waybar" # Status bar
+  "swww"  
+  "grim"  
+  "slurp"  
+
 )
 
-# Lista de dependencias AUR (SIN kde-material-you-colors)
+# Lista de dependencias AUR
 AUR_DEPENDENCIES=(
-  "neofetch"                # System info
-  "translate-shell"         # Command-line translator
-  "python-materialyoucolor" # Material You color library
-  "quickshell-git"          # Shell for Qt Quick
-  "wlogout"                 # Logout menu for Wayland
-  # Nuevas dependencias AUR (SIN kde-material-you-colors)
+  "neofetch"               
+  "translate-shell"        
+  "python-materialyoucolor" 
+  "quickshell-git"         
+  "wlogout"               
+
   "adw-gtk-theme-git"
   "breeze-plus"
   "darkly-bin"
@@ -164,10 +164,13 @@ AUR_DEPENDENCIES=(
   "ydotool"
 )
 
-# Lista de dependencias opcionales (actualizada con brave)
+# Lista de dependencias opcionales
 OPTIONAL_DEPS=(
-  "mako"  # Notification daemon
-  "brave" # Brave browser
+  "visual-studio-code-bin"
+  "discord"
+  "brave-bin"
+  "mako"
+  "dunst"
 )
 
 # Función para verificar si un comando existe
@@ -424,7 +427,7 @@ if command_exists fish; then
   fi
 fi
 
-print_success "🎉 Instalación completada!"
+print_success "Instalación completada!"
 print_info "Backup guardado en: $BACKUP_DIR"
 echo
 
@@ -453,11 +456,11 @@ check_config "$HOME/.config/nvim" "Neovim"
 check_config "$HOME/.config/quickshell" "Quickshell"
 check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
 check_config "$HOME/.config/starship.toml" "Starship"
-check_config "$HOME/.config/wal" "Wal" # NUEVO: Verificar wal
+check_config "$HOME/.config/wal" "Wal"
 
 echo
 if $configs_ok; then
-  print_success "✅ Todas las configuraciones están en su lugar"
+  print_success "Todas las configuraciones están en su lugar"
 else
   print_warning "⚠ Algunas configuraciones pueden tener problemas"
 fi
