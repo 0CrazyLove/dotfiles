@@ -228,13 +228,13 @@ AUR_PACKAGES=(
   "wallust"
   "python-colorthief"     # Movido de NEW_PACMAN_PACKAGES a AUR
   "python-haishoku"
+  "spotify"
 )
 
 # Paquetes opcionales 
 OPTIONAL_PACKAGES=(
   "visual-studio-code-bin"
   "discord"
-  "spotify"
   "brave-bin"
   "mako"
   "dunst"

@@ -160,7 +160,6 @@ AUR_DEPENDENCIES=(
   "uv"
   "hyprshot"
   "swappy"
-  "qt6-avif-image-plugin"
   "wtype"
   "ydotool"
 )
