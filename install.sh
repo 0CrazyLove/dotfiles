@@ -303,6 +303,32 @@ configure_wifi_module() {
   fi
 }
 
+# Función para instalar script rm protector
+install_rm_script() {
+  print_info "Instalando script rm protector..."
+
+  # Verificar que el script existe
+  if [ ! -f "$DOTFILES_DIR/bin/rm" ]; then
+    print_warning "⚠ Script rm no encontrado en $DOTFILES_DIR/bin/rm, saltando"
+    return
+  fi
+
+  # Hacer backup del rm actual si existe
+  if [ -f "/usr/local/bin/rm" ]; then
+    print_warning "Backup del rm existente"
+    sudo cp /usr/local/bin/rm "$BACKUP_DIR/rm.backup"
+  fi
+
+  # Copiar el script y hacerlo ejecutable
+  if sudo cp "$DOTFILES_DIR/bin/rm" "/usr/local/bin/rm"; then
+    sudo chmod +x "/usr/local/bin/rm"
+    print_success "✓ Script rm protector instalado en /usr/local/bin/rm"
+  else
+    print_error "✗ Error instalando script rm protector"
+    return 1
+  fi
+}
+
 # Función para crear backup y copiar archivos
 install_config() {
   local source="$1"
@@ -371,6 +397,9 @@ install_file() {
 mkdir -p "$HOME/.config"
 
 print_info "Instalando configuraciones..."
+
+# Instalar script rm protector
+install_rm_script
 
 # Instalar configuraciones de .config
 install_config "$DOTFILES_DIR/.config/fish" "$HOME/.config/fish" "Fish shell"
@@ -457,6 +486,7 @@ check_config "$HOME/.config/quickshell" "Quickshell"
 check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
 check_config "$HOME/.config/starship.toml" "Starship"
 check_config "$HOME/.config/wal" "Wal"
+check_config "/usr/local/bin/rm" "Script rm protector"
 
 echo
 if $configs_ok; then
@@ -473,6 +503,7 @@ echo "  • Para Neovim: Los plugins se instalarán automáticamente"
 echo "  • Para Starship: Reinicia tu terminal"
 echo "  • Para Wal: Los esquemas de color están listos para usar"
 echo "  • El módulo WiFi se cargará automáticamente en futuros reinicios"
+echo "  • El script rm protector ya está activo en /usr/local/bin/rm"
 echo
 print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."
