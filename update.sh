@@ -67,7 +67,7 @@ update_config "fish"
 update_config "hypr"
 update_config "kitty"
 update_config "neofetch"
-update_config "nvim"
+# update_config "nvim" 
 update_config "quickshell"
 
 # Actualizar archivos individuales
