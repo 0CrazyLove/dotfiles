@@ -599,7 +599,7 @@ done
 
 echo
 if $all_good; then
-  print_success "Todas las dependencias principales están listas UWU"
+  print_success "Todas las dependencias principales están listas UwU"
   print_success "Dependencias de wal verificadas y listas owo"
   print_info "Ahora puedes ejecutar:"
   echo "  ./install.sh"
