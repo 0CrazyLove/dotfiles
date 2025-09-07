@@ -163,6 +163,10 @@ Item {
         anchors.bottom: parent.bottom
         anchors.rightMargin: root.fabMargins
         anchors.bottomMargin: root.fabMargins
+          background: Rectangle {
+           color: "#303030"
+           radius: Appearance.rounding.full
+         }
 
         onClicked: root.showAddDialog = true
 
@@ -170,7 +174,7 @@ Item {
             text: "add"
             horizontalAlignment: Text.AlignHCenter
             iconSize: Appearance.font.pixelSize.huge
-            color: Appearance.m3colors.m3onPrimaryContainer
+            color: "#F2F2F2"
         }
     }
 
