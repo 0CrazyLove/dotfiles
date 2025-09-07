@@ -371,7 +371,11 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
       failed_packages+=("$package")
     fi
   else
-    print_info "Saltando $package (ya incluido en otra lista)"
+    if is_package_installed "$package"; then
+      print_success "✓ $package ya está instalado (saltando duplicado)"
+    else
+      print_info "Saltando $package (ya incluido en otra lista)"
+    fi
   fi
 done
 
