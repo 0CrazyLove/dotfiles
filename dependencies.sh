@@ -136,7 +136,6 @@ HYPRLAND_PACKAGES=(
   "swww"   # Wallpaper daemon
   "grim"   # Screenshot utility
   "slurp"  # Screen selection
-  "waybar" # Status bar
 )
 
 # Nuevas dependencias con pacman
@@ -184,9 +183,10 @@ NEW_PACMAN_PACKAGES=(
   "upower"
   "qt6-5compat"
   "syntax-highlighting"
-  "imagemagick"           # Para manipulación de imágenes (importante para wal)
-  "python-pip"            # AGREGADO: Para instalar paquetes Python adicionales
-  "go"                    # AGREGADO: Necesario para compilar yay
+  "imagemagick"           
+  "python-pip"           
+  "go"     
+  "cava"               
 )
 
 # Dependencias AUR (yay)
@@ -227,7 +227,7 @@ AUR_PACKAGES=(
   "wtype"
   "ydotool"
   "wallust"
-  "python-colorthief"     # Movido de NEW_PACMAN_PACKAGES a AUR
+  "python-colorthief"     
   "python-haishoku"
   "spotify"
 )
@@ -247,7 +247,7 @@ is_package_installed() {
   pacman -Qi "$package" >/dev/null 2>&1
 }
 
-# Función para instalar paquetes con retry (MEJORADA)
+# Función para instalar paquetes con retry 
 install_package() {
   local package="$1"
   local max_retries=3
@@ -299,7 +299,7 @@ is_aur_package_installed() {
   yay -Qi "$package" 2>/dev/null >/dev/null
 }
 
-# Función para instalar paquetes AUR con yay (MEJORADA)
+# Función para instalar paquetes AUR con yay 
 install_aur_package() {
   local package="$1"
   local max_retries=3
@@ -510,7 +510,7 @@ else
   print_warning "⚠ matugen no encontrado (se instalará desde AUR si yay está disponible)"
 fi
 
-print_success "🎉 ¡Dependencias instaladas!"
+print_success "¡Dependencias instaladas!"
 echo
 
 # Verificación final mejorada
@@ -599,8 +599,8 @@ done
 
 echo
 if $all_good; then
-  print_success "✅ Todas las dependencias principales están listas"
-  print_success "✅ Dependencias de wal verificadas y listas"
+  print_success "Todas las dependencias principales están listas UWU"
+  print_success "Dependencias de wal verificadas y listas owo"
   print_info "Ahora puedes ejecutar:"
   echo "  ./install.sh"
 else
