@@ -74,11 +74,13 @@ update_config "quickshell"
 update_file "starship.toml"
 
 # Actualizar fondos de pantalla
-if [ -d "$HOME/Documents/FondosPantallas" ]; then
+if [ -d "$HOME/Documents/Wallpapers" ]; then
   print_info "Actualizando fondos de pantalla..."
-  rm -rf "FondosPantallas"
-  cp -r "$HOME/Documents/FondosPantallas" "./"
+  rm -rf "Wallpapers"
+  cp -r "$HOME/Documents/Wallpapers" "./"
   print_success "✓ Fondos actualizados"
+else
+  print_warning "⚠ Carpeta de wallpapers no encontrada en ~/Documents/Wallpapers"
 fi
 
 # Mostrar estado de git
