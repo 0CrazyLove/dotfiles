@@ -145,6 +145,20 @@ sudo chown -R $USER:$USER $HOME
 chmod 755 $HOME
 ```
 
+**Pacman bloqueado (Database lock):**
+```bash
+# Error: "failed to init transaction (unable to lock database)"
+# Verificar que no hay procesos pacman activos:
+ps aux | grep pacman
+
+# Si no hay procesos activos, eliminar el archivo de bloqueo:
+sudo rm /var/lib/pacman/db.lck
+
+# Luego reintentar la instalación:
+sudo pacman -S paquete
+```
+*Este error es muy común cuando pacman se interrumpe con Ctrl+C o el sistema se apaga durante una instalación*
+
 **Dependencias faltantes:**
 ```bash
 # Reejecutar el script de dependencias
