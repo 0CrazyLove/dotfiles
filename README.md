@@ -79,6 +79,11 @@ Este script:
 - Instala wallpapers en `~/Documents/Wallpapers/`
 - Aplica permisos correctos
 
+## Atajos de teclado importantes
+
+### Wallpapers
+- **Super + P** - Cambiar wallpaper (muestra selector visual)
+
 ## Gestión de configuraciones
 
 ### Actualizar desde el repositorio
@@ -117,6 +122,8 @@ dotfiles/
 │   ├── nvim/                   # Neovim (LazyVim setup)
 │   ├── quickshell/             # Shell Qt Quick personalizado
 │   └── starship.toml           # Configuración del prompt
+├── bin/                        # Scripts personalizados
+│   └── rm                      # Script rm protector
 ├── Wallpapers/                 # Wallpapers personalizados
 ├── dependencies.sh            # Script de instalación de dependencias
 ├── install.sh                 # Script de instalación principal
