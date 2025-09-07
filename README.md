@@ -154,8 +154,8 @@ ps aux | grep pacman
 # Si no hay procesos activos, eliminar el archivo de bloqueo:
 sudo rm /var/lib/pacman/db.lck
 
-# Luego reintentar la instalación:
-sudo pacman -S paquete
+# Luego reintentar la instalación de las dependencias:
+./dependencies.sh
 ```
 *Este error es muy común cuando pacman se interrumpe con Ctrl+C o el sistema se apaga durante una instalación*
 
