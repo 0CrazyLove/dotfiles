@@ -32,13 +32,16 @@ is_dangerous() {
     if [[ "$args" =~ --no-preserve-root ]]; then
         return 0
     fi
-    
-    # 6. Detectar cualquier rm recursivo sobre directorios /home/*
+
+    # 6. Detectar rm recursivo peligroso en /home/, pero excluir cache y temp
     if [[ "$args" =~ ^-r[f]?[[:space:]]+/home/ ]]; then
-        return 0
+        # Permitir directorios de cache y temporales
+        if [[ ! "$args" =~ /\.cache/ ]] && [[ ! "$args" =~ /tmp/ ]] && [[ ! "$args" =~ /\.tmp/ ]]; then
+            return 0
+        fi
     fi
     
-    # 7. Verificaciones adicionales con patrones específicos
+    # 7. Verificaciones adicionales con patrones específicos (CORREGIDA)
     case "$args" in
         "-r /"|"-rf /")
             return 0
@@ -46,12 +49,10 @@ is_dangerous() {
         "-r ~"|"-rf ~")
             return 0
             ;;
-        "-r /home/"*|"-rf /home/"*)
-            return 0
-            ;;
         "-r /root"|"-rf /root")
             return 0
             ;;
+        # REMOVIDO: "-r /home/"*|"-rf /home/"*) - ahora se maneja en regla 6
     esac
     
     return 1
@@ -59,7 +60,7 @@ is_dangerous() {
 
 # Verificar si el comando es peligroso (SIN LOGS)
 if is_dangerous "$@"; then
-    echo "🛑 COMANDO BLOQUEADO POR SEGURIDAD DEL SISTEMA"
+    echo " COMANDO BLOQUEADO POR SEGURIDAD DEL SISTEMA"
     echo "Comando: rm $*"
     if [[ -n "$SUDO_USER" ]]; then
         echo "Ejecutado por: $SUDO_USER (vía sudo)"
