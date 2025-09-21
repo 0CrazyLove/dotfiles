@@ -21,7 +21,7 @@ Este dotfile está basado en [end-4/dots-hyprland](https://github.com/end-4/dots
 - **Manejo robusto de errores** - Verificación de permisos y reintentos
 - **Sistema de backups** - Protege tus configuraciones existentes
 
-## 📋 Documentación técnica
+## Documentación técnica
 
 Para información detallada sobre **instalación completa**, **dependencias específicas**, **configuraciones avanzadas** y **solución de problemas**, consulta la [**Documentación Técnica**](SECURITY.md).
 
