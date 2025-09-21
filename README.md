@@ -66,4 +66,10 @@ Este proyecto sigue la misma filosofía open-source del proyecto original. Sién
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
+## Contacto
 
+Si tienes dudas, problemas con la instalación o sugerencias, puedes contactarme directamente:
+
+**Discord**: `0crazylove0`
+
+No dudes en escribir si necesitas ayuda con alguna configuración específica o si encuentras algún error. ¡Estoy aquí para ayudar!

@@ -1,4 +1,3 @@
-
 ## Instalación detallada
 
 ### Script de dependencias
@@ -67,7 +66,6 @@ Este script:
 ### Componentes Core
 - Hyprland: ~200MB RAM
 - Fish + Kitty: ~70MB RAM
-- Neovim: ~150MB RAM
 - QuickShell: ~200MB RAM
 
 ## Atajos de teclado
@@ -115,6 +113,8 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | Atajo | Acción |
 |-------|---------|
 | `Super + Shift + S` | Captura de pantalla interactiva |
+| `Super + Alt + R` | Grabar video MP4 en región seleccionada (sin audio) |
+| `Super + Shift + Alt + R` | Grabar video MP4 de pantalla completa (con audio) |
 | `Super + P` | Cambiar fondo de pantalla automáticamente |
 
 ### Control de media
@@ -157,6 +157,21 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 - **Pantalla completa vs Falso fullscreen**: `Super + F` activa fullscreen real, mientras que `Super + Alt + F` simula el comportamiento para apps que lo requieren
 - **Workspaces dinámicos**: Los workspaces se crean automáticamente cuando los necesitas
 - **Zoom inteligente**: El zoom sigue la posición del mouse para mayor precisión
+- **Grabación de video**: Los videos se guardan en `~/Videos/`. Para detener la grabación, ejecuta el mismo comando por segunda vez
+
+## Configuración del Asistente de IA
+
+### Activar el asistente
+Puedes acceder al asistente de IA de dos formas:
+- Usando los atajos: `Super + O`, `Super + A`, o `Super + B`
+- Click derecho en la parte superior izquierda de la barra
+
+### Configurar API key
+1. Obtén tu API key de Google: https://aistudio.google.com/app/apikey
+2. En el apartado "Intelligence" del asistente, escribe:
+   ```
+   /key TU_API_KEY_GOOGLE
+   ```
 
 ## Personalización
 
