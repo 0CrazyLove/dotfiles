@@ -1,22 +1,28 @@
-## Instalación rápida
 
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/0CrazyLove/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-```
+## Instalación detallada
 
-### 2. Instalar dependencias (recomendado)
+### Script de dependencias
 ```bash
 chmod +x dependencies.sh
 ./dependencies.sh
 ```
+Este script:
+- Verifica y corrige permisos del sistema
+- Instala yay (AUR helper) si no está presente
+- Instala todas las dependencias necesarias
+- Ofrece paquetes opcionales
 
-### 3. Aplicar configuraciones
+### Script de instalación principal
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
+Este script:
+- Crea backups de configuraciones existentes
+- Copia todas las configuraciones a `~/.config/`
+- Instala wallpapers en `~/Documents/Wallpapers/`
+- Aplica permisos correctos
+
 
 ## Aplicaciones configuradas
 
@@ -43,6 +49,26 @@ chmod +x install.sh
 - **Illogical Impulse** - Configuraciones de tema adicionales
 - **Material You Colors** - Paletas de colores dinámicas
 - **Fonts** - JetBrains Mono Nerd, Space Grotesk, y más
+
+## Requisitos de Hardware
+
+### Mínimos
+- CPU: 4 cores
+- RAM: 4GB
+- GPU: Soporte Wayland
+- Storage: 5GB
+
+### Recomendados
+- CPU: 8+ cores  
+- RAM: 16GB
+- GPU: AMD Vega / NVIDIA GTX 1060+
+- Storage: 20GB
+
+### Componentes Core
+- Hyprland: ~200MB RAM
+- Fish + Kitty: ~70MB RAM
+- Neovim: ~150MB RAM
+- QuickShell: ~200MB RAM
 
 ## Atajos de teclado
 
@@ -159,30 +185,6 @@ El script `dependencies.sh` instala automáticamente:
 - **Arch Linux** o distribución basada en Arch
 - **Conexión a internet** para descargar dependencias
 - **Usuario con privilegios sudo**
-
-## Instalación detallada
-
-### Script de dependencias
-```bash
-chmod +x dependencies.sh
-./dependencies.sh
-```
-Este script:
-- Verifica y corrige permisos del sistema
-- Instala yay (AUR helper) si no está presente
-- Instala todas las dependencias necesarias
-- Ofrece paquetes opcionales
-
-### Script de instalación principal
-```bash
-chmod +x install.sh
-./install.sh
-```
-Este script:
-- Crea backups de configuraciones existentes
-- Copia todas las configuraciones a `~/.config/`
-- Instala wallpapers en `~/Documents/Wallpapers/`
-- Aplica permisos correctos
 
 ## Estructura del proyecto
 
