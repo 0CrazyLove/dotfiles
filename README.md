@@ -79,10 +79,72 @@ Este script:
 - Instala wallpapers en `~/Documents/Wallpapers/`
 - Aplica permisos correctos
 
-## Atajos de teclado importantes
+## Atajos de teclado
 
-### Wallpapers
-- **Super + P** - Cambiar wallpaper (muestra selector visual)
+Esta configuración incluye una amplia gama de atajos de teclado optimizados para un flujo de trabajo eficiente. Todos los atajos principales usan la tecla **Super** (Windows/Cmd) como modificador principal.
+
+### Gestión de workspaces
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + 1-9` | Cambiar al workspace especificado |
+| `Super + Shift + 1-9` | Mover ventana activa al workspace especificado |
+
+### Gestión de ventanas
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + Q` | Cerrar ventana activa |
+| `Super + L` | Bloquear pantalla |
+| `Super + J` | Ocultar/mostrar la barra de QuickShell |
+
+### Aplicaciones rápidas
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + T` | Abrir terminal |
+| `Super + Enter` | Abrir terminal (alternativo) |
+| `Super + W` | Abrir navegador predeterminado |
+| `Super + E` | Abrir explorador de archivos (Dolphin) |
+| `Super + C` | Abrir editor de código (VS Code) |
+| `Super + N` | Abrir menú del sistema |
+
+### Asistente de IA
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + O` | Abrir asistente de IA |
+| `Super + A` | Abrir asistente de IA (alternativo) |
+| `Super + B` | Abrir asistente de IA (alternativo) |
+
+### Capturas y multimedia
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + Shift + S` | Captura de pantalla interactiva |
+| `Super + P` | Cambiar fondo de pantalla automáticamente |
+
+### Zoom y navegación
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + +` | Hacer zoom donde apunta el mouse |
+| `Super + -` | Disminuir zoom |
+
+### Portapapeles y herramientas
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + V` | Abrir historial del portapapeles |
+| `Super + ;` | Abrir historial del portapapeles (alternativo) |
+| `Super + .` | Selector de emojis |
+
+### Consejos de uso
+
+- **Historial de portapapeles**: Al usar `Super + V`, se despliega un menú con todo lo que has copiado. Selecciona el elemento deseado y úsalo con `Ctrl + V`
+- **Selector de emojis**: Con `Super + .` aparece un menú de emojis. Selecciona uno y pégalo con `Ctrl + V`
+- **Workspaces dinámicos**: Los workspaces se crean automáticamente cuando los necesitas
+- **Zoom inteligente**: El zoom sigue la posición del mouse para mayor precisión
 
 ## Gestión de configuraciones
 
