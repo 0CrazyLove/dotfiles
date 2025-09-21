@@ -93,6 +93,7 @@ Item {
                 item: modelData
                 Layout.fillHeight: !root.vertical
                 Layout.fillWidth: root.vertical
+                
             }
 
         }
