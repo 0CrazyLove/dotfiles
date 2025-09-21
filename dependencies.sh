@@ -187,7 +187,8 @@ NEW_PACMAN_PACKAGES=(
   "python-pip"           
   "go"     
   "cava"
-  "gnome-system-monitor"                    
+  "gnome-system-monitor"         
+  "pavucontrol-qt"           
 )
 
 # Dependencias AUR (yay)
