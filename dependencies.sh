@@ -186,7 +186,8 @@ NEW_PACMAN_PACKAGES=(
   "imagemagick"           
   "python-pip"           
   "go"     
-  "cava"               
+  "cava"
+  "gnome-system-monitor"                    
 )
 
 # Dependencias AUR (yay)
