@@ -253,7 +253,7 @@ sudo rm /var/lib/pacman/db.lck
 # Luego reintentar la instalación de las dependencias:
 ./dependencies.sh
 ```
-Este error es muy común cuando pacman se interrumpe con Ctrl+C o el sistema se apaga durante una instalación*
+Este error es muy común cuando pacman se interrumpe con Ctrl+C o el sistema se apaga durante una instalación
 
 **Dependencias faltantes:**
 ```bash
