@@ -2,6 +2,17 @@
 
 Mi configuración personal para Arch Linux con Hyprland, basada en el excelente trabajo de [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland). Esta versión incluye configuraciones pre-configuradas y scripts automatizados para una instalación sin complicaciones.
 
+<div align="center">
+    <h2>• screenshots •</h2>
+    <h3></h3>
+</div>
+
+| AI | Common widgets |
+|:---|:---------------|
+| ![image](/Screenshots/IA.jpeg) | ![image](/Screenshots/SomeWidgets.jpeg) |
+| System Controller | Weeb power |
+| ![image](/Screenshots/SystemController.jpeg) | ![image](/Screenshots/Web.jpeg) |
+
 ## Características principales
 
 - **Configuración lista para usar** - Sin necesidad de configurar manualmente cada aplicación
@@ -55,6 +66,4 @@ Este proyecto sigue la misma filosofía open-source del proyecto original. Sién
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
----
 
-**Tip:** Para mejores resultados, ejecuta `dependencies.sh` antes de `install.sh` en una instalación limpia de Arch Linux.
