@@ -21,6 +21,19 @@ Este dotfile está basado en [end-4/dots-hyprland](https://github.com/end-4/dots
 - **Manejo robusto de errores** - Verificación de permisos y reintentos
 - **Sistema de backups** - Protege tus configuraciones existentes
 
+## 📋 Documentación técnica
+
+Para información detallada sobre **instalación completa**, **dependencias específicas**, **configuraciones avanzadas** y **solución de problemas**, consulta la [**Documentación Técnica**](SECURITY.md).
+
+La documentación técnica incluye:
+- **Instalación paso a paso** - Guía completa con `dependencies.sh` e `install.sh`
+- **Atajos de teclado completos** - Más de 25 combinaciones para Hyprland
+- **Estructura del proyecto** - Arquitectura completa de carpetas y archivos
+- **Aplicaciones configuradas** - Fish, Hyprland, Kitty, Neovim y más
+- **Scripts automatizados** - Funcionamiento de install.sh, update.sh y dependencies.sh
+- **Troubleshooting avanzado** - Soluciones a problemas comunes como pacman bloqueado
+- **Personalización** - Cómo modificar wallpapers, temas y configuraciones
+
 ## Créditos
 
 Este proyecto está basado en el increíble trabajo de:
