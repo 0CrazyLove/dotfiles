@@ -6,7 +6,6 @@ import qs.modules.common.functions
 import "periodic_table.js" as PTable
 import QtQuick
 import QtQuick.Layouts
-import "../../../colors.qml" as Colors
 
 Item {
     id: root

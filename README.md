@@ -97,6 +97,7 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + Q` | Cerrar ventana activa |
 | `Super + L` | Bloquear pantalla |
 | `Super + J` | Ocultar/mostrar la barra de QuickShell |
+| `Super + Alt + F` | Falso fullscreen (simulación) |
 
 ### Aplicaciones rápidas
 
@@ -124,6 +125,14 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + Shift + S` | Captura de pantalla interactiva |
 | `Super + P` | Cambiar fondo de pantalla automáticamente |
 
+### Control de media
+
+| Atajo | Acción |
+|-------|---------|
+| `Super + Shift + N` | Siguiente canción |
+| `Super + Shift + B` | Canción anterior |
+| `Super + Shift + P` | Play/Pause |
+
 ### Zoom y navegación
 
 | Atajo | Acción |
@@ -138,11 +147,20 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + V` | Abrir historial del portapapeles |
 | `Super + ;` | Abrir historial del portapapeles (alternativo) |
 | `Super + .` | Selector de emojis |
+| `Super + K` | Activar/desactivar teclado en pantalla |
+
+### Sistema y herramientas
+
+| Atajo | Acción |
+|-------|---------|
+| `Ctrl + Super + V` | Mezclador de volumen |
+| `Ctrl + Shift + Esc` | Administrador de tareas |
 
 ### Consejos de uso
 
 - **Historial de portapapeles**: Al usar `Super + V`, se despliega un menú con todo lo que has copiado. Selecciona el elemento deseado y úsalo con `Ctrl + V`
 - **Selector de emojis**: Con `Super + .` aparece un menú de emojis. Selecciona uno y pégalo con `Ctrl + V`
+- **Teclado en pantalla**: `Super + K` activa/desactiva el teclado virtual, útil para dispositivos táctiles o cuando necesitas un teclado en pantalla
 - **Workspaces dinámicos**: Los workspaces se crean automáticamente cuando los necesitas
 - **Zoom inteligente**: El zoom sigue la posición del mouse para mayor precisión
 
