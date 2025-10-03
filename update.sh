@@ -109,7 +109,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     git push
-    print_success "🎉 Dotfiles actualizados en GitHub!"
+    print_success "Dotfile actualizado en GitHub!"
   else
     print_info "Cambios guardados localmente. Usa 'git push' para subir."
   fi
