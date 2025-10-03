@@ -121,6 +121,7 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 
 | Atajo | Acción |
 |-------|---------|
+| `Super + Espacio` | Cambiar distribución de teclado (US ⇄ Latinoamérica) |
 | `Super + Shift + N` | Siguiente canción |
 | `Super + Shift + B` | Canción anterior |
 | `Super + Shift + P` | Play/Pause |
