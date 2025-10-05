@@ -88,7 +88,6 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + J` | Ocultar/mostrar la barra de QuickShell |
 | `Super + F` | Poner ventana en pantalla completa |
 | `Super + Alt + F` | Falso fullscreen (simulación) |
-| `Ctrl + Super + T` | Seleccionar fondo de pantalla manualmente |
 
 ### Aplicaciones rápidas
 
@@ -117,6 +116,7 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + Alt + R` | Grabar video MP4 en región seleccionada (sin audio) |
 | `Super + Shift + Alt + R` | Grabar video MP4 de pantalla completa (con audio) |
 | `Super + P` | Cambiar fondo de pantalla automáticamente |
+| `Ctrl + Super + T` | Seleccionar fondo de pantalla manualmente |
 
 ### Control de media
 
