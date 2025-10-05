@@ -141,7 +141,7 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + V` | Abrir historial del portapapeles |
 | `Super + ;` | Abrir historial del portapapeles (alternativo) |
 | `Super + .` | Selector de emojis |
-| `Super + K` | Activar/desactivar teclado en pantalla |
+| `Super + K` | Muestra el diseño de teclado activo|
 
 ### Sistema y herramientas
 
@@ -154,7 +154,6 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 
 - **Historial de portapapeles**: Al usar `Super + V`, se despliega un menú con todo lo que has copiado. Selecciona el elemento deseado y úsalo con `Ctrl + V`
 - **Selector de emojis**: Con `Super + .` aparece un menú de emojis. Selecciona uno y pégalo con `Ctrl + V`
-- **Teclado en pantalla**: `Super + K` activa/desactiva el teclado virtual, útil para dispositivos táctiles o cuando necesitas un teclado en pantalla
 - **Control de media**: Los atajos `Super + Shift + N/B/P` están optimizados para Spotify y funcionan específicamente con esta aplicación
 - **Pantalla completa vs Falso fullscreen**: `Super + F` activa fullscreen real, mientras que `Super + Alt + F` simula el comportamiento para apps que lo requieren
 - **Workspaces dinámicos**: Los workspaces se crean automáticamente cuando los necesitas
@@ -196,7 +195,7 @@ Puedes acceder al asistente de IA de dos formas:
 El script `dependencies.sh` instala automáticamente:
 - **Paquetes oficiales**: +40 paquetes esenciales
 - **Paquetes AUR**: +25 paquetes adicionales (requiere yay)
-- **Opcional**: VS Code, Discord, Spotify, Brave Browser
+- **Opcional**: VS Code, Discord, Brave Browser
 
 ### Requisitos previos
 - **Arch Linux** o distribución basada en Arch
@@ -300,33 +299,6 @@ chsh -s /usr/bin/fish
 cp -r ~/.config_backup_FECHA/* ~/.config/
 ```
 
-## Scripts incluidos
-
-### dependencies.sh
-Script que maneja la instalación automática de todas las dependencias:
-- Verifica permisos del sistema
-- Instala yay si no está presente
-- Maneja paquetes oficiales y AUR
-- Ofrece paquetes opcionales
-- Incluye manejo robusto de errores
-
-### install.sh
-Script principal de instalación de configuraciones:
-- Crea backups automáticos con timestamp
-- Copia configuraciones preservando estructura
-- Maneja permisos correctamente
-- Instala wallpapers y recursos
-
-### update.sh
-Script de sincronización bidireccional:
-- Copia cambios del sistema al repositorio
-- Muestra estado actual de git
-- Facilita commits y push automáticos
-- Mantiene sincronización con repositorio remoto
-
-### Scripts personalizados en bin/
-- **rm**: Script protector que previene borrado accidental de archivos importantes
-
 ## Configuraciones específicas
 
 ### Fish Shell
@@ -371,48 +343,4 @@ exec Hyprland
 which fish kitty hyprland neovim
 # Verificar servicios de audio
 systemctl --user status pipewire
-```
-
-## Notas de desarrollo
-
-### Mantenimiento del proyecto
-- Los scripts incluyen verificaciones de errores robustas
-- Sistema de backups automáticos protege configuraciones existentes
-- Estructura modular facilita actualizaciones
-
-### Futuras mejoras
-- Detección automática de distribuciones
-- Soporte para más gestores de ventanas
-- Configuraciones adicionales opcionales
-
-### Testing
-- Probado en Arch Linux limpio
-- Verificado en sistemas con configuraciones existentes
-- Scripts probados con diferentes niveles de permisos
-
-## Troubleshooting avanzado
-
-### Logs del sistema
-```bash
-# Logs de Hyprland
-journalctl -u hyprland --no-pager
-# Logs del sistema
-journalctl -xe
-# Logs de audio
-journalctl --user -u pipewire
-```
-
-### Verificación de servicios
-```bash
-# Estado de servicios críticos
-systemctl --user status pipewire
-systemctl --user status hyprland
-```
-
-### Restauración manual
-```bash
-# En caso de problemas graves, restaurar configuraciones
-cd ~/dotfiles
-rm -rf ~/.config
-cp -r ~/.config_backup_[FECHA] ~/.config
 ```

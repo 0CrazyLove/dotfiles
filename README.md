@@ -42,7 +42,6 @@ La documentación técnica incluye:
 - **Estructura del proyecto** - Arquitectura completa de carpetas y archivos
 - **Aplicaciones configuradas** - Fish, Hyprland, Kitty, Neovim y más
 - **Scripts automatizados** - Funcionamiento de install.sh, update.sh y dependencies.sh
-- **Troubleshooting avanzado** - Soluciones a problemas comunes como pacman bloqueado
 - **Personalización** - Cómo modificar wallpapers, temas y configuraciones
 
 ## Créditos
