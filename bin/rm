@@ -52,13 +52,12 @@ is_dangerous() {
         "-r /root"|"-rf /root")
             return 0
             ;;
-        # REMOVIDO: "-r /home/"*|"-rf /home/"*) - ahora se maneja en regla 6
     esac
     
     return 1
 }
 
-# Verificar si el comando es peligroso (SIN LOGS)
+# Verificar si el comando es peligroso 
 if is_dangerous "$@"; then
     echo " COMANDO BLOQUEADO POR SEGURIDAD DEL SISTEMA"
     echo "Comando: rm $*"
@@ -70,5 +69,5 @@ if is_dangerous "$@"; then
     exit 1
 fi
 
-# Ejecutar rm real si es seguro (COMPLETAMENTE SILENCIOSO)
+# Ejecutar rm real si es seguro
 exec /bin/rm "$@"
