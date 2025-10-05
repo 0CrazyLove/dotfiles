@@ -31,18 +31,18 @@ Item { // Bar content region
         active: Config.options.bar.showBackground && Config.options.bar.cornerStyle === 1
         anchors.fill: barBackground
         sourceComponent: StyledRectangularShadow {
-            anchors.fill: undefined // The loader's anchors act on this, and this should not have any anchor
+            anchors.fill: undefined
             target: barBackground
         }
     }
+
     // Background
     Rectangle {
         id: barBackground
         anchors {
             fill: parent
-            margins: Config.options.bar.cornerStyle === 1 ? (Appearance.sizes.hyprlandGapsOut) : 0 // idk why but +1 is needed
+            margins: Config.options.bar.cornerStyle === 1 ? (Appearance.sizes.hyprlandGapsOut) : 0
         }
-        //color trasparante barra 
         color: "transparent"
         radius: Config.options.bar.cornerStyle === 1 ? Appearance.rounding.windowRounding : 0
         border.width: Config.options.bar.cornerStyle === 1 ? 1 : 0
@@ -84,7 +84,7 @@ Item { // Bar content region
             anchors.fill: parent
             spacing: 10
 
-            LeftSidebarButton { // Left sidebar button
+            LeftSidebarButton {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.leftMargin: Appearance.rounding.screenRounding
                 colBackground: barLeftSideMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
@@ -113,8 +113,6 @@ Item { // Bar content region
             Layout.preferredWidth: root.centerSideModuleWidth
             Layout.fillHeight: false
 
-          
-
             Media {
                 visible: root.useShortenedForm < 2
                 Layout.fillWidth: true
@@ -132,8 +130,8 @@ Item { // Bar content region
             Workspaces {
                 id: workspacesWidget
                 Layout.fillHeight: true
+                
                 MouseArea {
-                    // Right-click to toggle overview
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
 
@@ -261,24 +259,77 @@ Item { // Bar content region
                     anchors.centerIn: parent
                     property real realSpacing: 15
                     spacing: 0
+
+                    Revealer {
+                        reveal: Audio.sink?.audio?.muted ?? false
+                        Layout.fillHeight: true
+                        Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+                        
+                        Behavior on Layout.rightMargin {
+                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                        }
+                        
+                        MaterialSymbol {
+                            text: "volume_off"
+                            iconSize: Appearance.font.pixelSize.larger
+                            color: rightSidebarButton.colText
+                        }
+                    }
+
+                    Revealer {
+                        reveal: Audio.source?.audio?.muted ?? false
+                        Layout.fillHeight: true
+                        Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+                        
+                        Behavior on Layout.rightMargin {
+                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                        }
+                        
+                        MaterialSymbol {
+                            text: "mic_off"
+                            iconSize: Appearance.font.pixelSize.larger
+                            color: rightSidebarButton.colText
+                        }
+                    }
+
                     Loader {
                         active: HyprlandXkb.layoutCodes.length > 1
                         visible: active
                         Layout.rightMargin: indicatorsRowLayout.realSpacing
+                        
                         sourceComponent: StyledText {
                             text: HyprlandXkb.currentLayoutCode
                             font.pixelSize: Appearance.font.pixelSize.small
                             color: rightSidebarButton.colText
                         }
                     }
+
+                    // ICONO DE BLUETOOTH
                     MaterialSymbol {
                         Layout.rightMargin: indicatorsRowLayout.realSpacing
-                        text: Network.materialSymbol
+                        text: Bluetooth.bluetoothConnected ? "bluetooth_connected" : Bluetooth.bluetoothEnabled ? "bluetooth" : "bluetooth_disabled"
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
                     }
+
+                    // ICONO DE VOLUMEN
                     MaterialSymbol {
-                        text: Bluetooth.bluetoothConnected ? "bluetooth_connected" : Bluetooth.bluetoothEnabled ? "bluetooth" : "bluetooth_disabled"
+                        Layout.rightMargin: indicatorsRowLayout.realSpacing
+                        text: {
+                            if (Audio.sink?.audio?.muted ?? false) return "volume_off"
+                            const vol = Audio.sink?.audio?.volume ?? 0
+                            if (vol === 0) return "volume_mute"
+                            if (vol < 0.33) return "volume_down"
+                            if (vol < 0.66) return "volume_up"
+                            return "volume_up"
+                        }
+                        iconSize: 22
+                        color: rightSidebarButton.colText
+                    }
+
+                    // ICONO DE RED/WIFI
+                    MaterialSymbol {
+                        text: Network.materialSymbol
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
                     }
