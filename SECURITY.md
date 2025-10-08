@@ -325,22 +325,9 @@ cp -r ~/.config_backup_FECHA/* ~/.config/
 
 ## Configuración post-instalación
 
-### Establecer Fish como shell predeterminado
-```bash
-chsh -s /usr/bin/fish
-```
-
 ### Configurar Hyprland en el gestor de sesiones
 ```bash
 # Para SDDM o GDM, Hyprland debería aparecer automáticamente
 # Para startx, agregar a ~/.xinitrc:
 exec Hyprland
-```
-
-### Verificar configuración
-```bash
-# Verificar que todas las aplicaciones están instaladas
-which fish kitty hyprland neovim
-# Verificar servicios de audio
-systemctl --user status pipewire
 ```
