@@ -118,7 +118,7 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + P` | Cambiar fondo de pantalla automáticamente |
 | `Ctrl + Super + T` | Seleccionar fondo de pantalla manualmente |
 
-### Control de media
+### Control de audio y media
 
 | Atajo | Acción |
 |-------|---------|
