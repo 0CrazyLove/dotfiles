@@ -122,10 +122,12 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 
 | Atajo | Acción |
 |-------|---------|
+| `Super + Shift + M`| Mutear/desmutear audio del sistema y micrófono |
 | `Super + Espacio` | Cambiar distribución de teclado (US ⇄ Latinoamérica) |
 | `Super + Shift + N` | Siguiente canción |
 | `Super + Shift + B` | Canción anterior |
 | `Super + Shift + P` | Play/Pause |
+| `Ctrl + Super + V` | Mezclador de volumen |
 
 ### Zoom y navegación
 
@@ -147,11 +149,10 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 
 | Atajo | Acción |
 |-------|---------|
-| `Ctrl + Super + V` | Mezclador de volumen |
 | `Ctrl + Shift + Esc` | Administrador de tareas |
 
 ### Consejos de uso
-
+- **Control de mute: Al usar `Super + Shift + M`, se silencia tanto el audio del sistema como el micrófono simultáneamente. El estado se refleja visualmente en la barra de QuickShell**
 - **Historial de portapapeles**: Al usar `Super + V`, se despliega un menú con todo lo que has copiado. Selecciona el elemento deseado y úsalo con `Ctrl + V`
 - **Selector de emojis**: Con `Super + .` aparece un menú de emojis. Selecciona uno y pégalo con `Ctrl + V`
 - **Control de media**: Los atajos `Super + Shift + N/B/P` están optimizados para Spotify y funcionan específicamente con esta aplicación
