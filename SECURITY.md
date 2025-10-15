@@ -1,6 +1,12 @@
 ## Instalación detallada
 
-### Script de dependencias
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/0CrazyLove/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+```
+
+### 2. Script de dependencias
 ```bash
 chmod +x dependencies.sh
 ./dependencies.sh
@@ -11,7 +17,7 @@ Este script:
 - Instala todas las dependencias necesarias
 - Ofrece paquetes opcionales
 
-### Script de instalación principal
+### 3. Script de instalación principal
 ```bash
 chmod +x install.sh
 ./install.sh
