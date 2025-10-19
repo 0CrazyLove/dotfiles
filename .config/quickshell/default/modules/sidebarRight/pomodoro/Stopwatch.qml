@@ -7,7 +7,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-import "../../../colors.qml" as Colors
 
 Item {
     id: stopwatchTab

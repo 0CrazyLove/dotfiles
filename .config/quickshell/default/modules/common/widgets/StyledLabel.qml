@@ -1,7 +1,6 @@
 import qs.modules.common
 import QtQuick
 import QtQuick.Controls
-import "../../../colors.qml" as Colors
 
 Label {
     renderType: Text.NativeRendering

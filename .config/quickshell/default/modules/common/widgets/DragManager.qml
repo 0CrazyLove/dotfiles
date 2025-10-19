@@ -1,7 +1,6 @@
 import qs.modules.common
 import qs.services
 import QtQuick
-import "../../../colors.qml" as Colors
 
 /**
  * A convenience MouseArea for handling drag events.

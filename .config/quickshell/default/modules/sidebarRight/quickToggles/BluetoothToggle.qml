@@ -7,7 +7,6 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
-import "../../../colors.qml" as Colors
 
 QuickToggleButton {
     toggled: Bluetooth.bluetoothEnabled

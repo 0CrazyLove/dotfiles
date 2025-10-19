@@ -10,7 +10,6 @@ import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
-import "../../../colors.qml" as Colors
 
 Button {
     id: root

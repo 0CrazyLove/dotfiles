@@ -10,7 +10,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import org.kde.syntaxhighlighting
-import "../../../colors.qml" as Colors
 
 ColumnLayout {
     id: root

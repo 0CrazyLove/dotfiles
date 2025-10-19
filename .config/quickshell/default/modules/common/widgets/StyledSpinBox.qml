@@ -2,7 +2,6 @@ import qs.modules.common
 import qs.modules.common.functions
 import QtQuick
 import QtQuick.Controls
-import "../../../colors.qml" as Colors
 
 /**
  * Material 3 styled SpinBox component.

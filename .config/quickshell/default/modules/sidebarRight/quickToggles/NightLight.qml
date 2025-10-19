@@ -4,7 +4,6 @@ import qs.modules.common.widgets
 import qs
 import qs.services
 import Quickshell.Io
-import "../../../colors.qml" as Colors
 
 QuickToggleButton {
     id: nightLightButton

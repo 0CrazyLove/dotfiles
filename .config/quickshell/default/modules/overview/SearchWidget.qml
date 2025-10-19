@@ -9,7 +9,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import "../../../colors.qml" as Colors
 
 Item { // Wrapper
     id: root

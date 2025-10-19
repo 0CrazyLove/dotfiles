@@ -9,7 +9,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
-import "../../../colors.qml" as Colors
 
 DockButton {
     id: root

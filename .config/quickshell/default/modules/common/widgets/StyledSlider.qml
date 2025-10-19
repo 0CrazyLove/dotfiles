@@ -5,7 +5,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Widgets
-import "../../../colors.qml" as Colors
 
 /**
  * Material 3 slider. See https://m3.material.io/components/sliders/overview

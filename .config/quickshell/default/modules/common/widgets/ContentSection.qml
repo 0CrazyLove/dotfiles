@@ -3,7 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import qs.modules.common
 import qs.modules.common.widgets
-import "../../../colors.qml" as Colors
 
 ColumnLayout {
     id: root

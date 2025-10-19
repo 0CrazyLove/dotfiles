@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Effects
 import qs.modules.common
-import "../../../colors.qml" as Colors
 
 RectangularShadow {
     required property var target

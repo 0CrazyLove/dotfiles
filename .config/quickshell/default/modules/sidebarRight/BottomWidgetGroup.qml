@@ -7,7 +7,6 @@ import "./todo"
 import "./pomodoro"
 import QtQuick
 import QtQuick.Layouts
-import "../../../colors.qml" as Colors
 
 Rectangle {
     id: root

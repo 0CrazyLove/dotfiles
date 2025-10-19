@@ -1,7 +1,6 @@
 import qs.modules.common
 import QtQuick
 import QtQuick.Controls
-import "../../../colors.qml" as Colors
 
 /**
  * Does not include visual layout, but includes the easily neglected colors.

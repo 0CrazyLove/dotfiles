@@ -37,26 +37,37 @@ Singleton {
     property real contentTransparency: 0
 
     m3colors: QtObject {
-        property bool darkmode: false
+      property bool darkmode: false
         property bool transparent: false
 
-        property color m3background: "#202020"//
-        property color m3onBackground: "#DADADA"//
-        property color m3surfaceContainerLow: "#181818" //
-        property color m3surfaceContainer: "#303030" //
-        property color m3onSurface: "#AAAAAA" //
-        property color m3onSurfaceVariant: "#AAAAAA" //
-        property color m3inverseSurface: "#FFFFFF" //
-        property color m3inverseOnSurface: "#000000" //
-        property color m3outline: "#F2F2F2" //
-        property color m3outlineVariant: "#797979" //
-        property color m3shadow: "#000000"//
-        property color m3primary: "#E7E7E7" //
-        property color m3onPrimary: "#000000" //
-        property color m3secondary: "#E7E7E7" //
-        property color m3secondaryContainer: "#303030" //
-        property color m3onSecondaryContainer: "#B6B6B6" //
-        property color m3onTertiaryContainer: "#000000" //
+        property color m3background: "#202020"
+        property color m3onBackground: "#DADADA"
+        property color m3surfaceContainerLow: "#181818"
+        property color m3surfaceContainer: "#303030"
+        property color m3surfaceContainerHigh: "#3a3a3a"
+        property color m3surfaceContainerHighest: "#444444"
+        property color m3onSurface: "#AAAAAA"
+        property color m3onSurfaceVariant: "#AAAAAA"
+        property color m3inverseSurface: "#FFFFFF"
+        property color m3inverseOnSurface: "#000000"
+        property color m3outline: "#F2F2F2"
+        property color m3outlineVariant: "#797979"
+        property color m3shadow: "#000000"
+        property color m3primary: "#E7E7E7"
+        property color m3onPrimary: "#000000"
+        property color m3primaryContainer: "#505050"
+        property color m3onPrimaryContainer: "#E7E7E7"
+        property color m3secondary: "#E7E7E7"
+        property color m3secondaryContainer: "#303030"
+        property color m3onSecondaryContainer: "#B6B6B6"
+        property color m3tertiary: "#D0D0D0"
+        property color m3tertiaryContainer: "#3a3a3a"
+        property color m3onTertiaryContainer: "#E0E0E0"
+        property color m3scrim: "#000000"
+        property color m3error: "#F44336"
+        property color m3onError: "#FFFFFF"
+        property color m3errorContainer: "#C62828"
+        property color m3onErrorContainer: "#F8D7DA"
 
         
 

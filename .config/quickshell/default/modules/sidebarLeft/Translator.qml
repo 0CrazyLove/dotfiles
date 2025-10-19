@@ -8,7 +8,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import "../../../colors.qml" as Colors
 
 /**
  * Translator widget with the `trans` commandline tool.

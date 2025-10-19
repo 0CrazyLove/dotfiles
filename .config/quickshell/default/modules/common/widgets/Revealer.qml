@@ -1,6 +1,5 @@
 import qs.modules.common
 import QtQuick
-import "../../../colors.qml" as Colors
 
 /**
  * Recreation of GTK revealer. Expects one single child.

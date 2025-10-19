@@ -1,7 +1,6 @@
 import qs.modules.common
 import QtQuick
 import QtQuick.Layouts
-import "../../../colors.qml" as Colors
 
 Text {
     id: root

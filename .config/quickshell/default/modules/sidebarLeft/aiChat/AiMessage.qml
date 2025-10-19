@@ -8,7 +8,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Io
 import Quickshell
-import "../../../colors.qml" as Colors
 
 Rectangle {
     id: root

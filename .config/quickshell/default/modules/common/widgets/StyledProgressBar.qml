@@ -7,7 +7,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Qt5Compat.GraphicalEffects
-import "../../../colors.qml" as Colors
 
 /**
  * Material 3 progress bar. See https://m3.material.io/components/progress-indicators/overview

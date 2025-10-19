@@ -2,7 +2,6 @@ import qs.modules.common
 import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Controls
-import "../../../colors.qml" as Colors
 
 /**
  * Material 3 styled TextArea (filled style)

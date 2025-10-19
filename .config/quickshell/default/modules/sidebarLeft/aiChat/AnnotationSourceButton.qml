@@ -5,7 +5,6 @@ import qs.services
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Hyprland
-import "../../../colors.qml" as Colors
 
 RippleButton {
     id: root

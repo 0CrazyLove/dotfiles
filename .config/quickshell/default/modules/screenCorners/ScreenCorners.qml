@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import "../../../colors.qml" as Colors
 
 Scope {
     id: screenCorners

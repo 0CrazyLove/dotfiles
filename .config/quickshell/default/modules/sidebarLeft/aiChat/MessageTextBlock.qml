@@ -9,7 +9,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Hyprland
-import "../../../colors.qml" as Colors
 
 ColumnLayout {
     id: root

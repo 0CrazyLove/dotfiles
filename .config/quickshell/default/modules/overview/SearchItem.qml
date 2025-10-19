@@ -8,7 +8,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Hyprland
-import "../../../colors.qml" as Colors
 
 RippleButton {
     id: root

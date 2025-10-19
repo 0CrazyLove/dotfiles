@@ -5,7 +5,6 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
-import "../../../colors.qml" as Colors
 
 Rectangle { // App icon
     id: root

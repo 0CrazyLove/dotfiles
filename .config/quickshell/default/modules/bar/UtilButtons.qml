@@ -7,7 +7,6 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
 import Quickshell.Services.UPower
-import "../../../colors.qml" as Colors
 
 Item {
     id: root

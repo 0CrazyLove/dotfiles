@@ -4,7 +4,6 @@ import qs.services
 import QtQuick
 import QtQuick.Layouts
 import "./../bar" as Bar
-import "../../../colors.qml" as Colors
 
 MouseArea {
     id: root

@@ -1,6 +1,5 @@
 pragma Singleton
 import Quickshell
-import "../../../colors.qml" as Colors
 
 Singleton {
     id: root

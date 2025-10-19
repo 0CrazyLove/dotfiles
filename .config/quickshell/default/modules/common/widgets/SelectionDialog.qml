@@ -5,7 +5,6 @@ import qs
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import "../../../colors.qml" as Colors
 
 Item {
     id: root

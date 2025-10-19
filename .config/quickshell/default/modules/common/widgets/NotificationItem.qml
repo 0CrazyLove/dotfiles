@@ -7,7 +7,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Services.Notifications
-import "../../../colors.qml" as Colors
 
 Item { // Notification item area
     id: root

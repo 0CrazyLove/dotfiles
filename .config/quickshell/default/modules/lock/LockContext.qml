@@ -2,7 +2,6 @@ import qs
 import QtQuick
 import Quickshell
 import Quickshell.Services.Pam
-import "../../../colors.qml" as Colors
 
 Scope {
     id: root

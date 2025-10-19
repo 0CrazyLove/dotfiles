@@ -10,7 +10,6 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import "../../../colors.qml" as Colors
 
 Scope {
     id: root

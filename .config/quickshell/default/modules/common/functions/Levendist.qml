@@ -1,7 +1,6 @@
 pragma Singleton
 import Quickshell
 import "./levendist.js" as Levendist
-import "../../../colors.qml" as Colors
 
 /**
  * Wrapper for levendist.js to play nicely with Quickshell's imports

@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import qs.modules.common
 import qs.modules.common.widgets
-import "../../../colors.qml" as Colors
 
 ColumnLayout { // Window content with navigation rail and content pane
     id: root

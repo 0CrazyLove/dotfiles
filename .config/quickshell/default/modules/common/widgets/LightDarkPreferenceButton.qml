@@ -5,7 +5,6 @@ import qs.modules.common.functions
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import "../../../colors.qml" as Colors
 
 GroupButton {
     id: lightDarkButtonRoot
