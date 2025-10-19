@@ -129,7 +129,7 @@ AUR_DEPENDENCIES=(
   "neofetch"               
   "translate-shell"        
   "python-materialyoucolor" 
-  "quickshell-git"         
+  "quickshell"         
   "wlogout"               
 
   "adw-gtk-theme-git"
