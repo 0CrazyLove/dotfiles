@@ -34,3 +34,4 @@ end
 neofetch
 set -gx PATH $PATH /home/crazy/.dotnet/tools
 
+set -gx PATH $HOME/.local/bin $PATH
