@@ -1,9 +1,8 @@
 #!/usr/bin/env fish
-
 # Configuración
 set FONDOS $HOME/Documents/Wallpapers
 set HISTORIAL_FILE $HOME/.cache/fondos_historial
-set MAX_HISTORIAL 50  # Máximo de fondos a recordar
+set MAX_HISTORIAL 50
 
 # Crear directorio cache si no existe
 mkdir -p (dirname $HISTORIAL_FILE)
@@ -23,15 +22,10 @@ end
 # Función para agregar al historial
 function agregar_historial
     set nuevo_fondo $argv[1]
-    
-    # Agregar nuevo fondo al inicio
     echo $nuevo_fondo > $HISTORIAL_FILE.tmp
-    
-    # Agregar historial anterior (excluyendo el nuevo si ya existía)
     if test -f $HISTORIAL_FILE
         grep -v "^$nuevo_fondo\$" $HISTORIAL_FILE | head -n (math $MAX_HISTORIAL - 1) >> $HISTORIAL_FILE.tmp
     end
-    
     mv $HISTORIAL_FILE.tmp $HISTORIAL_FILE
 end
 
@@ -71,16 +65,27 @@ swww img $FONDO --transition-type fade --transition-duration 0.3 &
 set swww_pid $last_pid
 
 # Generar colores en paralelo
-wal -i $FONDO -q &  # -q para modo silencioso
+wal -i $FONDO -q &
 set wal_pid $last_pid
 
 # Esperar a que ambos procesos terminen
 wait $swww_pid $wal_pid
 
+# Actualizar colores de Cava
+if test -f ~/.local/bin/update_cava_colors.sh
+    ~/.local/bin/update_cava_colors.sh &
+end
+
+# Si Cava está en ejecución, reinicialo
+if pgrep -x "cava" > /dev/null
+    pkill -9 cava
+    sleep 1
+    setsid cava > /dev/null 2>&1 &
+end
+
 # Aplicar colores a Dolphin/KDE sin reiniciar
 if test -f ~/.cache/wal/colors-kde.conf
     cp ~/.cache/wal/colors-kde.conf ~/.config/kdeglobals
-    
     # Aplicar cambios sin reiniciar aplicaciones
     if command -v qdbus > /dev/null
         # Recargar configuración de KDE

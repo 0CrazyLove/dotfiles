@@ -188,7 +188,8 @@ NEW_PACMAN_PACKAGES=(
   "go"     
   "cava"
   "gnome-system-monitor"         
-  "pavucontrol-qt"           
+  "pavucontrol-qt"
+  "fastfetch"           
 )
 
 # Dependencias AUR (yay)
@@ -512,6 +513,13 @@ else
   print_warning "⚠ matugen no encontrado (se instalará desde AUR si yay está disponible)"
 fi
 
+# Verificar fastfetch
+if command -v fastfetch >/dev/null 2>&1; then
+  print_success "✓ fastfetch disponible"
+else
+  print_warning "⚠ fastfetch no encontrado (se instalará desde AUR si yay está disponible)"
+fi
+
 print_success "¡Dependencias instaladas!"
 echo
 
@@ -541,6 +549,7 @@ declare -A PACKAGE_TO_COMMAND=(
   ["wget"]="wget"
   ["rsync"]="rsync"
   ["bc"]="bc"
+  ["fastfetch"]="fastfetch"
   ["matugen-bin"]="matugen"
 )
 

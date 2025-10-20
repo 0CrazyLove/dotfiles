@@ -30,8 +30,12 @@ alias q 'qs -c ii'
 if test -f ~/.cache/wal/sequences
     cat ~/.cache/wal/sequences &
 end
+
 #neofetch
-neofetch
+
+#fastfetch
+fastfetch
+
 set -gx PATH $PATH /home/crazy/.dotnet/tools
 
 set -gx PATH $HOME/.local/bin $PATH

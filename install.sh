@@ -114,6 +114,7 @@ DEPENDENCIES=(
   "upower"
   "qt6-5compat"
   "syntax-highlighting"
+  "fastfetch"
 )
 
 # Lista de dependencias de Hyprland
@@ -403,6 +404,7 @@ install_rm_script
 
 # Instalar configuraciones de .config
 install_config "$DOTFILES_DIR/.config/fish" "$HOME/.config/fish" "Fish shell"
+install_config "$DOTFILES_DIR/.config/fastfetch" "$HOME/.config/fastfetch" "Fastfetch"
 install_config "$DOTFILES_DIR/.config/hypr" "$HOME/.config/hypr" "Hyprland"
 install_config "$DOTFILES_DIR/.config/kitty" "$HOME/.config/kitty" "Kitty terminal"
 install_config "$DOTFILES_DIR/.config/neofetch" "$HOME/.config/neofetch" "Neofetch"
@@ -478,6 +480,7 @@ check_config() {
 }
 
 check_config "$HOME/.config/fish" "Fish"
+check_config "$HOME/.config/fastfetch" "Fastfetch"
 check_config "$HOME/.config/hypr" "Hyprland"
 check_config "$HOME/.config/kitty" "Kitty"
 check_config "$HOME/.config/neofetch" "Neofetch"

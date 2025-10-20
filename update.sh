@@ -64,6 +64,7 @@ update_file() {
 
 # Actualizar cada configuración (directorios)
 update_config "fish"
+update_config "fastfetch"
 update_config "hypr"
 update_config "kitty"
 update_config "neofetch"
