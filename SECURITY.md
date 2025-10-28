@@ -119,6 +119,7 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | Atajo | Acción |
 |-------|---------|
 | `Super + Shift + S` | Captura de pantalla interactiva |
+| `Super + Shift + T` | OCR: Reconocimiento de texto en pantalla |
 | `Super + Alt + R` | Grabar video MP4 en región seleccionada (sin audio) |
 | `Super + Shift + Alt + R` | Grabar video MP4 de pantalla completa (con audio) |
 | `Super + P` | Cambiar fondo de pantalla automáticamente |
@@ -158,6 +159,7 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Ctrl + Shift + Esc` | Administrador de tareas |
 
 ### Consejos de uso
+- **OCR (Reconocimiento de texto)**: Al presionar `Super + Shift + T`, puedes seleccionar cualquier área de la pantalla y extraer el texto que contenga. El texto reconocido se copia automáticamente al portapapeles. Ideal para copiar texto de imágenes, PDFs, videos o cualquier contenido que no se pueda seleccionar normalmente.
 - **Control de mute: Al usar `Super + Shift + M`, se silencia tanto el audio del sistema como el micrófono simultáneamente. El estado se refleja visualmente en la barra de QuickShell**
 - **Historial de portapapeles**: Al usar `Super + V`, se despliega un menú con todo lo que has copiado. Selecciona el elemento deseado y úsalo con `Ctrl + V`
 - **Selector de emojis**: Con `Super + .` aparece un menú de emojis. Selecciona uno y pégalo con `Ctrl + V`
