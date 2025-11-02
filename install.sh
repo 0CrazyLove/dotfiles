@@ -411,9 +411,9 @@ install_config "$DOTFILES_DIR/.config/neofetch" "$HOME/.config/neofetch" "Neofet
 install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
 install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
 install_config "$DOTFILES_DIR/.config/illogical-impulse" "$HOME/.config/illogical-impulse" "Illogical Impulse (Quickshell design)"
-
-# NUEVO: Instalar configuración de wal
 install_config "$DOTFILES_DIR/wal" "$HOME/.config/wal" "Wal (Color schemes)"
+# NUEVO: Instalar configuración de xdg-desktop-portal
+install_config "$DOTFILES_DIR/.config/xdg-desktop-portal" "$HOME/.config/xdg-desktop-portal" "XDG Desktop Portal (KDE)"
 
 # Instalar starship.toml sin validaciones
 print_info "Instalando configuración de Starship..."
@@ -489,6 +489,7 @@ check_config "$HOME/.config/quickshell" "Quickshell"
 check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
 check_config "$HOME/.config/starship.toml" "Starship"
 check_config "$HOME/.config/wal" "Wal"
+check_config "$HOME/.config/xdg-desktop-portal" "XDG Desktop Portal"
 check_config "/usr/local/bin/rm" "Script rm protector"
 
 echo
