@@ -36,6 +36,11 @@ end
 #fastfetch
 fastfetch
 
-set -gx PATH $PATH /home/crazy/.dotnet/tools
-
+#PATH rm
 set -gx PATH $HOME/.local/bin $PATH
+#GO PATH
+set -gx PATH $PATH ~/go/bin
+
+
+
+
