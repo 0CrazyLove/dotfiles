@@ -75,18 +75,15 @@ Este script:
 - QuickShell: ~200MB RAM
 
 ## Atajos de teclado
-
 Esta configuración incluye una amplia gama de atajos de teclado optimizados para un flujo de trabajo eficiente. Todos los atajos principales usan la tecla **Super** (Windows/Cmd) como modificador principal.
 
 ### Gestión de workspaces
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + 1-9` | Cambiar al workspace especificado |
 | `Super + Shift + 1-9` | Mover ventana activa al workspace especificado |
 
 ### Gestión de ventanas
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + Q` | Cerrar ventana activa |
@@ -96,7 +93,6 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + Alt + F` | Falso fullscreen (simulación) |
 
 ### Aplicaciones rápidas
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + T` | Abrir terminal |
@@ -107,7 +103,6 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + N` | Abrir menú del sistema |
 
 ### Asistente de IA
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + O` | Abrir asistente de IA |
@@ -115,18 +110,17 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + B` | Abrir asistente de IA (alternativo) |
 
 ### Capturas y multimedia
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + Shift + S` | Captura de pantalla interactiva |
 | `Super + Shift + T` | OCR: Reconocimiento de texto en pantalla |
 | `Super + Alt + R` | Grabar video MP4 en región seleccionada (sin audio) |
+| `Ctrl + Alt + R` | Grabar video MP4 de pantalla completa (sin audio) |
 | `Super + Shift + Alt + R` | Grabar video MP4 de pantalla completa (con audio) |
 | `Super + P` | Cambiar fondo de pantalla automáticamente |
 | `Ctrl + Super + T` | Seleccionar fondo de pantalla manualmente |
 
 ### Control de audio y media
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + Shift + M`| Mutear/desmutear audio del sistema y micrófono |
@@ -137,14 +131,12 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Ctrl + Super + V` | Mezclador de volumen |
 
 ### Zoom y navegación
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + +` | Hacer zoom donde apunta el mouse |
 | `Super + -` | Disminuir zoom |
 
 ### Portapapeles y herramientas
-
 | Atajo | Acción |
 |-------|---------|
 | `Super + V` | Abrir historial del portapapeles |
@@ -153,7 +145,6 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + K` | Muestra el diseño de teclado activo|
 
 ### Sistema y herramientas
-
 | Atajo | Acción |
 |-------|---------|
 | `Ctrl + Shift + Esc` | Administrador de tareas |
