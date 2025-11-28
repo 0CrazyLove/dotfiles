@@ -230,7 +230,8 @@ NEW_PACMAN_PACKAGES=(
   "gnome-system-monitor"         
   "pavucontrol-qt"
   "fastfetch"
-  "songrec"         
+  "songrec"
+  "python-colorthief"         
 )
 
 AUR_PACKAGES=(
@@ -454,21 +455,6 @@ if command -v wal >/dev/null 2>&1; then
     print_success "✓ ImageMagick disponible para wal"
   else
     print_warning "⚠ ImageMagick no encontrado (recomendado para wal)"
-  fi
-  print_info "Verificando colorthief para extracción de colores..."
-  if ! python3 -c "import colorthief" >/dev/null 2>&1; then
-    print_warning "colorthief no encontrado, instalando con pip..."
-    if command -v pip3 >/dev/null 2>&1; then
-      if pip3 install --user colorthief; then
-        print_success "✓ colorthief instalado con pip3"
-      else
-        print_warning "⚠ Error instalando colorthief con pip3"
-      fi
-    else
-      print_warning "⚠ pip3 no está disponible"
-    fi
-  else
-    print_success "✓ colorthief está disponible"
   fi
 else
   print_error "✗ pywal no está disponible"
