@@ -185,8 +185,7 @@ DEPENDENCIES=(
   "fish"               
   "hyprland"             
   "kitty"               
-  "neovim"             
-  "git"                
+  "neovim"                         
   "qt5-tools"         
   "starship"             
   "dolphin"              
@@ -297,8 +296,6 @@ OPTIONAL_DEPS=(
   "visual-studio-code-bin"
   "discord"
   "brave-bin"
-  "mako"
-  "dunst"
 )
 
 command_exists() {
