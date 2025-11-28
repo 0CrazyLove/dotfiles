@@ -272,7 +272,6 @@ AUR_DEPENDENCIES=(
   "ttf-rubik-vf"
   "ttf-twemoji"
   "hyprcursor"
-  "hyprland-qtutils"
   "hyprland-qt-support"
   "hyprlang"
   "hyprsunset"
@@ -385,12 +384,6 @@ if [ $total_missing -ne 0 ]; then
   fi
 fi
 
-if [ ${#missing_optional[@]} -ne 0 ]; then
-  echo
-  print_info "Dependencias opcionales faltantes (recomendadas):"
-  echo "sudo pacman -S ${missing_optional[*]}"
-  echo
-fi
 
 print_info "Creando backup en: $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
