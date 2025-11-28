@@ -115,6 +115,7 @@ DEPENDENCIES=(
   "qt6-5compat"
   "syntax-highlighting"
   "fastfetch"
+  "songrec"
 )
 
 # Lista de dependencias de Hyprland

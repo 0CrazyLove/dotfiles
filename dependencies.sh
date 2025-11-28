@@ -189,7 +189,8 @@ NEW_PACMAN_PACKAGES=(
   "cava"
   "gnome-system-monitor"         
   "pavucontrol-qt"
-  "fastfetch"           
+  "fastfetch"
+  "songrec"         
 )
 
 # Dependencias AUR (yay)
