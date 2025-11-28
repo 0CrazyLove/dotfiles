@@ -382,21 +382,6 @@ if command -v yay >/dev/null 2>&1; then
 else
   print_info "Paquetes opcionales omitidos (requieren yay)"
 fi
-if command -v fish >/dev/null 2>&1; then
-  current_shell=$(echo $SHELL)
-  if [[ "$current_shell" != *"fish"* ]]; then
-    print_info "¿Configurar Fish como shell por defecto?"
-    read -t 15 -p "(y/N) [timeout 15s]: " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-      chsh -s /usr/bin/fish
-      print_success "✓ Fish configurado como shell por defecto"
-      print_warning "⚠ Reinicia la sesión para aplicar cambios"
-    elif [ -z "$REPLY" ]; then
-      print_info "Timeout alcanzado, manteniendo shell actual"
-    fi
-  fi
-fi
 print_info "Configurando herramientas de color para wal..."
 if command -v wal >/dev/null 2>&1; then
   print_success "✓ pywal (wal) está disponible"
