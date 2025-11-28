@@ -1,35 +1,26 @@
 #!/bin/bash
 # Script para instalar todas las dependencias necesarias
 # Arch Linux + Hyprland Setup
-
 # Colores
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
-
 print_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-
-# Variables
-DOTS_HYPRLAND_DIR="$HOME/dots-hyprland"
-
 print_info "Instalando dependencias para dotfiles..."
-
 # Verificar si estamos en Arch Linux
 if ! command -v pacman >/dev/null 2>&1; then
   print_error "Este script está diseñado para Arch Linux"
   exit 1
 fi
-
 # Verificar y arreglar permisos del directorio HOME
 check_home_permissions() {
   local home_owner=$(stat -c %U "$HOME")
   local current_user=$(whoami)
-
   if [ "$home_owner" != "$current_user" ]; then
     print_error "Directorio HOME tiene permisos incorrectos"
     print_info "Arreglando permisos del directorio HOME..."
@@ -38,19 +29,15 @@ check_home_permissions() {
     print_success "✓ Permisos del directorio HOME corregidos"
   fi
 }
-
 # Verificar y reparar claves PGP 
 fix_pgp_keys() {
   print_info "Verificando claves PGP de pacman..."
-
   if [ ! -f /etc/pacman.d/gnupg/trustdb.gpg ]; then
     print_info "Inicializando keyring de pacman..."
     sudo pacman-key --init
   fi
-
   print_info "Actualizando claves de Arch Linux..."
   sudo pacman-key --populate archlinux
-
   print_info "Actualizando claves desde servidores..."
   if timeout 60 sudo pacman-key --refresh-keys; then
     print_success "✓ Claves PGP actualizadas"
@@ -58,7 +45,6 @@ fix_pgp_keys() {
     print_warning "⚠ Timeout o error actualizando claves PGP, continuando..."
   fi
 }
-
 # AUR helper (yay)
 install_yay_optional() {
   if ! command -v yay >/dev/null 2>&1; then
@@ -94,13 +80,10 @@ install_yay_optional() {
     return 0
   fi
 }
-
 check_home_permissions
 fix_pgp_keys
-
 print_info "Actualizando sistema..."
 sudo pacman -Syu --noconfirm
-
 # Dependencias principales
 MAIN_PACKAGES=(
   "base-devel"         
@@ -125,13 +108,11 @@ MAIN_PACKAGES=(
   "hyprpicker"        
   "nm-connection-editor" 
 )
-
 HYPRLAND_PACKAGES=(
   "swww"  
   "grim"  
   "slurp"  
 )
-
 NEW_PACMAN_PACKAGES=(
   "geoclue"
   "nano"
@@ -162,7 +143,7 @@ NEW_PACMAN_PACKAGES=(
   "tesseract-data-eng"
   "wf-recorder"
   "kdialog"
-  "less"  
+  "less" 
   "qt6-base"
   "qt6-declarative"
   "qt6-imageformats"
@@ -184,9 +165,8 @@ NEW_PACMAN_PACKAGES=(
   "gnome-system-monitor"         
   "pavucontrol-qt"
   "fastfetch"
-  "songrec"
+  "songrec"         
 )
-
 # NOTA: quickshell ya NO está aquí - se instalará con Illogical Impulse
 AUR_PACKAGES=(
   "neofetch"
@@ -228,7 +208,6 @@ AUR_PACKAGES=(
   "python-haishoku"
   "spotify"
 )
-
 OPTIONAL_PACKAGES=(
   "visual-studio-code-bin"
   "discord"
@@ -236,22 +215,18 @@ OPTIONAL_PACKAGES=(
   "mako"
   "dunst"
 )
-
 is_package_installed() {
   local package="$1"
   pacman -Qi "$package" >/dev/null 2>&1
 }
-
 install_package() {
   local package="$1"
   local max_retries=3
   local retry=0
-
   if is_package_installed "$package"; then
     print_success "✓ $package ya está instalado"
     return 0
   fi
-
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package... (intento $((retry + 1)))"
     
@@ -281,26 +256,21 @@ install_package() {
       fi
     fi
   done
-
   print_error "✗ No se pudo instalar $package después de $max_retries intentos"
   return 1
 }
-
 is_aur_package_installed() {
   local package="$1"
   yay -Qi "$package" 2>/dev/null >/dev/null
 }
-
 install_aur_package() {
   local package="$1"
   local max_retries=3
   local retry=0
-
   if is_aur_package_installed "$package"; then
     print_success "✓ $package ya está instalado"
     return 0
   fi
-
   while [ $retry -lt $max_retries ]; do
     print_info "Instalando $package desde AUR... (intento $((retry + 1)))"
     
@@ -330,28 +300,23 @@ install_aur_package() {
       fi
     fi
   done
-
   print_error "✗ No se pudo instalar $package desde AUR después de $max_retries intentos"
   return 1
 }
-
 # Instalar paquetes principales
 print_info "Instalando paquetes principales..."
 failed_packages=()
-
 for package in "${MAIN_PACKAGES[@]}"; do
   if ! install_package "$package"; then
     failed_packages+=("$package")
   fi
 done
-
 print_info "Instalando paquetes de Hyprland..."
 for package in "${HYPRLAND_PACKAGES[@]}"; do
   if ! install_package "$package"; then
     failed_packages+=("$package")
   fi
 done
-
 print_info "Instalando nuevas dependencias con pacman..."
 for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   if [[ ! " ${MAIN_PACKAGES[@]} " =~ " ${package} " ]] && [[ ! " ${HYPRLAND_PACKAGES[@]} " =~ " ${package} " ]]; then
@@ -366,22 +331,18 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
     fi
   fi
 done
-
 yay_installed=false
 if install_yay_optional; then
   yay_installed=true
 fi
-
 if $yay_installed || command -v yay >/dev/null 2>&1; then
   print_info "Instalando dependencias desde AUR..."
   failed_aur_packages=()
-
   for package in "${AUR_PACKAGES[@]}"; do
     if ! install_aur_package "$package"; then
       failed_aur_packages+=("$package")
     fi
   done
-
   failed_packages+=("${failed_aur_packages[@]}")
 else
   print_warning "⚠ yay no está disponible, saltando paquetes AUR"
@@ -391,21 +352,6 @@ else
   done
   echo
 fi
-
-# Clonar e instalar Illogical Impulse Quickshell
-echo
-print_info "=== Instalando Illogical Impulse Quickshell ==="
-if clone_illogical_impulse; then
-  if ! install_illogical_impulse_quickshell; then
-    print_error "✗ Error instalando illogical-impulse-quickshell-git"
-    failed_packages+=("illogical-impulse-quickshell-git")
-  fi
-else
-  print_error "✗ Error clonando dots-hyprland"
-  failed_packages+=("dots-hyprland")
-fi
-echo
-
 if [ ${#failed_packages[@]} -ne 0 ]; then
   print_warning "Paquetes que no se pudieron instalar:"
   for package in "${failed_packages[@]}"; do
@@ -419,17 +365,14 @@ if [ ${#failed_packages[@]} -ne 0 ]; then
   fi
   echo
 fi
-
 if command -v yay >/dev/null 2>&1; then
   echo
   print_info "Paquetes opcionales disponibles:"
   for package in "${OPTIONAL_PACKAGES[@]}"; do
     echo "  • $package"
   done
-
   read -t 30 -p "¿Instalar paquetes opcionales? (y/N) [timeout 30s]: " -n 1 -r
   echo
-
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     for package in "${OPTIONAL_PACKAGES[@]}"; do
       install_aur_package "$package"
@@ -442,7 +385,6 @@ if command -v yay >/dev/null 2>&1; then
 else
   print_info "Paquetes opcionales omitidos (requieren yay)"
 fi
-
 if command -v fish >/dev/null 2>&1; then
   current_shell=$(echo $SHELL)
   if [[ "$current_shell" != *"fish"* ]]; then
@@ -458,21 +400,16 @@ if command -v fish >/dev/null 2>&1; then
     fi
   fi
 fi
-
 print_info "Configurando herramientas de color para wal..."
-
 if command -v wal >/dev/null 2>&1; then
   print_success "✓ pywal (wal) está disponible"
-
   mkdir -p "$HOME/.cache/wal"
   print_success "✓ Directorio cache de wal creado"
-
   if command -v convert >/dev/null 2>&1; then
     print_success "✓ ImageMagick disponible para wal"
   else
     print_warning "⚠ ImageMagick no encontrado (recomendado para wal)"
   fi
-
   print_info "Verificando colorthief para extracción de colores..."
   if ! python3 -c "import colorthief" >/dev/null 2>&1; then
     print_warning "colorthief no encontrado, instalando con pip..."
@@ -492,25 +429,20 @@ else
   print_error "✗ pywal no está disponible"
   print_info "Instala con: sudo pacman -S python-pywal"
 fi
-
 if command -v matugen >/dev/null 2>&1; then
   print_success "✓ matugen disponible para esquemas Material You"
 else
   print_warning "⚠ matugen no encontrado (se instalará desde AUR si yay está disponible)"
 fi
-
 if command -v fastfetch >/dev/null 2>&1; then
   print_success "✓ fastfetch disponible"
 else
   print_warning "⚠ fastfetch no encontrado (se instalará desde AUR si yay está disponible)"
 fi
-
 print_success "¡Dependencias instaladas!"
 print_warning "NOTA: Quickshell se instalará con Illogical Impulse durante install.sh"
 echo
-
 print_info "Verificación final de dependencias principales..."
-
 declare -A PACKAGE_TO_COMMAND=(
   ["python-pywal"]="wal"
   ["imagemagick"]="convert"
@@ -536,13 +468,10 @@ declare -A PACKAGE_TO_COMMAND=(
   ["fastfetch"]="fastfetch"
   ["matugen-bin"]="matugen"
 )
-
 all_good=true
 all_packages=("${MAIN_PACKAGES[@]}" "${HYPRLAND_PACKAGES[@]}" "${NEW_PACMAN_PACKAGES[@]}")
-
 print_info "Verificando dependencias críticas para wal..."
 WAL_CRITICAL=("python-pywal" "imagemagick" "python-pillow")
-
 for package in "${WAL_CRITICAL[@]}"; do
   if [[ -n "${PACKAGE_TO_COMMAND[$package]}" ]]; then
     if eval "${PACKAGE_TO_COMMAND[$package]}" --version >/dev/null 2>&1 || eval "${PACKAGE_TO_COMMAND[$package]}" >/dev/null 2>&1; then
@@ -562,7 +491,6 @@ for package in "${WAL_CRITICAL[@]}"; do
     fi
   fi
 done
-
 print_info "Verificando otras dependencias..."
 for package in "${all_packages[@]}"; do
   if [[ ! " ${WAL_CRITICAL[@]} " =~ " ${package} " ]]; then
@@ -585,28 +513,16 @@ for package in "${all_packages[@]}"; do
     fi
   fi
 done
-
-# Verificar illogical-impulse-quickshell-git
-print_info "Verificando Illogical Impulse Quickshell..."
-if pacman -Qi illogical-impulse-quickshell-git >/dev/null 2>&1; then
-  print_success "✓ illogical-impulse-quickshell-git"
-else
-  print_error "✗ illogical-impulse-quickshell-git"
-  all_good=false
-fi
-
 echo
 if $all_good; then
   print_success "Todas las dependencias principales están listas UwU"
   print_success "Dependencias de wal verificadas y listas owo"
-  print_success "Illogical Impulse Quickshell instalado correctamente"
   print_info "Ahora puedes ejecutar:"
   echo "  ./install.sh"
 else
   print_warning "⚠ Algunas dependencias fallaron, pero puedes continuar"
   print_info "Para reintentar solo los paquetes faltantes, consulta la lista anterior"
 fi
-
 echo
 print_info "Información adicional sobre wal:"
 echo "  • pywal generará esquemas de color desde tus wallpapers"

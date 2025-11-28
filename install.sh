@@ -19,6 +19,7 @@ print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 DOTFILES_DIR="$HOME/dotfiles"
 BACKUP_DIR="$HOME/.configbackup$(date +%Y%m%d_%H%M%S)"
 WALLPAPERS_DIR="$HOME/Documents"
+DOTS_HYPRLAND_DIR="$HOME/dots-hyprland"
 
 print_info "Iniciando instalación de dotfiles..."
 
@@ -45,23 +46,89 @@ if [ ! -d "$DOTFILES_DIR" ]; then
   exit 1
 fi
 
+# Función para clonar dots-hyprland (Illogical Impulse)
+clone_illogical_impulse() {
+  local quickshell_pkg_dir="$DOTS_HYPRLAND_DIR/sdata/dist-arch/illogical-impulse-quickshell-git"
+  
+  # Si ya existe y tiene la estructura correcta, no hacer nada
+  if [ -d "$quickshell_pkg_dir" ]; then
+    print_success "✓ dots-hyprland ya existe con estructura correcta"
+    return 0
+  fi
+  
+  # Si no existe, clonar
+  print_info "Clonando repositorio Illogical Impulse (dots-hyprland)..."
+  if git clone --recurse-submodules https://github.com/end-4/dots-hyprland.git "$DOTS_HYPRLAND_DIR"; then
+    print_success "✓ Repositorio Illogical Impulse clonado"
+    return 0
+  else
+    print_error "✗ Error clonando repositorio Illogical Impulse"
+    return 1
+  fi
+}
+
+# Función para instalar Illogical Impulse Quickshell
+install_illogical_impulse_quickshell() {
+  local quickshell_dir="$DOTS_HYPRLAND_DIR/sdata/dist-arch/illogical-impulse-quickshell-git"
+
+  if [ ! -d "$quickshell_dir" ]; then
+    print_error "✗ Directorio $quickshell_dir no encontrado"
+    return 1
+  fi
+
+  # Verificar si hay otra versión de quickshell instalada
+  if pacman -Qi quickshell >/dev/null 2>&1 || pacman -Qi quickshell-git >/dev/null 2>&1; then
+    print_warning "⚠ Versión diferente de quickshell detectada, eliminando..."
+    sudo pacman -Rns --noconfirm quickshell quickshell-git
+    print_success "✓ Versión anterior de quickshell eliminada"
+  fi
+
+  # Verificar si illogical-impulse-quickshell-git ya está instalado
+  if pacman -Qi illogical-impulse-quickshell-git >/dev/null 2>&1; then
+    print_success "✓ illogical-impulse-quickshell-git ya está instalado"
+    return 0
+  fi
+
+  print_info "Compilando e instalando illogical-impulse-quickshell-git..."
+  cd "$quickshell_dir" || {
+  print_error "✗ No se pudo acceder a $quickshell_dir"
+  return 1
+}
+
+if makepkg -si --noconfirm; then
+  print_success "✓ illogical-impulse-quickshell-git instalado correctamente"
+  cd "$HOME" || cd ~
+  return 0
+else
+  print_error "✗ Error compilando/instalando illogical-impulse-quickshell-git"
+  cd "$HOME" || cd ~
+  return 1
+fi
+}
+
 # Función para inicializar submódulo shapes en quickshell config
 init_shapes_submodule() {
   local quickshell_dir="$HOME/.config/quickshell"
   
   # Verificar que quickshell config exista y sea un repo git
   if [ ! -d "$quickshell_dir/.git" ]; then
+    print_info "Saltando inicialización de submódulos (quickshell no es un repo git)"
     return 0
   fi
-
-  print_info "Inicializando submódulos en quickshell..."
-  cd "$quickshell_dir"
   
-  if git submodule update --init --recursive; then
+  print_info "Inicializando submódulos en quickshell..."
+  cd "$quickshell_dir" || {
+    print_error "✗ No se pudo acceder a $quickshell_dir"
+    return 1
+  }
+  
+  if git submodule update --init --recursive 2>/dev/null; then
     print_success "✓ Submódulos de quickshell inicializados"
+  else
+    print_warning "⚠ No se pudieron inicializar submódulos (puede ser normal si no hay submódulos)"
   fi
   
-  cd ~
+  cd "$HOME" || cd ~
 }
 
 # Lista de dependencias requeridas 
@@ -279,6 +346,30 @@ fi
 print_info "Creando backup en: $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
+# NUEVO: Clonar dots-hyprland para Illogical Impulse
+if ! clone_illogical_impulse; then
+  print_error "Error clonando dots-hyprland"
+  read -p "¿Continuar sin Illogical Impulse? (y/N): " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+fi
+
+# NUEVO: Instalar Illogical Impulse Quickshell
+if [ -d "$DOTS_HYPRLAND_DIR" ]; then
+  if ! install_illogical_impulse_quickshell; then
+    print_error "Error instalando illogical-impulse-quickshell-git"
+    read -p "¿Continuar sin quickshell de Illogical Impulse? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      exit 1
+    fi
+  fi
+else
+  print_warning "⚠ Saltando instalación de quickshell (dots-hyprland no disponible)"
+fi
+
 configure_wifi_module() {
   print_info "Configurando carga automática del módulo WiFi..."
 
@@ -399,7 +490,7 @@ install_config "$DOTFILES_DIR/.config/xdg-desktop-portal" "$HOME/.config/xdg-des
 
 install_file "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml" "Starship"
 
-# Inicializar submódulo shapes después de copiar quickshell config
+# NUEVO: Inicializar submódulo shapes después de copiar quickshell config
 if [ -d "$HOME/.config/quickshell" ]; then
   init_shapes_submodule
 fi
@@ -468,12 +559,11 @@ check_config "$HOME/.config/wal" "Wal"
 check_config "$HOME/.config/xdg-desktop-portal" "XDG Desktop Portal"
 check_config "/usr/local/bin/rm" "Script rm protector"
 
-# Verificar instalación de illogical-impulse-quickshell-git
+# Verificar instalación de quickshell
 if pacman -Qi illogical-impulse-quickshell-git >/dev/null 2>&1; then
   print_success "✓ illogical-impulse-quickshell-git instalado"
 else
-  print_error "✗ illogical-impulse-quickshell-git no instalado"
-  print_warning "Ejecuta primero: ./dependencies.sh"
+  print_warning "⚠ illogical-impulse-quickshell-git no instalado"
   configs_ok=false
 fi
 
@@ -493,8 +583,10 @@ echo "  • Para Starship: Reinicia tu terminal"
 echo "  • Para Wal: Los esquemas de color están listos para usar"
 echo "  • El módulo WiFi se cargará automáticamente en futuros reinicios"
 echo "  • El script rm protector ya está activo en /usr/local/bin/rm"
+echo "  • Quickshell de Illogical Impulse está instalado y configurado"
 echo
 print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."
+print_info "El directorio ~/dots-hyprland contiene los archivos de Illogical Impulse."
 echo
 print_warning "Para actualizar en el futuro, usa: ./update.sh desde ~/dotfiles"
