@@ -29,22 +29,88 @@ check_home_permissions() {
     print_success "✓ Permisos del directorio HOME corregidos"
   fi
 }
-# Verificar y reparar claves PGP 
+
+
+# Verificar y reparar claves PGP
 fix_pgp_keys() {
-  print_info "Verificando claves PGP de pacman..."
+  print_info "Verificando estado del keyring de pacman..."
+  
+  # Verificar si el keyring está inicializado
   if [ ! -f /etc/pacman.d/gnupg/trustdb.gpg ]; then
-    print_info "Inicializando keyring de pacman..."
+    print_warning "Keyring no inicializado, inicializando..."
+    echo
     sudo pacman-key --init
+    echo
+    sudo pacman-key --populate archlinux
+    echo
+    print_success "✓ Keyring inicializado"
+    return 0
   fi
-  print_info "Actualizando claves de Arch Linux..."
-  sudo pacman-key --populate archlinux
-  print_info "Actualizando claves desde servidores..."
-  if timeout 60 sudo pacman-key --refresh-keys; then
-    print_success "✓ Claves PGP actualizadas"
-  else
-    print_warning "⚠ Timeout o error actualizando claves PGP, continuando..."
+  
+  # Verificar si las claves principales de Arch están presentes
+  print_info "Verificando claves de Arch Linux..."
+  local archlinux_keys_present=false
+  
+  # Intentar listar las claves para verificar que el keyring funciona
+  echo
+  if sudo pacman-key --list-keys | grep -q "Arch Linux"; then
+    archlinux_keys_present=true
+    echo
+    print_success "✓ Claves de Arch Linux ya están presentes"
   fi
+  
+  # Verificar si pacman puede usar el keyring correctamente
+  print_info "Verificando funcionalidad del keyring..."
+  echo
+  local pacman_test_output
+  pacman_test_output=$(timeout 10 sudo pacman -Sy 2>&1)
+  local pacman_exit=$?
+  echo "$pacman_test_output"
+  
+  if echo "$pacman_test_output" | grep -qi "signature"; then
+    print_warning "⚠ Detectados problemas de firma, actualizando claves..."
+    archlinux_keys_present=false
+  elif [ $pacman_exit -eq 0 ]; then
+    print_success "✓ Keyring funciona correctamente"
+    if $archlinux_keys_present; then
+      print_info "Saltando actualización de claves (ya están configuradas)"
+      return 0
+    fi
+  fi
+  
+  # Solo actualizar si es necesario
+  if ! $archlinux_keys_present; then
+    print_info "Actualizando claves de Arch Linux..."
+    echo
+    sudo pacman-key --populate archlinux
+    
+    print_info "Refrescando claves desde servidores (con timeout de 60s)..."
+    echo
+    if timeout 60 sudo pacman-key --refresh-keys; then
+      echo
+      print_success "✓ Claves actualizadas exitosamente"
+    else
+      echo
+      print_warning "⚠ Timeout o error al refrescar claves"
+      print_info "Verificando si las claves básicas funcionan..."
+      echo
+      if timeout 10 sudo pacman -Sy; then
+        echo
+        print_success "✓ Las claves básicas funcionan, continuando..."
+      else
+        echo
+        print_error "✗ Problema con el keyring"
+        print_info "Intenta manualmente: sudo pacman-key --init && sudo pacman-key --populate archlinux"
+        return 1
+      fi
+    fi
+  fi
+  
+  print_success "✓ Keyring verificado y listo"
+  return 0
 }
+
+
 # AUR helper (yay)
 install_yay_optional() {
   if ! command -v yay >/dev/null 2>&1; then
@@ -497,7 +563,7 @@ for package in "${all_packages[@]}"; do
 done
 echo
 if [[ $all_good == true ]]; then
-  print_success "Todas las dependencias principales están listas UwU"
+  print_success "Todas las dependencias principales están listas (≧◡≦) ♡ "
   print_info "Ahora puedes ejecutar (≧∇≦):"
   echo "  ./install.sh"
 else
