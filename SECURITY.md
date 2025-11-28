@@ -117,7 +117,6 @@ Esta configuración incluye una amplia gama de atajos de teclado optimizados par
 | `Super + Alt + R` | Grabar video MP4 en región seleccionada (sin audio) |
 | `Ctrl + Alt + R` | Grabar video MP4 de pantalla completa (sin audio) |
 | `Super + Shift + Alt + R` | Grabar video MP4 de pantalla completa (con audio) |
-| `Super + P` | Cambiar fondo de pantalla automáticamente |
 | `Ctrl + Super + T` | Seleccionar fondo de pantalla manualmente |
 
 ### Control de audio y media
