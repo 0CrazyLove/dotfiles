@@ -130,27 +130,53 @@ install_illogical_impulse_quickshell() {
 
 # Función para inicializar submódulo shapes en quickshell config
 init_shapes_submodule() {
-  local quickshell_dir="$HOME/.config/quickshell"
+  local dots_hyprland_dir="$DOTS_HYPRLAND_DIR"
+  local shapes_source="$dots_hyprland_dir/dots/.config/quickshell/ii/modules/common/widgets/shapes"
+  local shapes_target="$HOME/.config/quickshell/ii/modules/common/widgets/shapes"
   
-  # Verificar que quickshell config exista y sea un repo git
-  if [ ! -d "$quickshell_dir/.git" ]; then
-    print_info "Saltando inicialización de submódulos (quickshell no es un repo git)"
+  # Verificar que dots-hyprland existe
+  if [ ! -d "$dots_hyprland_dir" ]; then
+    print_warning "⚠ Directorio dots-hyprland no encontrado, saltando inicialización de shapes"
     return 0
   fi
   
-  print_info "Inicializando submódulos en quickshell..."
-  cd "$quickshell_dir" || {
-    print_error "✗ No se pudo acceder a $quickshell_dir"
+  print_info "Inicializando submódulos de dots-hyprland..."
+  cd "$dots_hyprland_dir" || {
+    print_error "✗ No se pudo acceder a $dots_hyprland_dir"
     return 1
   }
   
+  # Inicializar submódulos
   if git submodule update --init --recursive 2>/dev/null; then
-    print_success "✓ Submódulos de quickshell inicializados"
+    print_success "✓ Submódulos de dots-hyprland inicializados"
   else
-    print_warning "⚠ No se pudieron inicializar submódulos (puede ser normal si no hay submódulos)"
+    print_warning "⚠ No se pudieron inicializar submódulos"
+    cd "$HOME" || cd ~
+    return 1
+  fi
+  
+  # Verificar que shapes existe después de inicializar submódulos
+  if [ ! -d "$shapes_source" ]; then
+    print_error "✗ Directorio shapes no encontrado en $shapes_source"
+    cd "$HOME" || cd ~
+    return 1
+  fi
+  
+  # Crear directorio destino si no existe
+  mkdir -p "$(dirname "$shapes_target")"
+  
+  # Copiar shapes
+  print_info "Copiando módulo shapes a quickshell config..."
+  if cp -r "$shapes_source" "$shapes_target"; then
+    print_success "✓ Módulo shapes copiado correctamente"
+  else
+    print_error "✗ Error copiando módulo shapes"
+    cd "$HOME" || cd ~
+    return 1
   fi
   
   cd "$HOME" || cd ~
+  return 0
 }
 
 # Lista de dependencias requeridas 
