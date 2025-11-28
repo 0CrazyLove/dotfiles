@@ -22,6 +22,7 @@ if [ ! -d "$DOTFILES_DIR" ]; then
 fi
 
 cd "$DOTFILES_DIR"
+
 print_info "Actualizando dotfiles desde configuraciones actuales..."
 
 # Función para actualizar configuraciones
@@ -29,19 +30,54 @@ update_config() {
   local config_name="$1"
   local source_path="$HOME/.config/$config_name"
   local dest_path=".config/$config_name"
-
+  
   if [ -d "$source_path" ]; then
     print_info "Actualizando $config_name..."
+    
     # Eliminar configuración antigua en dotfiles
     rm -rf "$dest_path"
+    
     # Copiar nueva configuración
     cp -r "$source_path" "$dest_path"
+    
     # Limpiar archivos git si existen
     find "$dest_path" -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    
     print_success "✓ $config_name actualizado"
   else
     print_warning "⚠ $config_name no encontrado en ~/.config/"
   fi
+}
+
+# Función especial para actualizar quickshell (excluye contenido de shapes/)
+update_quickshell() {
+  local source_path="$HOME/.config/quickshell"
+  local dest_path=".config/quickshell"
+  local shapes_dir="ii/modules/common/widgets/shapes"
+  
+  if [ ! -d "$source_path" ]; then
+    print_warning "⚠ quickshell no encontrado en ~/.config/"
+    return
+  fi
+  
+  print_info "Actualizando quickshell (excluyendo contenido de shapes/)..."
+  
+  # Eliminar configuración antigua en dotfiles
+  rm -rf "$dest_path"
+  
+  # Copiar quickshell completo
+  cp -r "$source_path" "$dest_path"
+  
+  # Limpiar archivos git si existen
+  find "$dest_path" -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+  
+  # Vaciar el directorio shapes/ pero mantener la estructura
+  if [ -d "$dest_path/$shapes_dir" ]; then
+    print_info "Vaciando directorio shapes/..."
+    rm -rf "$dest_path/$shapes_dir"/{*,.[!.]*,..?*} 2>/dev/null || true
+  fi
+  
+  print_success "✓ quickshell actualizado"
 }
 
 # Función para actualizar archivos individuales
@@ -49,13 +85,16 @@ update_file() {
   local config_name="$1"
   local source_path="$HOME/.config/$config_name"
   local dest_path=".config/$config_name"
-
+  
   if [ -f "$source_path" ]; then
     print_info "Actualizando $config_name..."
+    
     # Crear directorio padre si no existe
     mkdir -p "$(dirname "$dest_path")"
+    
     # Copiar archivo
     cp "$source_path" "$dest_path"
+    
     print_success "✓ $config_name actualizado"
   else
     print_warning "⚠ $config_name no encontrado en ~/.config/"
@@ -69,7 +108,9 @@ update_config "hypr"
 update_config "kitty"
 update_config "neofetch"
 # update_config "nvim" 
-update_config "quickshell"
+
+# Actualizar quickshell con lógica especial
+update_quickshell
 
 # Actualizar archivos individuales
 update_file "starship.toml"
@@ -96,18 +137,18 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   # Pedir mensaje de commit
   read -p "Mensaje del commit (o Enter para mensaje automático): " commit_msg
-
+  
   if [ -z "$commit_msg" ]; then
     commit_msg="Update dotfiles - $(date +'%Y-%m-%d %H:%M')"
   fi
-
+  
   # Hacer commit y push
   git add .
   git commit -m "$commit_msg"
-
+  
   read -p "¿Subir cambios a GitHub? (y/N): " -n 1 -r
   echo
-
+  
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     git push
     print_success "Dotfile actualizado en GitHub!"
