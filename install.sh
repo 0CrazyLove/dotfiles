@@ -68,42 +68,64 @@ clone_illogical_impulse() {
 }
 
 # Función para instalar Illogical Impulse Quickshell
+# Función para instalar Illogical Impulse Quickshell
 install_illogical_impulse_quickshell() {
   local quickshell_dir="$DOTS_HYPRLAND_DIR/sdata/dist-arch/illogical-impulse-quickshell-git"
-
+  
   if [ ! -d "$quickshell_dir" ]; then
     print_error "✗ Directorio $quickshell_dir no encontrado"
     return 1
   fi
-
+  
   # Verificar si hay otra versión de quickshell instalada
-  if pacman -Qi quickshell >/dev/null 2>&1 || pacman -Qi quickshell-git >/dev/null 2>&1; then
-    print_warning "⚠ Versión diferente de quickshell detectada, eliminando..."
-    sudo pacman -Rns --noconfirm quickshell quickshell-git
-    print_success "✓ Versión anterior de quickshell eliminada"
+  local has_quickshell=false
+  local packages_to_remove=()
+  
+  if pacman -Qi quickshell >/dev/null 2>&1; then
+    packages_to_remove+=("quickshell")
+    has_quickshell=true
   fi
-
+  
+  if pacman -Qi quickshell-git >/dev/null 2>&1; then
+    packages_to_remove+=("quickshell-git")
+    has_quickshell=true
+  fi
+  
+  # Solo intentar eliminar si hay paquetes instalados
+  if [ "$has_quickshell" = true ]; then
+    print_warning "⚠ Versión diferente de quickshell detectada: ${packages_to_remove[*]}"
+    print_info "Eliminando versiones anteriores..."
+    if sudo pacman -Rns --noconfirm "${packages_to_remove[@]}"; then
+      print_success "✓ Versión(es) anterior(es) de quickshell eliminada(s)"
+    else
+      print_error "✗ Error eliminando versión anterior de quickshell"
+      return 1
+    fi
+  else
+    print_info "No se encontraron versiones anteriores de quickshell"
+  fi
+  
   # Verificar si illogical-impulse-quickshell-git ya está instalado
   if pacman -Qi illogical-impulse-quickshell-git >/dev/null 2>&1; then
     print_success "✓ illogical-impulse-quickshell-git ya está instalado"
     return 0
   fi
-
+  
   print_info "Compilando e instalando illogical-impulse-quickshell-git..."
   cd "$quickshell_dir" || {
-  print_error "✗ No se pudo acceder a $quickshell_dir"
-  return 1
-}
-
-if makepkg -si --noconfirm; then
-  print_success "✓ illogical-impulse-quickshell-git instalado correctamente"
-  cd "$HOME" || cd ~
-  return 0
-else
-  print_error "✗ Error compilando/instalando illogical-impulse-quickshell-git"
-  cd "$HOME" || cd ~
-  return 1
-fi
+    print_error "✗ No se pudo acceder a $quickshell_dir"
+    return 1
+  }
+  
+  if makepkg -si --noconfirm; then
+    print_success "✓ illogical-impulse-quickshell-git instalado correctamente"
+    cd "$HOME" || cd ~
+    return 0
+  else
+    print_error "✗ Error compilando/instalando illogical-impulse-quickshell-git"
+    cd "$HOME" || cd ~
+    return 1
+  fi
 }
 
 # Función para inicializar submódulo shapes en quickshell config
@@ -207,7 +229,6 @@ HYPRLAND_DEPS=(
   "slurp"  
 )
 
-# NOTA: quickshell ya NO está aquí - se instalará con Illogical Impulse
 AUR_DEPENDENCIES=(
   "neofetch"               
   "translate-shell"        
@@ -243,6 +264,8 @@ AUR_DEPENDENCIES=(
   "swappy"
   "wtype"
   "ydotool"
+  "google-breakpad"          
+  "qt6-avif-image-plugin"
 )
 
 OPTIONAL_DEPS=(

@@ -167,16 +167,16 @@ NEW_PACMAN_PACKAGES=(
   "fastfetch"
   "songrec"         
 )
-# NOTA: quickshell ya NO está aquí - se instalará con Illogical Impulse
+
 AUR_PACKAGES=(
-  "neofetch"
-  "translate-shell"
-  "python-materialyoucolor"
-  "wlogout"
+  "neofetch"               
+  "translate-shell"        
+  "python-materialyoucolor" 
+  "wlogout"               
   "adw-gtk-theme-git"
   "breeze-plus"
   "darkly-bin"
-  "matugen-bin" 
+  "matugen-bin"
   "otf-space-grotesk"
   "ttf-gabarito-git"
   "ttf-jetbrains-mono-nerd"
@@ -203,10 +203,8 @@ AUR_PACKAGES=(
   "swappy"
   "wtype"
   "ydotool"
-  "wallust"
-  "python-colorthief"     
-  "python-haishoku"
-  "spotify"
+  "google-breakpad"          
+  "qt6-avif-image-plugin"
 )
 OPTIONAL_PACKAGES=(
   "visual-studio-code-bin"
