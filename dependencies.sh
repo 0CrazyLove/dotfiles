@@ -162,6 +162,7 @@ NEW_PACMAN_PACKAGES=(
   "tesseract-data-eng"
   "wf-recorder"
   "kdialog"
+  "less"  
   "qt6-base"
   "qt6-declarative"
   "qt6-imageformats"
@@ -183,7 +184,7 @@ NEW_PACMAN_PACKAGES=(
   "gnome-system-monitor"         
   "pavucontrol-qt"
   "fastfetch"
-  "songrec"         
+  "songrec"
 )
 
 # NOTA: quickshell ya NO está aquí - se instalará con Illogical Impulse

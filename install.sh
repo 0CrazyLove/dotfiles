@@ -115,6 +115,7 @@ DEPENDENCIES=(
   "tesseract-data-eng"
   "wf-recorder"
   "kdialog"
+  "less" 
   "qt6-base"
   "qt6-declarative"
   "qt6-imageformats"
