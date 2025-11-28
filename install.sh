@@ -611,7 +611,7 @@ fi
 
 echo
 if $configs_ok; then
-  print_success "Todas las configuraciones están en su lugar (≧∇≦)"
+  print_success "Todas las configuraciones están en su lugar OWO"
 else
   print_warning "⚠ Algunas configuraciones pueden tener problemas"
 fi
