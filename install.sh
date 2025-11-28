@@ -68,7 +68,6 @@ clone_illogical_impulse() {
 }
 
 # Función para instalar Illogical Impulse Quickshell
-# Función para instalar Illogical Impulse Quickshell
 install_illogical_impulse_quickshell() {
   local quickshell_dir="$DOTS_HYPRLAND_DIR/sdata/dist-arch/illogical-impulse-quickshell-git"
   
@@ -77,16 +76,24 @@ install_illogical_impulse_quickshell() {
     return 1
   fi
   
+  # Verificar si illogical-impulse-quickshell-git ya está instalado
+  print_info "Verificando si illogical-impulse-quickshell-git está instalado..."
+  if pacman -Qi illogical-impulse-quickshell-git 2>&1; then
+    print_success "✓ illogical-impulse-quickshell-git ya está instalado"
+    return 0
+  fi
+  
   # Verificar si hay otra versión de quickshell instalada
   local has_quickshell=false
   local packages_to_remove=()
   
-  if pacman -Qi quickshell >/dev/null 2>&1; then
+  print_info "Verificando otras versiones de quickshell..."
+  if pacman -Qi quickshell 2>&1; then
     packages_to_remove+=("quickshell")
     has_quickshell=true
   fi
   
-  if pacman -Qi quickshell-git >/dev/null 2>&1; then
+  if pacman -Qi quickshell-git 2>&1; then
     packages_to_remove+=("quickshell-git")
     has_quickshell=true
   fi
@@ -95,7 +102,8 @@ install_illogical_impulse_quickshell() {
   if [ "$has_quickshell" = true ]; then
     print_warning "⚠ Versión diferente de quickshell detectada: ${packages_to_remove[*]}"
     print_info "Eliminando versiones anteriores..."
-    if sudo pacman -Rns --noconfirm "${packages_to_remove[@]}"; then
+    sudo pacman -Rns --noconfirm "${packages_to_remove[@]}"
+    if [ $? -eq 0 ]; then
       print_success "✓ Versión(es) anterior(es) de quickshell eliminada(s)"
     else
       print_error "✗ Error eliminando versión anterior de quickshell"
@@ -105,19 +113,14 @@ install_illogical_impulse_quickshell() {
     print_info "No se encontraron versiones anteriores de quickshell"
   fi
   
-  # Verificar si illogical-impulse-quickshell-git ya está instalado
-  if pacman -Qi illogical-impulse-quickshell-git >/dev/null 2>&1; then
-    print_success "✓ illogical-impulse-quickshell-git ya está instalado"
-    return 0
-  fi
-  
   print_info "Compilando e instalando illogical-impulse-quickshell-git..."
   cd "$quickshell_dir" || {
     print_error "✗ No se pudo acceder a $quickshell_dir"
     return 1
   }
   
-  if makepkg -si --noconfirm; then
+  makepkg -si --noconfirm
+  if [ $? -eq 0 ]; then
     print_success "✓ illogical-impulse-quickshell-git instalado correctamente"
     cd "$HOME" || cd ~
     return 0
