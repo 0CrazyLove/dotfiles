@@ -275,8 +275,6 @@ OPTIONAL_PACKAGES=(
   "visual-studio-code-bin"
   "discord"
   "brave-bin"
-  "mako"
-  "dunst"
 )
 is_package_installed() {
   local package="$1"
