@@ -611,14 +611,14 @@ fi
 
 echo
 if $configs_ok; then
-  print_success "Todas las configuraciones están en su lugar"
+  print_success "Todas las configuraciones están en su lugar (≧∇≦)"
 else
   print_warning "⚠ Algunas configuraciones pueden tener problemas"
 fi
 
 echo
 print_info "Para aplicar los cambios:"
-echo "  • Reinicia tu sesión reiniciando Arch Linux"
+echo "  • Reinicia tu sesión reiniciando Arch Linux! (｡◕‿◕｡)"
 echo
 print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."
