@@ -8,9 +8,8 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Función para imprimir mensajes con colores
 print_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
@@ -23,7 +22,6 @@ WALLPAPERS_DIR="$HOME/Documents"
 
 print_info "Iniciando instalación de dotfiles..."
 
-# Verificar permisos del directorio HOME
 check_home_permissions() {
   local home_owner=$(stat -c %U "$HOME")
   local current_user=$(whoami)
@@ -38,16 +36,33 @@ check_home_permissions() {
   fi
 }
 
-# Verificar permisos antes de continuar
 check_home_permissions
 
-# Verificar si existe el directorio de dotfiles
 if [ ! -d "$DOTFILES_DIR" ]; then
   print_error "Directorio $DOTFILES_DIR no encontrado!"
   print_info "Clona primero el repositorio:"
   echo "git clone https://github.com/0CrazyLove/dotfiles.git $DOTFILES_DIR"
   exit 1
 fi
+
+# Función para inicializar submódulo shapes en quickshell config
+init_shapes_submodule() {
+  local quickshell_dir="$HOME/.config/quickshell"
+  
+  # Verificar que quickshell config exista y sea un repo git
+  if [ ! -d "$quickshell_dir/.git" ]; then
+    return 0
+  fi
+
+  print_info "Inicializando submódulos en quickshell..."
+  cd "$quickshell_dir"
+  
+  if git submodule update --init --recursive; then
+    print_success "✓ Submódulos de quickshell inicializados"
+  fi
+  
+  cd ~
+}
 
 # Lista de dependencias requeridas 
 DEPENDENCIES=(
@@ -118,22 +133,18 @@ DEPENDENCIES=(
   "songrec"
 )
 
-# Lista de dependencias de Hyprland
 HYPRLAND_DEPS=(
   "swww"  
   "grim"  
   "slurp"  
-
 )
 
-# Lista de dependencias AUR
+# NOTA: quickshell ya NO está aquí - se instalará con Illogical Impulse
 AUR_DEPENDENCIES=(
   "neofetch"               
   "translate-shell"        
   "python-materialyoucolor" 
-  "quickshell"         
   "wlogout"               
-
   "adw-gtk-theme-git"
   "breeze-plus"
   "darkly-bin"
@@ -166,7 +177,6 @@ AUR_DEPENDENCIES=(
   "ydotool"
 )
 
-# Lista de dependencias opcionales
 OPTIONAL_DEPS=(
   "visual-studio-code-bin"
   "discord"
@@ -175,21 +185,17 @@ OPTIONAL_DEPS=(
   "dunst"
 )
 
-# Función para verificar si un comando existe
 command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-# Verificar dependencias
 print_info "Verificando dependencias principales..."
 missing_deps=()
 missing_hyprland=()
 missing_aur=()
 missing_optional=()
 
-# Verificar dependencias principales
 for dep in "${DEPENDENCIES[@]}"; do
-  # Verificar tanto el comando como el paquete instalado
   if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
     missing_deps+=("$dep")
     print_error "✗ $dep no encontrado"
@@ -198,7 +204,6 @@ for dep in "${DEPENDENCIES[@]}"; do
   fi
 done
 
-# Verificar dependencias de Hyprland
 print_info "Verificando dependencias de Hyprland..."
 for dep in "${HYPRLAND_DEPS[@]}"; do
   if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
@@ -209,7 +214,6 @@ for dep in "${HYPRLAND_DEPS[@]}"; do
   fi
 done
 
-# Verificar dependencias AUR
 print_info "Verificando dependencias AUR..."
 for dep in "${AUR_DEPENDENCIES[@]}"; do
   if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
@@ -220,7 +224,6 @@ for dep in "${AUR_DEPENDENCIES[@]}"; do
   fi
 done
 
-# Verificar dependencias opcionales
 for dep in "${OPTIONAL_DEPS[@]}"; do
   if ! command_exists "$dep" && ! pacman -Qi "$dep" >/dev/null 2>&1; then
     missing_optional+=("$dep")
@@ -230,7 +233,6 @@ for dep in "${OPTIONAL_DEPS[@]}"; do
   fi
 done
 
-# Mostrar comandos de instalación si faltan dependencias
 total_missing=$((${#missing_deps[@]} + ${#missing_hyprland[@]} + ${#missing_aur[@]}))
 
 if [ $total_missing -ne 0 ]; then
@@ -273,11 +275,9 @@ if [ ${#missing_optional[@]} -ne 0 ]; then
   echo
 fi
 
-# Crear directorio de backup
 print_info "Creando backup en: $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
-# Función para configurar carga automática del módulo WiFi
 configure_wifi_module() {
   print_info "Configurando carga automática del módulo WiFi..."
 
@@ -289,11 +289,9 @@ configure_wifi_module() {
     fi
   fi
 
-  # Configurar el módulo para carga automática
   if echo "rtl8xxxu" | sudo tee /etc/modules-load.d/wifi.conf >/dev/null 2>&1; then
     print_success "✓ Módulo WiFi configurado para carga automática"
 
-    # Cargar el módulo inmediatamente
     if sudo modprobe rtl8xxxu >/dev/null 2>&1; then
       print_success "✓ Módulo WiFi cargado correctamente"
     else
@@ -305,23 +303,19 @@ configure_wifi_module() {
   fi
 }
 
-# Función para instalar script rm protector
 install_rm_script() {
   print_info "Instalando script rm protector..."
 
-  # Verificar que el script existe
   if [ ! -f "$DOTFILES_DIR/bin/rm" ]; then
     print_warning "⚠ Script rm no encontrado en $DOTFILES_DIR/bin/rm, saltando"
     return
   fi
 
-  # Hacer backup del rm actual si existe
   if [ -f "/usr/local/bin/rm" ]; then
     print_warning "Backup del rm existente"
     sudo cp /usr/local/bin/rm "$BACKUP_DIR/rm.backup"
   fi
 
-  # Copiar el script y hacerlo ejecutable
   if sudo cp "$DOTFILES_DIR/bin/rm" "/usr/local/bin/rm"; then
     sudo chmod +x "/usr/local/bin/rm"
     print_success "✓ Script rm protector instalado en /usr/local/bin/rm"
@@ -331,7 +325,6 @@ install_rm_script() {
   fi
 }
 
-# Función para crear backup y copiar archivos
 install_config() {
   local source="$1"
   local target="$2"
@@ -339,22 +332,18 @@ install_config() {
 
   print_info "Instalando configuración de $name..."
 
-  # Verificar que el origen existe
   if [ ! -d "$source" ]; then
     print_warning "⚠ $source no encontrado, saltando $name"
     return
   fi
 
-  # Crear directorio padre si no existe
   mkdir -p "$(dirname "$target")"
 
-  # Hacer backup si el archivo/directorio existe
   if [ -e "$target" ]; then
     print_warning "Backup de $target existente"
     mv "$target" "$BACKUP_DIR/"
   fi
 
-  # Copiar archivos
   if cp -r "$source" "$target"; then
     print_success "✓ $name configurado"
   else
@@ -363,7 +352,6 @@ install_config() {
   fi
 }
 
-# Función para instalar archivo individual
 install_file() {
   local source="$1"
   local target="$2"
@@ -371,22 +359,18 @@ install_file() {
 
   print_info "Instalando $name..."
 
-  # Verificar que el origen existe
   if [ ! -f "$source" ]; then
     print_warning "⚠ $source no encontrado, saltando $name"
     return
   fi
 
-  # Crear directorio padre si no existe
   mkdir -p "$(dirname "$target")"
 
-  # Hacer backup si el archivo existe
   if [ -f "$target" ]; then
     print_warning "Backup de $target existente"
     mv "$target" "$BACKUP_DIR/"
   fi
 
-  # Copiar archivo
   if cp "$source" "$target"; then
     print_success "✓ $name configurado"
   else
@@ -395,15 +379,12 @@ install_file() {
   fi
 }
 
-# Crear directorio .config si no existe
 mkdir -p "$HOME/.config"
 
 print_info "Instalando configuraciones..."
 
-# Instalar script rm protector
 install_rm_script
 
-# Instalar configuraciones de .config
 install_config "$DOTFILES_DIR/.config/fish" "$HOME/.config/fish" "Fish shell"
 install_config "$DOTFILES_DIR/.config/fastfetch" "$HOME/.config/fastfetch" "Fastfetch"
 install_config "$DOTFILES_DIR/.config/hypr" "$HOME/.config/hypr" "Hyprland"
@@ -413,30 +394,27 @@ install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
 install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
 install_config "$DOTFILES_DIR/.config/illogical-impulse" "$HOME/.config/illogical-impulse" "Illogical Impulse (Quickshell design)"
 install_config "$DOTFILES_DIR/wal" "$HOME/.config/wal" "Wal (Color schemes)"
-# NUEVO: Instalar configuración de xdg-desktop-portal
 install_config "$DOTFILES_DIR/.config/xdg-desktop-portal" "$HOME/.config/xdg-desktop-portal" "XDG Desktop Portal (KDE)"
 
-# Instalar starship.toml sin validaciones
-print_info "Instalando configuración de Starship..."
 install_file "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml" "Starship"
 
-# Configurar módulo WiFi automático
+# Inicializar submódulo shapes después de copiar quickshell config
+if [ -d "$HOME/.config/quickshell" ]; then
+  init_shapes_submodule
+fi
+
 configure_wifi_module
 
-# Instalar fondos de pantalla
 if [ -d "$DOTFILES_DIR/Wallpapers" ]; then
   print_info "Instalando fondos de pantalla..."
 
-  # Crear directorio Documents si no existe
   mkdir -p "$WALLPAPERS_DIR"
 
-  # Hacer backup si existe
   if [ -d "$WALLPAPERS_DIR/Wallpapers" ]; then
     print_warning "Backup de fondos existentes"
     mv "$WALLPAPERS_DIR/Wallpapers" "$BACKUP_DIR/"
   fi
 
-  # Copiar fondos (no symlink para evitar problemas con aplicaciones)
   if cp -r "$DOTFILES_DIR/Wallpapers" "$WALLPAPERS_DIR/"; then
     print_success "✓ Fondos de pantalla instalados en $WALLPAPERS_DIR/Wallpapers"
   else
@@ -446,11 +424,9 @@ else
   print_warning "Carpeta Wallpapers no encontrada en $DOTFILES_DIR"
 fi
 
-# Configurar Fish si está instalado
 if command_exists fish; then
   print_info "Configurando Fish shell..."
 
-  # Añadir starship al config de fish si está disponible
   if command_exists starship && [ -f "$HOME/.config/fish/config.fish" ]; then
     if ! grep -q "starship init fish" "$HOME/.config/fish/config.fish"; then
       echo "starship init fish | source" >>"$HOME/.config/fish/config.fish"
@@ -463,11 +439,9 @@ print_success "Instalación completada!"
 print_info "Backup guardado en: $BACKUP_DIR"
 echo
 
-# Verificación final
 print_info "Verificando instalación..."
 configs_ok=true
 
-# Verificar configuraciones principales
 check_config() {
   local config_path="$1"
   local name="$2"
@@ -492,6 +466,15 @@ check_config "$HOME/.config/starship.toml" "Starship"
 check_config "$HOME/.config/wal" "Wal"
 check_config "$HOME/.config/xdg-desktop-portal" "XDG Desktop Portal"
 check_config "/usr/local/bin/rm" "Script rm protector"
+
+# Verificar instalación de illogical-impulse-quickshell-git
+if pacman -Qi illogical-impulse-quickshell-git >/dev/null 2>&1; then
+  print_success "✓ illogical-impulse-quickshell-git instalado"
+else
+  print_error "✗ illogical-impulse-quickshell-git no instalado"
+  print_warning "Ejecuta primero: ./dependencies.sh"
+  configs_ok=false
+fi
 
 echo
 if $configs_ok; then
