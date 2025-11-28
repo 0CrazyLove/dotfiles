@@ -618,14 +618,7 @@ fi
 
 echo
 print_info "Para aplicar los cambios:"
-echo "  • Reinicia tu sesión o recarga Hyprland: Super+Shift+R"
-echo "  • Para Fish: exec fish"
-echo "  • Para Neovim: Los plugins se instalarán automáticamente"
-echo "  • Para Starship: Reinicia tu terminal"
-echo "  • Para Wal: Los esquemas de color están listos para usar"
-echo "  • El módulo WiFi se cargará automáticamente en futuros reinicios"
-echo "  • El script rm protector ya está activo en /usr/local/bin/rm"
-echo "  • Quickshell de Illogical Impulse está instalado y configurado"
+echo "  • Reinicia tu sesión reiniciando Arch Linux"
 echo
 print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."

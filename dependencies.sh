@@ -498,21 +498,11 @@ done
 echo
 if [[ $all_good == true ]]; then
   print_success "Todas las dependencias principales están listas UwU"
-  print_info "Ahora puedes ejecutar:"
+  print_info "Ahora puedes ejecutar (≧∇≦):"
   echo "  ./install.sh"
 else
   print_warning "⚠ Algunas dependencias fallaron, pero puedes continuar"
   print_info "Para reintentar solo los paquetes faltantes, consulta la lista anterior"
 fi
-
 echo
-if command -v yay >/dev/null 2>&1; then
-  echo "  • matugen proporcionará esquemas Material You adicionales"
-else
-  echo "  • matugen NO disponible (requiere yay para instalación desde AUR)"
-fi
-
-echo "  • ImageMagick mejora el procesamiento de imágenes para wal"
-echo
-
-print_warning "Nota: Algunas configuraciones requieren reiniciar la sesión"
+print_warning "Nota: Algunas configuraciones requieren reiniciar la sesión (＞﹏＜)"
