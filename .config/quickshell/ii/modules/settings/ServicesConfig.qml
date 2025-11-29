@@ -158,36 +158,36 @@ ContentPage {
                 }
             }
 
-            ConfigRow {
-                uniform: true
-                MaterialTextArea {
-                    Layout.fillWidth: true
-                    placeholderText: Translation.tr("Math")
-                    text: Config.options.search.prefix.math
-                    wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.math = text;
-                    }
-                }
-                MaterialTextArea {
-                    Layout.fillWidth: true
-                    placeholderText: Translation.tr("Shell command")
-                    text: Config.options.search.prefix.shellCommand
-                    wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.shellCommand = text;
-                    }
-                }
-                MaterialTextArea {
-                    Layout.fillWidth: true
-                    placeholderText: Translation.tr("Web search")
-                    text: Config.options.search.prefix.webSearch
-                    wrapMode: TextEdit.Wrap
-                    onTextChanged: {
-                        Config.options.search.prefix.webSearch = text;
-                    }
-                }
-            }
+            // ConfigRow {
+            //     uniform: true
+            //     MaterialTextArea {
+            //         Layout.fillWidth: true
+            //         placeholderText: Translation.tr("Math")
+            //         text: Config.options.search.prefix.math
+            //         wrapMode: TextEdit.Wrap
+            //         onTextChanged: {
+            //             Config.options.search.prefix.math = text;
+            //         }
+            //     }
+            //     MaterialTextArea {
+            //         Layout.fillWidth: true
+            //         placeholderText: Translation.tr("Shell command")
+            //         text: Config.options.search.prefix.shellCommand
+            //         wrapMode: TextEdit.Wrap
+            //         onTextChanged: {
+            //             Config.options.search.prefix.shellCommand = text;
+            //         }
+            //     }
+            //     MaterialTextArea {
+            //         Layout.fillWidth: true
+            //         placeholderText: Translation.tr("Web search")
+            //         text: Config.options.search.prefix.webSearch
+            //         wrapMode: TextEdit.Wrap
+            //         onTextChanged: {
+            //             Config.options.search.prefix.webSearch = text;
+            //         }
+            //     }
+            // }
         }
         ContentSubsection {
             title: Translation.tr("Web search")
@@ -203,50 +203,50 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "weather_mix"
-        title: Translation.tr("Weather")
-        ConfigRow {
-            ConfigSwitch {
-                buttonIcon: "assistant_navigation"
-                text: Translation.tr("Enable GPS based location")
-                checked: Config.options.bar.weather.enableGPS
-                onCheckedChanged: {
-                    Config.options.bar.weather.enableGPS = checked;
-                }
-            }
-            ConfigSwitch {
-                buttonIcon: "thermometer"
-                text: Translation.tr("Fahrenheit unit")
-                checked: Config.options.bar.weather.useUSCS
-                onCheckedChanged: {
-                    Config.options.bar.weather.useUSCS = checked;
-                }
-                StyledToolTip {
-                    text: Translation.tr("It may take a few seconds to update")
-                }
-            }
-        }
+    // ContentSection {
+    //     icon: "weather_mix"
+    //     title: Translation.tr("Weather")
+    //     ConfigRow {
+    //         ConfigSwitch {
+    //             buttonIcon: "assistant_navigation"
+    //             text: Translation.tr("Enable GPS based location")
+    //             checked: Config.options.bar.weather.enableGPS
+    //             onCheckedChanged: {
+    //                 Config.options.bar.weather.enableGPS = checked;
+    //             }
+    //         }
+    //         ConfigSwitch {
+    //             buttonIcon: "thermometer"
+    //             text: Translation.tr("Fahrenheit unit")
+    //             checked: Config.options.bar.weather.useUSCS
+    //             onCheckedChanged: {
+    //                 Config.options.bar.weather.useUSCS = checked;
+    //             }
+    //             StyledToolTip {
+    //                 text: Translation.tr("It may take a few seconds to update")
+    //             }
+    //         }
+    //     }
         
-        MaterialTextArea {
-            Layout.fillWidth: true
-            placeholderText: Translation.tr("City name")
-            text: Config.options.bar.weather.city
-            wrapMode: TextEdit.Wrap
-            onTextChanged: {
-                Config.options.bar.weather.city = text;
-            }
-        }
-        ConfigSpinBox {
-            icon: "av_timer"
-            text: Translation.tr("Polling interval (m)")
-            value: Config.options.bar.weather.fetchInterval
-            from: 5
-            to: 50
-            stepSize: 5
-            onValueChanged: {
-                Config.options.bar.weather.fetchInterval = value;
-            }
-        }
-    }
+    //     MaterialTextArea {
+    //         Layout.fillWidth: true
+    //         placeholderText: Translation.tr("City name")
+    //         text: Config.options.bar.weather.city
+    //         wrapMode: TextEdit.Wrap
+    //         onTextChanged: {
+    //             Config.options.bar.weather.city = text;
+    //         }
+    //     }
+    //     ConfigSpinBox {
+    //         icon: "av_timer"
+    //         text: Translation.tr("Polling interval (m)")
+    //         value: Config.options.bar.weather.fetchInterval
+    //         from: 5
+    //         to: 50
+    //         stepSize: 5
+    //         onValueChanged: {
+    //             Config.options.bar.weather.fetchInterval = value;
+    //         }
+    //     }
+    // }
 }
