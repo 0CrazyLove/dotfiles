@@ -13,7 +13,7 @@ MouseArea {
     id: root
     property int columns: 4
     property real previewCellAspectRatio: 4 / 3
-    property bool useDarkMode: Appearance.m3colors.darkmode
+    property bool useDarkMode: true
     
     // Agregar esta propiedad para controlar si ya se estableció el directorio inicial
     property bool initialDirectorySet: false
@@ -50,7 +50,7 @@ MouseArea {
     }
     function selectWallpaperPath(filePath) {
         if (filePath && filePath.length > 0) {
-            Wallpapers.select(filePath, root.useDarkMode);
+            Wallpapers.select(filePath, true);
             filterField.text = "";
         }
     }
