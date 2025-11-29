@@ -24,7 +24,7 @@ TextArea {
 
     background: Rectangle {
         implicitHeight: 56
-        color: Appearance.m3colors.m3surface
+        color: "#3d3d3d"
         topLeftRadius: 4
         topRightRadius: 4
         Rectangle {
