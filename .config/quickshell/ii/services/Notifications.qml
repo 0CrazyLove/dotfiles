@@ -160,6 +160,14 @@ Singleton {
         persistenceSupported: true
 
         onNotification: (notification) => {
+            // ====== FILTER TO BLOCK UPSCAYL ======
+            const blockedApps = ["Upscayl", "upscayl", "org.upscayl.Upscayl", "Wallpaper switcher"];
+            if (blockedApps.includes(notification.appName)) {
+             console.log("[Notifications] Blocked notification from: " + notification.appName);
+             notification.dismiss(); // Descartar la notificación inmediatamente
+             return; 
+            }
+        // ====
             notification.tracked = true
             const newNotifObject = notifComponent.createObject(root, {
                 "notificationId": notification.id + root.idOffset,
