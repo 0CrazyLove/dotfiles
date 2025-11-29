@@ -10,7 +10,6 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
-
 PanelWindow {
     id: root
     visible: false
@@ -25,7 +24,6 @@ PanelWindow {
         top: true
         bottom: true
     }
-
     // TODO: Ask: sidebar AI; Ocr: tesseract
     enum SnipAction { Copy, Edit, Search, CharRecognition, Record, RecordWithSound } 
     enum SelectionMode { RectCorners, Circle }
@@ -36,14 +34,13 @@ PanelWindow {
     property string saveScreenshotDir: Config.options.screenSnip.savePath !== ""
                                        ? Config.options.screenSnip.savePath
                                        : ""
-
     property string screenshotDir: Directories.screenshotTemp
     property string imageSearchEngineBaseUrl: Config.options.search.imageSearch.imageSearchEngineBaseUrl
     property string fileUploadApiEndpoint: "https://uguu.se/upload"
     property color overlayColor: "#88111111"
-    property color brightText: Appearance.m3colors.darkmode ? Appearance.colors.colOnLayer0 : Appearance.colors.colLayer0
-    property color brightSecondary: Appearance.m3colors.darkmode ? Appearance.colors.colSecondary : Appearance.colors.colOnSecondary
-    property color brightTertiary: Appearance.m3colors.darkmode ? Appearance.colors.colTertiary : Qt.lighter(Appearance.colors.colPrimary)
+    property color brightText: Appearance.colors.colOnLayer0
+    property color brightSecondary: Appearance.colors.colSecondary
+    property color brightTertiary: Appearance.colors.colTertiary
     property color selectionBorderColor: ColorUtils.mix(brightText, brightSecondary, 0.5)
     property color selectionFillColor: "#33ffffff"
     property color windowBorderColor: brightSecondary
@@ -58,7 +55,6 @@ PanelWindow {
     })
     readonly property var layers: HyprlandData.layers
     readonly property real falsePositivePreventionRatio: 0.5
-
     readonly property HyprlandMonitor hyprlandMonitor: Hyprland.monitorFor(screen)
     readonly property real monitorScale: hyprlandMonitor.scale
     readonly property real monitorOffsetX: hyprlandMonitor.x
@@ -109,14 +105,12 @@ PanelWindow {
         });
         return offsetAdjustedLayers;
     }
-
     property bool isCircleSelection: (root.selectionMode === RegionSelection.SelectionMode.Circle)
     property bool enableWindowRegions: Config.options.regionSelector.targetRegions.windows && !isCircleSelection
     property bool enableLayerRegions: Config.options.regionSelector.targetRegions.layers && !isCircleSelection
     property bool enableContentRegions: Config.options.regionSelector.targetRegions.content
     property real targetRegionOpacity: Config.options.regionSelector.targetRegions.opacity
     property bool contentRegionOpacity: Config.options.regionSelector.targetRegions.contentRegionOpacity
-
     property real targetedRegionX: -1
     property real targetedRegionY: -1
     property real targetedRegionWidth: 0
@@ -131,7 +125,6 @@ PanelWindow {
         root.regionWidth = root.targetedRegionWidth + padding * 2;
         root.regionHeight = root.targetedRegionHeight + padding * 2;
     }
-
     function updateTargetedRegion(x, y) {
         // Image regions
         const clickedRegion = root.imageRegions.find(region => {
@@ -144,7 +137,6 @@ PanelWindow {
             root.targetedRegionHeight = clickedRegion.size[1];
             return;
         }
-
         // Layer regions
         const clickedLayer = root.layerRegions.find(region => {
             return region.at[0] <= x && x <= region.at[0] + region.size[0] && region.at[1] <= y && y <= region.at[1] + region.size[1];
@@ -156,7 +148,6 @@ PanelWindow {
             root.targetedRegionHeight = clickedLayer.size[1];
             return;
         }
-
         // Window regions
         const clickedWindow = root.windowRegions.find(region => {
             return region.at[0] <= x && x <= region.at[0] + region.size[0] && region.at[1] <= y && y <= region.at[1] + region.size[1];
@@ -168,18 +159,15 @@ PanelWindow {
             root.targetedRegionHeight = clickedWindow.size[1];
             return;
         }
-
         root.targetedRegionX = -1;
         root.targetedRegionY = -1;
         root.targetedRegionWidth = 0;
         root.targetedRegionHeight = 0;
     }
-
     property real regionWidth: Math.abs(draggingX - dragStartX)
     property real regionHeight: Math.abs(draggingY - dragStartY)
     property real regionX: Math.min(dragStartX, draggingX)
     property real regionY: Math.min(dragStartY, draggingY)
-
     Process {
         id: screenshotProc
         running: true
@@ -210,7 +198,6 @@ PanelWindow {
         }
         root.visible = true;
     }
-
     Process {
         id: imageDetectionProcess
         command: ["bash", "-c", `${Directories.scriptPath}/images/find-regions-venv.sh ` 
@@ -228,25 +215,21 @@ PanelWindow {
             }
         }
     }
-
     function snip() {
         // Validity check
         if (root.regionWidth <= 0 || root.regionHeight <= 0) {
             console.warn("[Region Selector] Invalid region size, skipping snip.");
             root.dismiss();
         }
-
         // Clamp region to screen bounds
         root.regionX = Math.max(0, Math.min(root.regionX, root.screen.width - root.regionWidth));
         root.regionY = Math.max(0, Math.min(root.regionY, root.screen.height - root.regionHeight));
         root.regionWidth = Math.max(0, Math.min(root.regionWidth, root.screen.width - root.regionX));
         root.regionHeight = Math.max(0, Math.min(root.regionHeight, root.screen.height - root.regionY));
-
         // Adjust action
         if (root.action === RegionSelection.SnipAction.Copy || root.action === RegionSelection.SnipAction.Edit) {
             root.action = root.mouseButton === Qt.RightButton ? RegionSelection.SnipAction.Edit : RegionSelection.SnipAction.Copy;
         }
-
         // Set command for action
         const rx = Math.round(root.regionX * root.monitorScale);
         const ry = Math.round(root.regionY * root.monitorScale);
@@ -268,9 +251,7 @@ PanelWindow {
                     snipProc.command = ["bash", "-c", `${cropToStdout} | wl-copy && ${cleanup}`]
                     break;
                 }
-
                 const savePathBase = root.saveScreenshotDir
-
                 snipProc.command = [
                     "bash", "-c",
                     `mkdir -p '${StringUtils.shellSingleQuoteEscape(savePathBase)}' && \
@@ -279,7 +260,6 @@ PanelWindow {
                     ${cropToStdout} | tee >(wl-copy) > "$savePath" && \
                     ${cleanup}`
                 ]
-
                 break;
             case RegionSelection.SnipAction.Edit:
                 snipProc.command = ["bash", "-c", `${cropToStdout} | swappy -f - && ${cleanup}`]
@@ -301,35 +281,29 @@ PanelWindow {
                 root.dismiss();
                 return;
         }
-
         // Image post-processing
         snipProc.startDetached();
         root.dismiss();
     }
-
     Process {
         id: snipProc
     }
-
     ScreencopyView {
         anchors.fill: parent
         live: false
         captureSource: root.screen
-
         focus: root.visible
         Keys.onPressed: (event) => { // Esc to close
             if (event.key === Qt.Key_Escape) {
                 root.dismiss();
             }
         }
-
         MouseArea {
             id: mouseArea
             anchors.fill: parent
             cursorShape: Qt.CrossCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             hoverEnabled: true
-
             // Controls
             onPressed: (mouse) => {
                 root.dragStartX = mouse.x;
@@ -386,7 +360,6 @@ PanelWindow {
                     overlayColor: root.overlayColor
                 }
             }
-
             Loader {
                 z: 2
                 anchors.fill: parent
@@ -397,7 +370,6 @@ PanelWindow {
                     points: root.points
                 }
             }
-
             // Window regions
             Repeater {
                 model: ScriptModel {
@@ -413,7 +385,6 @@ PanelWindow {
                         && root.targetedRegionY === modelData.at[1]
                         && root.targetedRegionWidth === modelData.size[0]
                         && root.targetedRegionHeight === modelData.size[1])
-
                     opacity: root.draggedAway ? 0 : root.targetRegionOpacity
                     borderColor: root.windowBorderColor
                     fillColor: targeted ? root.windowFillColor : "transparent"
@@ -421,7 +392,6 @@ PanelWindow {
                     radius: Appearance.rounding.windowRounding
                 }
             }
-
             // Layer regions
             Repeater {
                 model: ScriptModel {
@@ -436,7 +406,6 @@ PanelWindow {
                         && root.targetedRegionY === modelData.at[1]
                         && root.targetedRegionWidth === modelData.size[0]
                         && root.targetedRegionHeight === modelData.size[1])
-
                     opacity: root.draggedAway ? 0 : root.targetRegionOpacity
                     borderColor: root.windowBorderColor
                     fillColor: targeted ? root.windowFillColor : "transparent"
@@ -444,7 +413,6 @@ PanelWindow {
                     radius: Appearance.rounding.windowRounding
                 }
             }
-
             // Content regions
             Repeater {
                 model: ScriptModel {
@@ -459,14 +427,12 @@ PanelWindow {
                         && root.targetedRegionY === modelData.at[1]
                         && root.targetedRegionWidth === modelData.size[0]
                         && root.targetedRegionHeight === modelData.size[1])
-
                     opacity: root.draggedAway ? 0 : root.contentRegionOpacity
                     borderColor: root.imageBorderColor
                     fillColor: targeted ? root.imageFillColor : "transparent"
                     text: Translation.tr("Content region")
                 }
             }
-
             // Controls
             Row {
                 id: regionSelectionControls
@@ -492,7 +458,6 @@ PanelWindow {
                     animation: Appearance.animation.elementMove.numberAnimation.createObject(this)
                 }
                 spacing: 6
-
                 OptionsToolbar {
                     Synchronizer on action {
                         property alias source: root.action

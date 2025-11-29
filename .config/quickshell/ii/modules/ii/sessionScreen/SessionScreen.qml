@@ -10,13 +10,11 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
-
 Scope {
     id: root
     property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
     property bool packageManagerRunning: false
     property bool downloadRunning: false
-
     component DescriptionLabel: Rectangle {
         id: descriptionLabel
         property string text
@@ -26,11 +24,9 @@ Scope {
         radius: Appearance.rounding.normal
         implicitHeight: descriptionLabelText.implicitHeight + 10 * 2
         implicitWidth: descriptionLabelText.implicitWidth + 15 * 2
-
         Behavior on implicitWidth {
             animation: Appearance.animation.elementMove.numberAnimation.createObject(this)
         }
-
         StyledText {
             id: descriptionLabelText
             anchors.centerIn: parent
@@ -38,7 +34,6 @@ Scope {
             text: descriptionLabel.text
         }
     }
-
     function detectRunningStuff() {
         packageManagerRunning = false;
         downloadRunning = false;
@@ -47,7 +42,6 @@ Scope {
         detectDownloadProc.running = false;
         detectDownloadProc.running = true;
     }
-
     Process {
         id: detectPackageManagerProc
         command: ["bash", "-c", "pidof pacman yay paru dnf zypper apt apx xbps flatpak snap apk yum epsi pikman"]
@@ -55,7 +49,6 @@ Scope {
             root.packageManagerRunning = (exitCode === 0);
         }
     }
-
     Process {
         id: detectDownloadProc
         command: ["bash", "-c", "pidof curl wget aria2c yt-dlp || ls ~/Downloads | grep -E '\.crdownload$|\.part$'"]
@@ -63,14 +56,12 @@ Scope {
             root.downloadRunning = (exitCode === 0);
         }
     }
-
     Loader {
         id: sessionLoader
         active: GlobalStates.sessionOpen
         onActiveChanged: {
             if (sessionLoader.active) root.detectRunningStuff();
         }
-
         Connections {
             target: GlobalStates
             function onScreenLockedChanged() {
@@ -79,7 +70,6 @@ Scope {
                 }
             }
         }
-
         sourceComponent: PanelWindow { // Session menu
             id: sessionRoot
             visible: sessionLoader.active
@@ -88,24 +78,20 @@ Scope {
             function hide() {
                 GlobalStates.sessionOpen = false;
             }
-
             exclusionMode: ExclusionMode.Ignore
             WlrLayershell.namespace: "quickshell:session"
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
             // This is a big surface so we needa carefully choose the transparency,
-            // or we'll get a large scary rgb blob
-            color: ColorUtils.transparentize(Appearance.m3colors.m3background, Appearance.m3colors.darkmode ? 0.04 : 0.12)
-
+            // Always use dark mode transparency
+            color: ColorUtils.transparentize(Appearance.m3colors.m3background, 0.04)
             anchors {
                 top: true
                 left: true
                 right: true
             }
-
             implicitWidth: root.focusedScreen?.width ?? 0
             implicitHeight: root.focusedScreen?.height ?? 0
-
             MouseArea {
                 id: sessionMouseArea
                 anchors.fill: parent
@@ -113,18 +99,15 @@ Scope {
                     sessionRoot.hide()
                 }
             }
-
             ColumnLayout { // Content column
                 id: contentColumn
                 anchors.centerIn: parent
                 spacing: 15
-
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Escape) {
                         sessionRoot.hide();
                     }
                 }
-
                 ColumnLayout {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 0
@@ -138,7 +121,6 @@ Scope {
                         }
                         text: Translation.tr("Session")
                     }
-
                     StyledText { // Small instruction
                         Layout.alignment: Qt.AlignHCenter
                         horizontalAlignment: Text.AlignHCenter
@@ -146,12 +128,10 @@ Scope {
                         text: Translation.tr("Arrow keys to navigate, Enter to select\nEsc or click anywhere to cancel")
                     }
                 }
-
                 GridLayout {
                     columns: 4
                     columnSpacing: 15
                     rowSpacing: 15
-
                     SessionActionButton {
                         id: sessionLock
                         focus: sessionRoot.visible
@@ -191,7 +171,6 @@ Scope {
                         KeyNavigation.left: sessionLogout
                         KeyNavigation.down: sessionFirmwareReboot
                     }
-
                     SessionActionButton {
                         id: sessionHibernate
                         buttonIcon: "downloading"
@@ -231,13 +210,11 @@ Scope {
                         KeyNavigation.left: sessionReboot
                     }
                 }
-
                 DescriptionLabel {
                     Layout.alignment: Qt.AlignHCenter
                     text: sessionRoot.subtitle
                 }
             }
-
             RowLayout {
                 anchors {
                     top: contentColumn.bottom
@@ -245,7 +222,6 @@ Scope {
                     horizontalCenter: contentColumn.horizontalCenter
                 }
                 spacing: 10
-
                 Loader {
                     active: root.packageManagerRunning
                     visible: active
@@ -267,48 +243,37 @@ Scope {
             }
         }
     }
-
     IpcHandler {
         target: "session"
-
         function toggle(): void {
             GlobalStates.sessionOpen = !GlobalStates.sessionOpen;
         }
-
         function close(): void {
             GlobalStates.sessionOpen = false
         }
-
         function open(): void {
             GlobalStates.sessionOpen = true
         }
     }
-
     GlobalShortcut {
         name: "sessionToggle"
         description: "Toggles session screen on press"
-
         onPressed: {
             GlobalStates.sessionOpen = !GlobalStates.sessionOpen;
         }
     }
-
     GlobalShortcut {
         name: "sessionOpen"
         description: "Opens session screen on press"
-
         onPressed: {
             GlobalStates.sessionOpen = true
         }
     }
-
     GlobalShortcut {
         name: "sessionClose"
         description: "Closes session screen on press"
-
         onPressed: {
             GlobalStates.sessionOpen = false
         }
     }
-
 }
