@@ -50,19 +50,9 @@ handle_kde_material_you_colors() {
 }
 
 pre_process() {
-    local mode_flag="$1"
-    
-    # Set GNOME color-scheme if mode_flag is dark or light
-    case "$mode_flag" in
-        dark)
-            gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-            gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
-            ;;
-        light)
-            gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
-            gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
-            ;;
-    esac
+    # Set GNOME color-scheme to dark
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
     
     mkdir -p "$CACHE_DIR/user/generated"
 }
@@ -185,16 +175,16 @@ reload_terminal_colors() {
 # Apply wallpaper with SWWW and generate colors with pywal
 apply_wallpaper_swww() {
     local imgpath="$1"
-    local mode_flag="$2"
     
+  # Save wallpaper path to config
+    set_wallpaper_path "$imgpath"
+
     # Apply with swww (visually faster)
-    swww img "$imgpath" --transition-type fade --transition-duration 0.3 &
+    swww img "$imgpath" --transition-type none
     local swww_pid=$!
     
-    # Generate colors with pywal
-    local wal_args=(-i "$imgpath" -q)
-    [ "$mode_flag" == "light" ] && wal_args+=(-l)
-    wal "${wal_args[@]}" &
+    # Generate colors with pywal in dark mode
+    wal -i "$imgpath" -q &
     local wal_pid=$!
     
     # Wait for both to finish
@@ -209,7 +199,6 @@ apply_wallpaper_swww() {
 
 handle_video_wallpaper() {
     local imgpath="$1"
-    local mode_flag="$2"
     
     mkdir -p "$THUMBNAIL_DIR"
     
@@ -260,10 +249,8 @@ handle_video_wallpaper() {
         return 1
     fi
     
-    # Generate colors from thumbnail with pywal
-    local wal_args=(-i "$thumbnail" -q)
-    [ "$mode_flag" == "light" ] && wal_args+=(-l)
-    wal "${wal_args[@]}"
+    # Generate colors from thumbnail with pywal in dark mode
+    wal -i "$thumbnail" -q
     
     # Reload colors for active terminals
     reload_terminal_colors
@@ -274,10 +261,9 @@ handle_video_wallpaper() {
 
 switch() {
     local imgpath="$1"
-    local mode_flag="$2"
-    local type_flag="$3"
-    local color_flag="$4"
-    local color="$5"
+    local type_flag="$2"
+    local color_flag="$3"
+    local color="$4"
     
     # Start Gemini auto-categorization if enabled
     if [ -f "$SHELL_CONFIG_FILE" ]; then
@@ -312,18 +298,16 @@ switch() {
         # IF USING SWWW AND NOT VIDEO, APPLY WITH SWWW
         if [ "$USE_SWWW" == "true" ] && ! is_video "$imgpath"; then
             # Apply wallpaper with swww and pywal
-            apply_wallpaper_swww "$imgpath" "$mode_flag"
+            apply_wallpaper_swww "$imgpath"
             remove_restore
         elif is_video "$imgpath"; then
-            handle_video_wallpaper "$imgpath" "$mode_flag" || return 1
+            handle_video_wallpaper "$imgpath" || return 1
         else
             # Fallback to original method if USE_SWWW=false
             set_wallpaper_path "$imgpath"
             
-            # Generate colors with pywal
-            local wal_args=(-i "$imgpath" -q)
-            [ "$mode_flag" == "light" ] && wal_args+=(-l)
-            wal "${wal_args[@]}"
+            # Generate colors with pywal in dark mode
+            wal -i "$imgpath" -q
             
             # Reload colors for active terminals
             reload_terminal_colors
@@ -332,13 +316,7 @@ switch() {
         fi
     fi
     
-    # Determine mode if not set
-    if [ -z "$mode_flag" ]; then
-        local current_mode=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null | tr -d "'")
-        mode_flag=$( [ "$current_mode" == "prefer-dark" ] && echo "dark" || echo "light" )
-    fi
-    
-    pre_process "$mode_flag"
+    pre_process
     
     # Check if app and shell theming is enabled in config
     if [ -f "$SHELL_CONFIG_FILE" ]; then
@@ -359,14 +337,10 @@ switch() {
 }
 
 main() {
-    local imgpath="" mode_flag="" type_flag="" color_flag="" color="" noswitch_flag=""
+    local imgpath="" type_flag="" color_flag="" color="" noswitch_flag=""
     
     while [ $# -gt 0 ]; do
         case "$1" in
-            --mode)
-                mode_flag="$2"
-                shift 2
-                ;;
             --type)
                 type_flag="$2"
                 shift 2
@@ -406,7 +380,7 @@ main() {
         imgpath=$(kdialog --getopenfilename . --title 'Choose wallpaper')
     fi
     
-    switch "$imgpath" "$mode_flag" "$type_flag" "$color_flag" "$color"
+    switch "$imgpath" "$type_flag" "$color_flag" "$color"
 }
 
 main "$@"
