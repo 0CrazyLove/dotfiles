@@ -154,21 +154,21 @@ ContentPage {
                         }
                     }
                 }
-                RowLayout {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    uniformCellSizes: true
+                // RowLayout {
+                //     Layout.alignment: Qt.AlignHCenter
+                //     Layout.fillWidth: true
+                //     Layout.fillHeight: true
+                //     uniformCellSizes: true
 
-                    SmallLightDarkPreferenceButton {
-                        Layout.fillHeight: true
-                        dark: false
-                    }
-                    SmallLightDarkPreferenceButton {
-                        Layout.fillHeight: true
-                        dark: true
-                    }
-                }
+                //     SmallLightDarkPreferenceButton {
+                //         Layout.fillHeight: true
+                //         dark: false
+                //     }
+                //     SmallLightDarkPreferenceButton {
+                //         Layout.fillHeight: true
+                //         dark: true
+                //     }
+                // }
             }
         }
 
