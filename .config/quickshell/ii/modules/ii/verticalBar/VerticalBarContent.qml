@@ -88,12 +88,12 @@ Item { // Bar content region
         Bar.BarGroup {
             vertical: true
             padding: 8
-            Resources {
-                Layout.fillWidth: true
-                Layout.fillHeight: false
-            }
+            // Resources {
+            //     Layout.fillWidth: true
+            //     Layout.fillHeight: false
+            // }
             
-            HorizontalBarSeparator {}
+            // HorizontalBarSeparator {}
 
             VerticalMedia {
                 Layout.fillWidth: true

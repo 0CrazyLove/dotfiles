@@ -35,8 +35,8 @@ Item {
         anchors.fill: parent
         hoverEnabled: !Config.options.bar.tooltips.clickToShow
 
-        Bar.ClockWidgetPopup {
-            hoverTarget: mouseArea
-        }
+        // Bar.ClockWidgetPopup {
+        //     hoverTarget: mouseArea
+        // }
     }
 }
