@@ -547,11 +547,7 @@ done
 echo
 if [[ $all_good == true ]]; then
   print_success "Todas las dependencias principales están listas UWU "
-  print_info "Ahora puedes ejecutar 7///7:"
-  echo "  ./install.sh"
 else
   print_warning "⚠ Algunas dependencias fallaron, pero puedes continuar"
   print_info "Para reintentar solo los paquetes faltantes, consulta la lista anterior"
 fi
-echo
-print_warning "Nota: Algunas configuraciones requieren reiniciar la sesión... ~Nya"

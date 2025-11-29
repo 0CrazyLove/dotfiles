@@ -620,9 +620,6 @@ else
 fi
 
 echo
-print_info "Para aplicar los cambios:"
-echo "  • Reinicia tu sesión reiniciando Arch Linux! (>:<)!"
-echo
 print_info "Configuraciones instaladas como archivos independientes."
 print_info "Puedes eliminar el directorio ~/dotfiles si quieres."
 print_info "El directorio ~/dots-hyprland contiene los archivos de Illogical Impulse."
