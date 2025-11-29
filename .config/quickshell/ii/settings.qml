@@ -49,11 +49,11 @@ ApplicationWindow {
             icon: "settings",
             component: "modules/settings/ServicesConfig.qml"
         },
-        {
-            name: Translation.tr("Advanced"),
-            icon: "construction",
-            component: "modules/settings/AdvancedConfig.qml"
-        },
+        // {
+        //     name: Translation.tr("Advanced"),
+        //     icon: "construction",
+        //     component: "modules/settings/AdvancedConfig.qml"
+        // },
         {
             name: Translation.tr("About"),
             icon: "info",
@@ -133,11 +133,12 @@ ApplicationWindow {
                     buttonRadius: Appearance.rounding.full
                     implicitWidth: 35
                     implicitHeight: 35
+                     enabled: false 
                     onClicked: root.close()
                     contentItem: MaterialSymbol {
                         anchors.centerIn: parent
                         horizontalAlignment: Text.AlignHCenter
-                        text: "close"
+                        // text: "close"
                         iconSize: 20
                     }
                 }
