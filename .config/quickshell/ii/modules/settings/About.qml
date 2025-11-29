@@ -147,4 +147,52 @@ ContentPage {
             
         }
     }
+     //crazy
+        ContentSection {
+        icon: "folder_managed"
+        title: Translation.tr("Dotfiles")
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 20
+            Layout.topMargin: 10
+            Layout.bottomMargin: 10
+            IconImage {
+                implicitSize: 80
+                source: Quickshell.iconPath("heart")
+            }
+            ColumnLayout {
+                Layout.alignment: Qt.AlignVCenter
+                // spacing: 10
+                StyledText {
+                    text: Translation.tr("CrazyLove's")
+                    font.pixelSize: Appearance.font.pixelSize.title
+                }
+                StyledText {
+                    text: "https://github.com/0CrazyLove/dotfiles"
+                    font.pixelSize: Appearance.font.pixelSize.normal
+                    textFormat: Text.MarkdownText
+                    onLinkActivated: (link) => {
+                        Qt.openUrlExternally(link)
+                    }
+                    PointingHandLinkHover {}
+                }
+            }
+        }
+
+        Flow {
+            Layout.fillWidth: true
+            spacing: 5
+
+            RippleButtonWithIcon {
+                materialIcon: "auto_stories"
+                mainText: Translation.tr("Documentation")
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/0CrazyLove/dotfiles/blob/main/SECURITY.md")
+                }
+            }
+             
+        }
+    }
+
 }
