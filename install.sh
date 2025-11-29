@@ -515,7 +515,7 @@ install_file() {
 }
 
 mkdir -p "$HOME/.config"
-mkdir -p "$HOME/.local" 
+mkdir -p "$HOME/.local/share" 
 
 print_info "Instalando configuraciones..."
 
@@ -531,7 +531,7 @@ install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Qu
 install_config "$DOTFILES_DIR/.config/illogical-impulse" "$HOME/.config/illogical-impulse" "Illogical Impulse (Quickshell design)"
 install_config "$DOTFILES_DIR/wal" "$HOME/.config/wal" "Wal (Color schemes)"
 install_config "$DOTFILES_DIR/.config/xdg-desktop-portal" "$HOME/.config/xdg-desktop-portal" "XDG Desktop Portal (KDE)"
-install_config "$DOTFILES_DIR/.local/share" "$HOME/.local/share" ".local/share (iconos y recursos)"
+install_config "$DOTFILES_DIR/.local/share/icons" "$HOME/.local/share/icons" "Iconos personalizados"
 install_file "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml" "Starship"
 
 # NUEVO: Inicializar submódulo shapes después de copiar quickshell config
@@ -601,7 +601,7 @@ check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
 check_config "$HOME/.config/starship.toml" "Starship"
 check_config "$HOME/.config/wal" "Wal"
 check_config "$HOME/.config/xdg-desktop-portal" "XDG Desktop Portal"
-check_config "$HOME/.local/share" ".local/share"
+check_config "$HOME/.local/share/icons" "Iconos personalizados"
 check_config "/usr/local/bin/rm" "Script rm protector"
 
 # Verificar instalación de quickshell
