@@ -7,18 +7,18 @@ import qs.modules.common.widgets
 ContentPage {
     forceWidth: true
 
-    ContentSection {
-        icon: "notifications"
-        title: Translation.tr("Notifications")
-        ConfigSwitch {
-            buttonIcon: "counter_2"
-            text: Translation.tr("Unread indicator: show count")
-            checked: Config.options.bar.indicators.notifications.showUnreadCount
-            onCheckedChanged: {
-                Config.options.bar.indicators.notifications.showUnreadCount = checked;
-            }
-        }
-    }
+    // ContentSection {
+    //     icon: "notifications"
+    //     title: Translation.tr("Notifications")
+    //     ConfigSwitch {
+    //         buttonIcon: "counter_2"
+    //         text: Translation.tr("Unread indicator: show count")
+    //         checked: Config.options.bar.indicators.notifications.showUnreadCount
+    //         onCheckedChanged: {
+    //             Config.options.bar.indicators.notifications.showUnreadCount = checked;
+    //         }
+    //     }
+    // }
     
     ContentSection {
         icon: "spoke"
@@ -208,22 +208,22 @@ ContentPage {
         }
         ConfigRow {
             uniform: true
-            ConfigSwitch {
-                buttonIcon: "dark_mode"
-                text: Translation.tr("Dark/Light toggle")
-                checked: Config.options.bar.utilButtons.showDarkModeToggle
-                onCheckedChanged: {
-                    Config.options.bar.utilButtons.showDarkModeToggle = checked;
-                }
-            }
-            ConfigSwitch {
-                buttonIcon: "speed"
-                text: Translation.tr("Performance Profile toggle")
-                checked: Config.options.bar.utilButtons.showPerformanceProfileToggle
-                onCheckedChanged: {
-                    Config.options.bar.utilButtons.showPerformanceProfileToggle = checked;
-                }
-            }
+            // ConfigSwitch {
+            //     buttonIcon: "dark_mode"
+            //     text: Translation.tr("Dark/Light toggle")
+            //     checked: Config.options.bar.utilButtons.showDarkModeToggle
+            //     onCheckedChanged: {
+            //         Config.options.bar.utilButtons.showDarkModeToggle = checked;
+            //     }
+            // }
+            // ConfigSwitch {
+            //     buttonIcon: "speed"
+            //     text: Translation.tr("Performance Profile toggle")
+            //     checked: Config.options.bar.utilButtons.showPerformanceProfileToggle
+            //     onCheckedChanged: {
+            //         Config.options.bar.utilButtons.showPerformanceProfileToggle = checked;
+            //     }
+            // }
         }
         ConfigRow {
             uniform: true
@@ -238,18 +238,18 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "cloud"
-        title: Translation.tr("Weather")
-        ConfigSwitch {
-            buttonIcon: "check"
-            text: Translation.tr("Enable")
-            checked: Config.options.bar.weather.enable
-            onCheckedChanged: {
-                Config.options.bar.weather.enable = checked;
-            }
-        }
-    }
+    // ContentSection {
+    //     icon: "cloud"
+    //     title: Translation.tr("Weather")
+    //     ConfigSwitch {
+    //         buttonIcon: "check"
+    //         text: Translation.tr("Enable")
+    //         checked: Config.options.bar.weather.enable
+    //         onCheckedChanged: {
+    //             Config.options.bar.weather.enable = checked;
+    //         }
+    //     }
+    // }
 
     ContentSection {
         icon: "workspaces"
@@ -335,16 +335,16 @@ ContentPage {
         }
     }
 
-    ContentSection {
-        icon: "tooltip"
-        title: Translation.tr("Tooltips")
-        ConfigSwitch {
-            buttonIcon: "ads_click"
-            text: Translation.tr("Click to show")
-            checked: Config.options.bar.tooltips.clickToShow
-            onCheckedChanged: {
-                Config.options.bar.tooltips.clickToShow = checked;
-            }
-        }
-    }
+    // ContentSection {
+    //     icon: "tooltip"
+    //     title: Translation.tr("Tooltips")
+    //     ConfigSwitch {
+    //         buttonIcon: "ads_click"
+    //         text: Translation.tr("Click to show")
+    //         checked: Config.options.bar.tooltips.clickToShow
+    //         onCheckedChanged: {
+    //             Config.options.bar.tooltips.clickToShow = checked;
+    //         }
+    //     }
+    // }
 }
