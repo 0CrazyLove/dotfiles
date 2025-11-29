@@ -156,20 +156,18 @@ set_thumbnail_path() {
 
 # Reload terminal colors for active terminals
 reload_terminal_colors() {
-    # For kitty terminals
-    command -v kitty &>/dev/null && killall -SIGUSR1 kitty 2>/dev/null
-    
-    # For alacritty terminals - send config reload signal
-    pgrep -x alacritty >/dev/null && pkill -USR1 alacritty 2>/dev/null
-    
-    # For foot terminals
-    pgrep -x foot >/dev/null && pkill -USR1 foot 2>/dev/null
-    
-    # For wezterm terminals
-    if pgrep -x wezterm-gui >/dev/null; then
-        # Wezterm watches config files automatically, just touch the colors file
-        [ -f ~/.cache/wal/colors-wezterm.toml ] && touch ~/.cache/wal/colors-wezterm.toml
-    fi
+    # Reload in background with slight delay to avoid crashing current terminal
+    (
+        sleep 0.5
+        # For kitty terminals
+        command -v kitty &>/dev/null && killall -SIGUSR1 kitty 2>/dev/null
+        
+        # For wezterm terminals
+        if pgrep -x wezterm-gui >/dev/null; then
+            # Wezterm watches config files automatically, just touch the colors file
+            [ -f ~/.cache/wal/colors-wezterm.toml ] && touch ~/.cache/wal/colors-wezterm.toml
+        fi
+    ) &
 }
 
 # Apply wallpaper with SWWW and generate colors with pywal
