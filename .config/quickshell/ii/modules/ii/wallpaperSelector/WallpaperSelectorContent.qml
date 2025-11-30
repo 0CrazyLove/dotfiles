@@ -299,22 +299,22 @@ MouseArea {
                             horizontalCenter: parent.horizontalCenter
                             bottomMargin: 8
                         }
-                        IconToolbarButton {
-                            implicitWidth: height
-                            onClicked: {
-                                Wallpapers.openFallbackPicker(root.useDarkMode);
-                                GlobalStates.wallpaperSelectorOpen = false;
-                            }
-                            altAction: () => {
-                                Wallpapers.openFallbackPicker(root.useDarkMode);
-                                GlobalStates.wallpaperSelectorOpen = false;
-                                Config.options.wallpaperSelector.useSystemFileDialog = true
-                            }
-                            text: "open_in_new"
-                            StyledToolTip {
-                                text: Translation.tr("Use the system file picker instead\nRight-click to make this the default behavior")
-                            }
-                        }
+                        // IconToolbarButton {
+                        //     implicitWidth: height
+                        //     onClicked: {
+                        //         Wallpapers.openFallbackPicker(root.useDarkMode);
+                        //         GlobalStates.wallpaperSelectorOpen = false;
+                        //     }
+                        //     altAction: () => {
+                        //         Wallpapers.openFallbackPicker(root.useDarkMode);
+                        //         GlobalStates.wallpaperSelectorOpen = false;
+                        //         Config.options.wallpaperSelector.useSystemFileDialog = true
+                        //     }
+                        //     text: "open_in_new"
+                        //     StyledToolTip {
+                        //         text: Translation.tr("Use the system file picker instead\nRight-click to make this the default behavior")
+                        //     }
+                        // }
                         IconToolbarButton {
                             implicitWidth: height
                             onClicked: {
