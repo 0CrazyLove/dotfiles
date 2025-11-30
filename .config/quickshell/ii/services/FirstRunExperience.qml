@@ -28,6 +28,7 @@ Singleton {
     function handleFirstRun() {
         Quickshell.execDetached([Directories.wallpaperSwitchScriptPath, root.defaultWallpaperPath])
         // Quickshell.execDetached(["bash", "-c", `qs -p '${root.welcomeQmlPath}'`])
+        Quickshell.execDetached(["notify-send", "Aplicación de Bienvenida", "¡Disfruta! Para abrir configuración, presiona <tt>Super+I</tt> (✿◠‿◠)", "-a", "Shell"])
     }
 
     FileView {
