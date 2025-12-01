@@ -1,41 +1,22 @@
 #!/usr/bin/env bash
+QUICKSHELL_CONFIG_NAME="ii"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+CONFIG_DIR="$XDG_CONFIG_HOME/quickshell/$QUICKSHELL_CONFIG_NAME"
+CACHE_DIR="$XDG_CACHE_HOME/quickshell"
+STATE_DIR="$XDG_STATE_HOME/quickshell"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SHELL_CONFIG_FILE="$XDG_CONFIG_HOME/illogical-impulse/config.json"
+MATUGEN_DIR="$XDG_CONFIG_HOME/matugen"
 
-# Configuration constants
-readonly QUICKSHELL_CONFIG_NAME="ii"
-readonly XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-readonly XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
-readonly XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
-readonly CONFIG_DIR="$XDG_CONFIG_HOME/quickshell/$QUICKSHELL_CONFIG_NAME"
-readonly CACHE_DIR="$XDG_CACHE_HOME/quickshell"
-readonly STATE_DIR="$XDG_STATE_HOME/quickshell"
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly SHELL_CONFIG_FILE="$XDG_CONFIG_HOME/illogical-impulse/config.json"
-
-# USE SWWW
-readonly USE_SWWW=true
-
-# Video configuration
-readonly CUSTOM_DIR="$XDG_CONFIG_HOME/hypr/custom"
-readonly RESTORE_SCRIPT_DIR="$CUSTOM_DIR/scripts"
-readonly RESTORE_SCRIPT="$RESTORE_SCRIPT_DIR/__restore_video_wallpaper.sh"
-readonly THUMBNAIL_DIR="$RESTORE_SCRIPT_DIR/mpvpaper_thumbnails"
-readonly VIDEO_OPTS="no-audio loop hwdec=auto scale=bilinear interpolation=no video-sync=display-resample panscan=1.0 video-scale-x=1.0 video-scale-y=1.0 video-align-x=0.5 video-align-y=0.5 load-scripts=no"
-
-# Check if file is a video
-is_video() {
-    local extension="${1##*.}"
-    case "$extension" in
-        mp4|webm|mkv|avi|mov) return 0 ;;
-        *) return 1 ;;
-    esac
-}
-
-# Apply pywal colors to KDE
 handle_kde_material_you_colors() {
     # Check if Qt app theming is enabled in config
     if [ -f "$SHELL_CONFIG_FILE" ]; then
-        local enable_qt_apps=$(jq -r '.appearance.wallpaperTheming.enableQtApps' "$SHELL_CONFIG_FILE")
-        [ "$enable_qt_apps" == "false" ] && return
+        enable_qt_apps=$(jq -r '.appearance.wallpaperTheming.enableQtApps' "$SHELL_CONFIG_FILE")
+        if [ "$enable_qt_apps" == "false" ]; then
+            return
+        fi
     fi
     
     # Apply pywal colors to KDE
@@ -49,75 +30,100 @@ handle_kde_material_you_colors() {
     fi
 }
 
-pre_process() {
-    # Set GNOME color-scheme to dark
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
+# Reload terminal colors for active terminals
+reload_terminal_colors() {
+    # For kitty terminals - send SIGUSR1 signal to reload colors
+    command -v kitty &>/dev/null && killall -SIGUSR1 kitty 2>/dev/null
     
-    mkdir -p "$CACHE_DIR/user/generated"
+    # For wezterm terminals
+    if pgrep -x wezterm-gui >/dev/null; then
+        # Wezterm watches config files automatically, just touch the colors file
+        [ -f ~/.cache/wal/colors-wezterm.toml ] && touch ~/.cache/wal/colors-wezterm.toml
+    fi
+    
+    return 0
+}
+
+pre_process() {
+    local mode_flag="$1"
+    # Set GNOME color-scheme if mode_flag is dark or light
+    if [[ "$mode_flag" == "dark" ]]; then
+        gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+        gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
+    elif [[ "$mode_flag" == "light" ]]; then
+        gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+        gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+    fi
+    if [ ! -d "$CACHE_DIR"/user/generated ]; then
+        mkdir -p "$CACHE_DIR"/user/generated
+    fi
 }
 
 post_process() {
     local screen_width="$1"
     local screen_height="$2"
     local wallpaper_path="$3"
-    
     handle_kde_material_you_colors &
     "$SCRIPT_DIR/code/material-code-set-color.sh" &
 }
 
 check_and_prompt_upscale() {
     local img="$1"
-    
-    command -v identify &>/dev/null || return
-    [ ! -f "$img" ] && return
-    
-    local min_width_desired=$(hyprctl monitors -j | jq '([.[].width] | max)')
-    local min_height_desired=$(hyprctl monitors -j | jq '([.[].height] | max)')
-    local img_width img_height
-    
-    if is_video "$img"; then
-        img_width=$min_width_desired
-        img_height=$min_height_desired
-    else
-        img_width=$(identify -format "%w" "$img" 2>/dev/null)
-        img_height=$(identify -format "%h" "$img" 2>/dev/null)
+    min_width_desired="$(hyprctl monitors -j | jq '([.[].width] | max)' | xargs)" # max monitor width
+    min_height_desired="$(hyprctl monitors -j | jq '([.[].height] | max)' | xargs)" # max monitor height
+    if command -v identify &>/dev/null && [ -f "$img" ]; then
+        local img_width img_height
+        if is_video "$img"; then # Not check resolution for videos, just let em pass
+            img_width=$min_width_desired
+            img_height=$min_height_desired
+        else
+            img_width=$(identify -format "%w" "$img" 2>/dev/null)
+            img_height=$(identify -format "%h" "$img" 2>/dev/null)
+        fi
+        if [[ "$img_width" -lt "$min_width_desired" || "$img_height" -lt "$min_height_desired" ]]; then
+            action=$(notify-send "Upscale?" \
+                "Image resolution (${img_width}x${img_height}) is lower than screen resolution (${min_width_desired}x${min_height_desired})" \
+                -A "open_upscayl=Open Upscayl"\
+                -a "Wallpaper switcher")
+            if [[ "$action" == "open_upscayl" ]]; then
+                if command -v upscayl &>/dev/null; then
+                    nohup upscayl > /dev/null 2>&1 &
+                else
+                    action2=$(notify-send \
+                        -a "Wallpaper switcher" \
+                        -c "im.error" \
+                        -A "install_upscayl=Install Upscayl (Arch)" \
+                        "Install Upscayl?" \
+                        "yay -S upscayl-bin")
+                    if [[ "$action2" == "install_upscayl" ]]; then
+                        kitty -1 yay -S upscayl-bin
+                        if command -v upscayl &>/dev/null; then
+                            nohup upscayl > /dev/null 2>&1 &
+                        fi
+                    fi
+                fi
+            fi
+        fi
     fi
-    
-    [ "$img_width" -ge "$min_width_desired" ] && [ "$img_height" -ge "$min_height_desired" ] && return
-    
-    local action=$(notify-send "Upscale?" \
-        "Image resolution (${img_width}x${img_height}) is lower than screen resolution (${min_width_desired}x${min_height_desired})" \
-        -A "open_upscayl=Open Upscayl" \
-        -a "Wallpaper switcher")
-    
-    [ "$action" != "open_upscayl" ] && return
-    
-    if command -v upscayl &>/dev/null; then
-        nohup upscayl > /dev/null 2>&1 &
-        return
-    fi
-    
-    local action2=$(notify-send \
-        -a "Wallpaper switcher" \
-        -c "im.error" \
-        -A "install_upscayl=Install Upscayl (Arch)" \
-        "Install Upscayl?" \
-        "yay -S upscayl-bin")
-    
-    if [ "$action2" == "install_upscayl" ]; then
-        kitty -1 yay -S upscayl-bin
-        command -v upscayl &>/dev/null && nohup upscayl > /dev/null 2>&1 &
-    fi
+}
+
+CUSTOM_DIR="$XDG_CONFIG_HOME/hypr/custom"
+RESTORE_SCRIPT_DIR="$CUSTOM_DIR/scripts"
+RESTORE_SCRIPT="$RESTORE_SCRIPT_DIR/__restore_video_wallpaper.sh"
+THUMBNAIL_DIR="$RESTORE_SCRIPT_DIR/mpvpaper_thumbnails"
+VIDEO_OPTS="no-audio loop hwdec=auto scale=bilinear interpolation=no video-sync=display-resample panscan=1.0 video-scale-x=1.0 video-scale-y=1.0 video-align-x=0.5 video-align-y=0.5 load-scripts=no"
+
+is_video() {
+    local extension="${1##*.}"
+    [[ "$extension" == "mp4" || "$extension" == "webm" || "$extension" == "mkv" || "$extension" == "avi" || "$extension" == "mov" ]] && return 0 || return 1
 }
 
 kill_existing_mpvpaper() {
-    pkill -f -9 mpvpaper 2>/dev/null || true
+    pkill -f -9 mpvpaper || true
 }
 
 create_restore_script() {
-    local video_path="$1"
-    
+    local video_path=$1
     cat > "$RESTORE_SCRIPT.tmp" << EOF
 #!/bin/bash
 # Generated by switchwall.sh - Don't modify it by yourself.
@@ -133,7 +139,7 @@ EOF
 }
 
 remove_restore() {
-    cat > "$RESTORE_SCRIPT.tmp" << 'EOF'
+    cat > "$RESTORE_SCRIPT.tmp" << EOF
 #!/bin/bash
 # The content of this script will be generated by switchwall.sh - Don't modify it by yourself.
 EOF
@@ -142,202 +148,192 @@ EOF
 
 set_wallpaper_path() {
     local path="$1"
-    [ -f "$SHELL_CONFIG_FILE" ] && \
-        jq --arg path "$path" '.background.wallpaperPath = $path' "$SHELL_CONFIG_FILE" > "$SHELL_CONFIG_FILE.tmp" && \
-        mv "$SHELL_CONFIG_FILE.tmp" "$SHELL_CONFIG_FILE"
+    if [ -f "$SHELL_CONFIG_FILE" ]; then
+        jq --arg path "$path" '.background.wallpaperPath = $path' "$SHELL_CONFIG_FILE" > "$SHELL_CONFIG_FILE.tmp" && mv "$SHELL_CONFIG_FILE.tmp" "$SHELL_CONFIG_FILE"
+    fi
 }
 
 set_thumbnail_path() {
     local path="$1"
-    [ -f "$SHELL_CONFIG_FILE" ] && \
-        jq --arg path "$path" '.background.thumbnailPath = $path' "$SHELL_CONFIG_FILE" > "$SHELL_CONFIG_FILE.tmp" && \
-        mv "$SHELL_CONFIG_FILE.tmp" "$SHELL_CONFIG_FILE"
-}
-
-# Reload terminal colors for active terminals
-reload_terminal_colors() {
-    # # Reload in background with slight delay to avoid crashing current terminal
-
-    #     # For kitty terminals
-    #     command -v kitty &>/dev/null && killall -SIGUSR1 kitty 2>/dev/null
-        
-    #     # For wezterm terminals
-    #     if pgrep -x wezterm-gui >/dev/null; then
-    #         # Wezterm watches config files automatically, just touch the colors file
-    #         [ -f ~/.cache/wal/colors-wezterm.toml ] && touch ~/.cache/wal/colors-wezterm.toml
-    #     fi
-    return 0
-}
-
-# Apply wallpaper with SWWW and generate colors with pywal
-apply_wallpaper_swww() {
-    local imgpath="$1"
-    
-  # Save wallpaper path to config
-    set_wallpaper_path "$imgpath"
-
-    # Apply with swww (visually faster)
-    swww img "$imgpath" --transition-type none
-    local swww_pid=$!
-    
-    # Generate colors with pywal in dark mode
-    wal -i "$imgpath" -q &
-    local wal_pid=$!
-    
-    # Wait for both to finish
-    wait $swww_pid $wal_pid
-    
-    # Reload colors for active terminals
-    reload_terminal_colors
-    
-    # Apply colors to KDE/Dolphin
-    handle_kde_material_you_colors
-}
-
-handle_video_wallpaper() {
-    local imgpath="$1"
-    
-    mkdir -p "$THUMBNAIL_DIR"
-    
-    # Check dependencies
-    local missing_deps=()
-    command -v mpvpaper &>/dev/null || missing_deps+=("mpvpaper")
-    command -v ffmpeg &>/dev/null || missing_deps+=("ffmpeg")
-    
-    if [ ${#missing_deps[@]} -gt 0 ]; then
-        echo "Missing deps: ${missing_deps[*]}"
-        echo "Arch: sudo pacman -S ${missing_deps[*]}"
-        
-        local action=$(notify-send \
-            -a "Wallpaper switcher" \
-            -c "im.error" \
-            -A "install_arch=Install (Arch)" \
-            "Can't switch to video wallpaper" \
-            "Missing dependencies: ${missing_deps[*]}")
-        
-        if [ "$action" == "install_arch" ]; then
-            kitty -1 sudo pacman -S "${missing_deps[@]}"
-            if command -v mpvpaper &>/dev/null && command -v ffmpeg &>/dev/null; then
-                notify-send 'Wallpaper switcher' 'Alright, try again!' -a "Wallpaper switcher"
-            fi
-        fi
-        return 1
+    if [ -f "$SHELL_CONFIG_FILE" ]; then
+        jq --arg path "$path" '.background.thumbnailPath = $path' "$SHELL_CONFIG_FILE" > "$SHELL_CONFIG_FILE.tmp" && mv "$SHELL_CONFIG_FILE.tmp" "$SHELL_CONFIG_FILE"
     fi
-    
-    # Set wallpaper path
-    set_wallpaper_path "$imgpath"
-    
-    # Set video wallpaper
-    hyprctl monitors -j | jq -r '.[] | .name' | while read -r monitor; do
-        mpvpaper -o "$VIDEO_OPTS" "$monitor" "$imgpath" &
-        sleep 0.1
-    done
-    
-    # Extract first frame for color generation
-    local thumbnail="$THUMBNAIL_DIR/$(basename "$imgpath").jpg"
-    ffmpeg -y -i "$imgpath" -vframes 1 "$thumbnail" 2>/dev/null
-    
-    # Set thumbnail path
-    set_thumbnail_path "$thumbnail"
-    
-    if [ ! -f "$thumbnail" ]; then
-        echo "Cannot create image to colorgen"
-        remove_restore
-        return 1
-    fi
-    
-    # Generate colors from thumbnail with pywal in dark mode
-    wal -i "$thumbnail" -q
-    
-    # Reload colors for active terminals
-    reload_terminal_colors
-    
-    create_restore_script "$imgpath"
-    return 0
 }
 
 switch() {
-    local imgpath="$1"
-    local type_flag="$2"
-    local color_flag="$3"
-    local color="$4"
+    imgpath="$1"
+    mode_flag="$2"
+    type_flag="$3"
+    color_flag="$4"
+    color="$5"
     
     # Start Gemini auto-categorization if enabled
-    if [ -f "$SHELL_CONFIG_FILE" ]; then
-        local aiStylingEnabled=$(jq -r '.background.clock.cookie.aiStyling' "$SHELL_CONFIG_FILE")
-        if [ "$aiStylingEnabled" == "true" ]; then
-            "$SCRIPT_DIR/../ai/gemini-categorize-wallpaper.sh" "$imgpath" > "$STATE_DIR/user/generated/wallpaper/category.txt" &
-        fi
+    aiStylingEnabled=$(jq -r '.background.clock.cookie.aiStyling' "$SHELL_CONFIG_FILE")
+    if [[ "$aiStylingEnabled" == "true" ]]; then
+        "$SCRIPT_DIR/../ai/gemini-categorize-wallpaper.sh" "$imgpath" > "$STATE_DIR/user/generated/wallpaper/category.txt" &
     fi
     
-    # Get cursor position
-    local scale screenx screeny screensizey
-    read -r scale screenx screeny screensizey < <(hyprctl monitors -j | jq '.[] | select(.focused) | .scale, .x, .y, .height' | xargs)
-    
-    local cursorposx=$(hyprctl cursorpos -j 2>/dev/null | jq '.x' || echo 960)
+    read scale screenx screeny screensizey < <(hyprctl monitors -j | jq '.[] | select(.focused) | .scale, .x, .y, .height' | xargs)
+    cursorposx=$(hyprctl cursorpos -j | jq '.x' 2>/dev/null) || cursorposx=960
     cursorposx=$(bc <<< "scale=0; ($cursorposx - $screenx) * $scale / 1")
-    
-    local cursorposy=$(hyprctl cursorpos -j 2>/dev/null | jq '.y' || echo 540)
+    cursorposy=$(hyprctl cursorpos -j | jq '.y' 2>/dev/null) || cursorposy=540
     cursorposy=$(bc <<< "scale=0; ($cursorposy - $screeny) * $scale / 1")
-    local cursorposy_inverted=$((screensizey - cursorposy))
+    cursorposy_inverted=$((screensizey - cursorposy))
     
-    if [ "$color_flag" == "1" ]; then
-        # For color mode, we'll need to create a temp image with that color
+    local wallpaper_for_pywal=""
+    
+    if [[ "$color_flag" == "1" ]]; then
+        # For color mode, create a temp image with that color for pywal
         local temp_color_img="/tmp/wal_color_${color//\#/}.png"
-        magick -size 1920x1080 "xc:$color" "$temp_color_img"
-        imgpath="$temp_color_img"
+        magick -size 1920x1080 "xc:$color" "$temp_color_img" 2>/dev/null
+        wallpaper_for_pywal="$temp_color_img"
+        matugen_args=(color hex "$color")
     else
-        [ -z "$imgpath" ] && { echo 'Aborted'; return 0; }
-        
+        if [[ -z "$imgpath" ]]; then
+            echo 'Aborted'
+            exit 0
+        fi
         check_and_prompt_upscale "$imgpath" &
         kill_existing_mpvpaper
         
-        # IF USING SWWW AND NOT VIDEO, APPLY WITH SWWW
-        if [ "$USE_SWWW" == "true" ] && ! is_video "$imgpath"; then
-            # Apply wallpaper with swww and pywal
-            apply_wallpaper_swww "$imgpath"
-            remove_restore
-        elif is_video "$imgpath"; then
-            handle_video_wallpaper "$imgpath" || return 1
-        else
-            # Fallback to original method if USE_SWWW=false
+        if is_video "$imgpath"; then
+            mkdir -p "$THUMBNAIL_DIR"
+            missing_deps=()
+            if ! command -v mpvpaper &> /dev/null; then
+                missing_deps+=("mpvpaper")
+            fi
+            if ! command -v ffmpeg &> /dev/null; then
+                missing_deps+=("ffmpeg")
+            fi
+            if [ ${#missing_deps[@]} -gt 0 ]; then
+                echo "Missing deps: ${missing_deps[*]}"
+                echo "Arch: sudo pacman -S ${missing_deps[*]}"
+                action=$(notify-send \
+                    -a "Wallpaper switcher" \
+                    -c "im.error" \
+                    -A "install_arch=Install (Arch)" \
+                    "Can't switch to video wallpaper" \
+                    "Missing dependencies: ${missing_deps[*]}")
+                if [[ "$action" == "install_arch" ]]; then
+                    kitty -1 sudo pacman -S "${missing_deps[*]}"
+                    if command -v mpvpaper &>/dev/null && command -v ffmpeg &>/dev/null; then
+                        notify-send 'Wallpaper switcher' 'Alright, try again!' -a "Wallpaper switcher"
+                    fi
+                fi
+                exit 0
+            fi
+            
+            # Set wallpaper path
             set_wallpaper_path "$imgpath"
             
-            # Generate colors with pywal in dark mode
-            wal -i "$imgpath" -q
+            # Set video wallpaper
+            local video_path="$imgpath"
+            monitors=$(hyprctl monitors -j | jq -r '.[] | .name')
+            for monitor in $monitors; do
+                mpvpaper -o "$VIDEO_OPTS" "$monitor" "$video_path" &
+                sleep 0.1
+            done
             
-            # Reload colors for active terminals
-            reload_terminal_colors
+            # Extract first frame for color generation
+            thumbnail="$THUMBNAIL_DIR/$(basename "$imgpath").jpg"
+            ffmpeg -y -i "$imgpath" -vframes 1 "$thumbnail" 2>/dev/null
             
+            # Set thumbnail path
+            set_thumbnail_path "$thumbnail"
+            
+            if [ -f "$thumbnail" ]; then
+                wallpaper_for_pywal="$thumbnail"
+                matugen_args=(image "$thumbnail")
+                create_restore_script "$video_path"
+            else
+                echo "Cannot create image to colorgen"
+                remove_restore
+                exit 1
+            fi
+        else
+            wallpaper_for_pywal="$imgpath"
+            matugen_args=(image "$imgpath")
+            # Update wallpaper path in config
+            set_wallpaper_path "$imgpath"
             remove_restore
         fi
     fi
     
-    pre_process
+    # Determine mode if not set
+    if [[ -z "$mode_flag" ]]; then
+        current_mode=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null | tr -d "'")
+        if [[ "$current_mode" == "prefer-dark" ]]; then
+            mode_flag="dark"
+        else
+            mode_flag="light"
+        fi
+    fi
+    
+    # Run pywal with the wallpaper
+    if [[ -n "$wallpaper_for_pywal" && -f "$wallpaper_for_pywal" ]]; then
+        if [[ "$mode_flag" == "light" ]]; then
+            wal -i "$wallpaper_for_pywal" -l -q
+        else
+            wal -i "$wallpaper_for_pywal" -q
+        fi
+        
+        # Reload terminal colors
+        reload_terminal_colors
+    fi
+    
+    # enforce dark mode for matugen
+    if [[ -n "$mode_flag" ]]; then
+        matugen_args+=(--mode "$mode_flag")
+    fi
+    [[ -n "$type_flag" ]] && matugen_args+=(--type "$type_flag")
+    
+    pre_process "$mode_flag"
     
     # Check if app and shell theming is enabled in config
     if [ -f "$SHELL_CONFIG_FILE" ]; then
-        local enable_apps_shell=$(jq -r '.appearance.wallpaperTheming.enableAppsAndShell' "$SHELL_CONFIG_FILE")
+        enable_apps_shell=$(jq -r '.appearance.wallpaperTheming.enableAppsAndShell' "$SHELL_CONFIG_FILE")
         if [ "$enable_apps_shell" == "false" ]; then
-            echo "App and shell theming disabled, skipping color generation"
+            echo "App and shell theming disabled, skipping matugen and color generation"
             return
         fi
     fi
     
-    # Run applycolor.sh if it exists (for other integrations)
-    [ -f "$SCRIPT_DIR/applycolor.sh" ] && "$SCRIPT_DIR/applycolor.sh"
+    # Run matugen for other apps (not for terminal colors)
+    matugen "${matugen_args[@]}"
+    
+    "$SCRIPT_DIR"/applycolor.sh
     
     # Pass screen width, height, and wallpaper path to post_process
-    local max_width_desired=$(hyprctl monitors -j | jq '([.[].width] | min)')
-    local max_height_desired=$(hyprctl monitors -j | jq '([.[].height] | min)')
+    max_width_desired="$(hyprctl monitors -j | jq '([.[].width] | min)' | xargs)"
+    max_height_desired="$(hyprctl monitors -j | jq '([.[].height] | min)' | xargs)"
     post_process "$max_width_desired" "$max_height_desired" "$imgpath"
 }
 
 main() {
-    local imgpath="" type_flag="" color_flag="" color="" noswitch_flag=""
+    imgpath=""
+    mode_flag=""
+    type_flag=""
+    color_flag=""
+    color=""
+    noswitch_flag=""
     
-    while [ $# -gt 0 ]; do
+    get_type_from_config() {
+        jq -r '.appearance.palette.type' "$SHELL_CONFIG_FILE" 2>/dev/null || echo "auto"
+    }
+    
+    detect_scheme_type_from_image() {
+        local img="$1"
+        source "$(eval echo $ILLOGICAL_IMPULSE_VIRTUAL_ENV)/bin/activate"
+        "$SCRIPT_DIR"/scheme_for_image.py "$img" 2>/dev/null | tr -d '\n'
+        deactivate
+    }
+    
+    while [[ $# -gt 0 ]]; do
         case "$1" in
+            --mode)
+                mode_flag="$2"
+                shift 2
+                ;;
             --type)
                 type_flag="$2"
                 shift 2
@@ -362,22 +358,64 @@ main() {
                 shift
                 ;;
             *)
-                [ -z "$imgpath" ] && imgpath="$1"
+                if [[ -z "$imgpath" ]]; then
+                    imgpath="$1"
+                fi
                 shift
                 ;;
         esac
     done
     
-    # Only prompt for wallpaper if not using --color and not using --noswitch and no imgpath set
-    if [ -z "$imgpath" ] && [ -z "$color_flag" ] && [ -z "$noswitch_flag" ]; then
-        cd "$(xdg-user-dir PICTURES)/Wallpapers/showcase" 2>/dev/null || \
-        cd "$(xdg-user-dir PICTURES)/Wallpapers" 2>/dev/null || \
-        cd "$(xdg-user-dir PICTURES)" || return 1
-        
-        imgpath=$(kdialog --getopenfilename . --title 'Choose wallpaper')
+    # If type_flag is not set, get it from config
+    if [[ -z "$type_flag" ]]; then
+        type_flag="$(get_type_from_config)"
     fi
     
-    switch "$imgpath" "$type_flag" "$color_flag" "$color"
+    # Validate type_flag (allow 'auto' as well)
+    allowed_types=(scheme-content scheme-expressive scheme-fidelity scheme-fruit-salad scheme-monochrome scheme-neutral scheme-rainbow scheme-tonal-spot auto)
+    valid_type=0
+    for t in "${allowed_types[@]}"; do
+        if [[ "$type_flag" == "$t" ]]; then
+            valid_type=1
+            break
+        fi
+    done
+    if [[ $valid_type -eq 0 ]]; then
+        echo "[switchwall.sh] Warning: Invalid type '$type_flag', defaulting to 'auto'" >&2
+        type_flag="auto"
+    fi
+    
+    # Only prompt for wallpaper if not using --color and not using --noswitch and no imgpath set
+    if [[ -z "$imgpath" && -z "$color_flag" && -z "$noswitch_flag" ]]; then
+        cd "$(xdg-user-dir PICTURES)/Wallpapers/showcase" 2>/dev/null || cd "$(xdg-user-dir PICTURES)/Wallpapers" 2>/dev/null || cd "$(xdg-user-dir PICTURES)" || return 1
+        imgpath="$(kdialog --getopenfilename . --title 'Choose wallpaper')"
+    fi
+    
+    # If type_flag is 'auto', detect scheme type from image (after imgpath is set)
+    if [[ "$type_flag" == "auto" ]]; then
+        if [[ -n "$imgpath" && -f "$imgpath" ]]; then
+            detected_type="$(detect_scheme_type_from_image "$imgpath")"
+            # Only use detected_type if it's valid
+            valid_detected=0
+            for t in "${allowed_types[@]}"; do
+                if [[ "$detected_type" == "$t" && "$detected_type" != "auto" ]]; then
+                    valid_detected=1
+                    break
+                fi
+            done
+            if [[ $valid_detected -eq 1 ]]; then
+                type_flag="$detected_type"
+            else
+                echo "[switchwall] Warning: Could not auto-detect a valid scheme, defaulting to 'scheme-tonal-spot'" >&2
+                type_flag="scheme-tonal-spot"
+            fi
+        else
+            echo "[switchwall] Warning: No image to auto-detect scheme from, defaulting to 'scheme-tonal-spot'" >&2
+            type_flag="scheme-tonal-spot"
+        fi
+    fi
+    
+    switch "$imgpath" "$mode_flag" "$type_flag" "$color_flag" "$color"
 }
 
 main "$@"
