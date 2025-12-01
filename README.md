@@ -1,74 +1,75 @@
 # Dotfiles - Arch Linux + Hyprland
 
-Mi configuración personal para Arch Linux con Hyprland, basada en el excelente trabajo de [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland). Esta versión incluye configuraciones pre-configuradas y scripts automatizados para una instalación sin complicaciones.
+My personal configuration for Arch Linux with Hyprland, based on the excellent work of [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland). This version includes pre-configured settings and automated scripts for a hassle-free installation 𓆩♡𓆪
 
 <div align="center">
-    <h2>• screenshots •</h2>
+    <h2>☆ screenshots ☆</h2>
     <h3></h3>
 </div>
 
-| AI | Common widgets |
+| Some Widget | Window management |
 |:---|:---------------|
-| ![image](/Screenshots/IA.jpeg) | ![image](/Screenshots/SomeWidgets.jpeg) |
-| System Controller | Weeb power |
-| ![image](/Screenshots/SystemController.jpeg) | ![image](/Screenshots/Web.jpeg) |
+| ![image](/Screenshots/SomeWidget.jpeg) | ![image](/Screenshots/WindowManagement.jpeg) |
+| System Controller | IA |
+| ![image](/Screenshots/SystemController.jpeg) | ![image](/Screenshots/IA.jpeg) |
 
-## Características principales
+## Main Features (≧ω≦) ♪✧
 
-- **Configuración lista para usar** - Sin necesidad de configurar manualmente cada aplicación
-- **Scripts automatizados** - Instalación de dependencias y configuración en un solo comando
-- **Backups automáticos** - Tus configuraciones actuales se respaldan antes de la instalación
-- **Temas y wallpapers incluidos** - Wallpapers personalizados y configuraciones visuales
-- **Sincronización bidireccional** - Scripts para actualizar tanto desde el repo como hacia el repo
+- 🌸 **Ready-to-use configuration** - No need to manually configure each application ♬
+- ☆ **Automated scripts** - Dependency installation and setup in a single command ○♩
+- 🌷 **Themes and wallpapers included** - Custom wallpapers and visual configurations ●♩
+- 🤍 **Bidirectional synchronization** - Scripts to update both from and to the repo ♡
 
-## Diferencias con el dotfile original
+## Differences from the original dotfile (⁄ ⁄>⁄ ▽ ⁄<⁄ ⁄) ☆
 
-Este dotfile está basado en [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland) pero incluye:
+This dotfile is based on [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland) but includes:
 
-- **Configuraciones pre-establecidas** - No necesitas configurar manualmente
-- **Scripts automatizados** - Instalación y actualización automática
-- **Wallpapers incluidos** - Colección de fondos personalizados
-- **Dependencias completas** - Script que instala todo lo necesario
-- **Manejo robusto de errores** - Verificación de permisos y reintentos
-- **Sistema de backups** - Protege tus configuraciones existentes
+- 𖥔 **Pre-established configurations** - No manual setup needed ♬
+- ☾ **Automated scripts** - Automatic installation and updates ○♩
+- 🌸 **Wallpapers included** - Collection of custom backgrounds ●♩
+- 🖤 **Complete dependencies** - Script that installs everything needed ♪✧
+- 🌷 **Robust error handling** - Permission verification and retries ♡
+- ☆ **Backup system** - Protects your existing configurations ❤
 
-## Documentación técnica
+## Technical Documentation (>///<) ♬
 
-Para información detallada sobre **instalación completa**, **dependencias específicas**, **configuraciones avanzadas** y **solución de problemas**, consulta la [**Documentación Técnica**](SECURITY.md).
+For detailed information about **complete installation**, **specific dependencies**, **advanced configurations**, and **troubleshooting**, check the [**Technical Documentation**](SECURITY.md). ☆
 
-La documentación técnica incluye:
-- **Instalación paso a paso** - Guía completa con `dependencies.sh` e `install.sh`
-- **Atajos de teclado completos** - Más de 25 combinaciones para Hyprland
-- **Estructura del proyecto** - Arquitectura completa de carpetas y archivos
-- **Aplicaciones configuradas** - Fish, Hyprland, Kitty, Neovim y más
-- **Scripts automatizados** - Funcionamiento de install.sh, update.sh y dependencies.sh
-- **Personalización** - Cómo modificar wallpapers, temas y configuraciones
+The technical documentation includes:
 
-## Créditos
+- 🤍 **Step-by-step installation** - Complete guide with `rice.sh`, `dependencies.sh` and `install.sh` ○♩
+- 𖥔 **Complete keyboard shortcuts** - Over 25 combinations for Hyprland ●♩
+- ☾ **Project structure** - Complete folder and file architecture ♪✧
+- 🌸 **Configured applications** - Hyprland, quickshell, Kitty, fastfetch and more ♡
+- ☆ **Automated scripts** - How rice.sh, install.sh, dependencies.sh and update.sh work ❤
+- 🌷 **Customization** - How to modify wallpapers, themes and configurations ♬
 
-Este proyecto está basado en el increíble trabajo de:
-- **[end-4/dots-hyprland](https://github.com/end-4/dots-hyprland)** - Dotfile base y configuraciones principales
-- **Comunidad Hyprland** - Por el excelente compositor y documentación
-- **Arch Linux** - Por la flexibilidad y control del sistema
+## Credits (≧∇≦) ☆
 
-## Licencia
+This project is based on the incredible work of:
 
-Este proyecto sigue la misma filosofía open-source del proyecto original. Siéntete libre de usar, modificar y compartir.
+- 🌸 **[end-4/dots-hyprland](https://github.com/end-4/dots-hyprland)** - Base dotfile and main configurations ☆
+- 🖤 **Hyprland Community** - For the excellent compositor and documentation ○♩
+- 🌷 **Arch Linux** - For the flexibility and system control ●♩
 
-## Contribuciones
+## License (っ＞ω＜c) ♪✧
 
-¿Encontraste algún bug o tienes una mejora? ¡Las contribuciones son bienvenidas!
+This project follows the same open-source philosophy as the original project. Feel free to use, modify and share. ♡
 
-1. Fork del proyecto
-2. Crea tu rama de características (`git checkout -b feature/AmazingFeature`)
-3. Commit de cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+## Contributions (≧∇≦) ☆
 
-## Contacto
+Found a bug or have an improvement? Contributions are welcome! (ᗒᗨᗕ) ♬
 
-Si tienes dudas, problemas con la instalación o sugerencias, puedes contactarme directamente:
+1. 🌸 Fork the project ○♩
+2. ☆ Create your feature branch `git checkout -b feature/AmazingFeature` ●♩
+3. 🤍 Commit your changes `git commit -m 'Add some AmazingFeature'` ♪✧
+4. 𖥔 Push to the branch `git push origin feature/AmazingFeature` ♡
+5. 🌷 Open a Pull Request ❤
+
+## Contact (⁄ ⁄>⁄ ▽ ⁄<⁄ ⁄) ☆
+
+If you have questions, installation problems or suggestions, you can contact me directly: ♬
 
 **Discord**: `0crazylove0`
 
-No dudes en escribir si necesitas ayuda con alguna configuración específica o si encuentras algún error. ¡Estoy aquí para ayudar!
+Don't hesitate to write if you need help with any specific configuration or if you find any errors. I'm here to help! (≧ω≦) ♡
