@@ -1,13 +1,11 @@
 import QtQuick
 import Quickshell
 import qs.modules.common.functions
-
 pragma Singleton
 pragma ComponentBehavior: Bound
 
 Singleton {
     id: root
-    
     property QtObject m3colors
     property QtObject animation
     property QtObject animationCurves
@@ -16,7 +14,7 @@ Singleton {
     property QtObject font
     property QtObject sizes
     property string syntaxHighlightingTheme
-    
+
     // Transparency. The quadratic functions were derived from analysis of hand-picked transparency values.
     ColorQuantizer {
         id: wallColorQuant
@@ -26,58 +24,94 @@ Singleton {
         depth: 0 // 2^0 = 1 color
         rescaleSize: 10
     }
-    
     property real wallpaperVibrancy: (wallColorQuant.colors[0]?.hslSaturation + wallColorQuant.colors[0]?.hslLightness) / 2
-    
     property real autoBackgroundTransparency: { // y = 0.5768x^2 - 0.759x + 0.2896
         let x = wallpaperVibrancy
         let y = 0.5768 * (x * x) - 0.759 * (x) + 0.2896
         return Math.max(0, Math.min(0.22, y))
     }
-    
     property real autoContentTransparency: { // y = -10.1734x^2 + 3.4457x + 0.1872
         let x = autoBackgroundTransparency
         let y = -10.1734 * (x * x) + 3.4457 * (x) + 0.1872
         return Math.max(0, Math.min(0.6, y))
     }
-    
     property real backgroundTransparency: Config?.options.appearance.transparency.enable ? Config?.options.appearance.transparency.automatic ? autoBackgroundTransparency : Config?.options.appearance.transparency.backgroundTransparency : 0
     property real contentTransparency: Config?.options.appearance.transparency.enable ? Config?.options.appearance.transparency.automatic ? autoContentTransparency : Config?.options.appearance.transparency.contentTransparency : 0
-    
+
     m3colors: QtObject {
         property bool darkmode: true
         property bool transparent: false
-        
-        property color m3background: "#202020"
-        property color m3onBackground: "#DADADA"
-        property color m3surfaceContainerLow: "#181818"
-        property color m3surfaceContainer: "#303030"
-        property color m3surfaceContainerHigh: "#3a3a3a"
-        property color m3surfaceContainerHighest: "#444444"
-        property color m3onSurface: "#AAAAAA"
-        property color m3onSurfaceVariant: "#AAAAAA"
-        property color m3inverseSurface: "#FFFFFF"
-        property color m3inverseOnSurface: "#000000"
-        property color m3outline: "#F2F2F2"
-        property color m3outlineVariant: "#797979"
+        property color m3background: "#141313"
+        property color m3onBackground: "#e6e1e1"
+        property color m3surface: "#141313"
+        property color m3surfaceDim: "#141313"
+        property color m3surfaceBright: "#3a3939"
+        property color m3surfaceContainerLowest: "#0f0e0e"
+        property color m3surfaceContainerLow: "#1c1b1c"
+        property color m3surfaceContainer: "#201f20"
+        property color m3surfaceContainerHigh: "#2b2a2a"
+        property color m3surfaceContainerHighest: "#363435"
+        property color m3onSurface: "#e6e1e1"
+        property color m3surfaceVariant: "#49464a"
+        property color m3onSurfaceVariant: "#cbc5ca"
+        property color m3inverseSurface: "#e6e1e1"
+        property color m3inverseOnSurface: "#313030"
+        property color m3outline: "#948f94"
+        property color m3outlineVariant: "#49464a"
         property color m3shadow: "#000000"
-        property color m3primary: "#E7E7E7"
-        property color m3onPrimary: "#000000"
-        property color m3primaryContainer: "#505050"
-        property color m3onPrimaryContainer: "#E7E7E7"
-        property color m3secondary: "#E7E7E7"
-        property color m3secondaryContainer: "#303030"
-        property color m3onSecondaryContainer: "#B6B6B6"
-        property color m3tertiary: "#D0D0D0"
-        property color m3tertiaryContainer: "#3a3a3a"
-        property color m3onTertiaryContainer: "#E0E0E0"
         property color m3scrim: "#000000"
-        property color m3error: "#F44336"
-        property color m3onError: "#FFFFFF"
-        property color m3errorContainer: "#C62828"
-        property color m3onErrorContainer: "#F8D7DA"
+        property color m3surfaceTint: "#cbc4cb"
+        property color m3primary: "#cbc4cb"
+        property color m3onPrimary: "#322f34"
+        property color m3primaryContainer: "#2d2a2f"
+        property color m3onPrimaryContainer: "#bcb6bc"
+        property color m3inversePrimary: "#615d63"
+        property color m3secondary: "#cac5c8"
+        property color m3onSecondary: "#323032"
+        property color m3secondaryContainer: "#4d4b4d"
+        property color m3onSecondaryContainer: "#ece6e9"
+        property color m3tertiary: "#d1c3c6"
+        property color m3onTertiary: "#372e30"
+        property color m3tertiaryContainer: "#31292b"
+        property color m3onTertiaryContainer: "#c1b4b7"
+        property color m3error: "#ffb4ab"
+        property color m3onError: "#690005"
+        property color m3errorContainer: "#93000a"
+        property color m3onErrorContainer: "#ffdad6"
+        property color m3primaryFixed: "#e7e0e7"
+        property color m3primaryFixedDim: "#cbc4cb"
+        property color m3onPrimaryFixed: "#1d1b1f"
+        property color m3onPrimaryFixedVariant: "#49454b"
+        property color m3secondaryFixed: "#e6e1e4"
+        property color m3secondaryFixedDim: "#cac5c8"
+        property color m3onSecondaryFixed: "#1d1b1d"
+        property color m3onSecondaryFixedVariant: "#484648"
+        property color m3tertiaryFixed: "#eddfe1"
+        property color m3tertiaryFixedDim: "#d1c3c6"
+        property color m3onTertiaryFixed: "#211a1c"
+        property color m3onTertiaryFixedVariant: "#4e4447"
+        property color m3success: "#B5CCBA"
+        property color m3onSuccess: "#213528"
+        property color m3successContainer: "#374B3E"
+        property color m3onSuccessContainer: "#D1E9D6"
+        property color term0: "#EDE4E4"
+        property color term1: "#B52755"
+        property color term2: "#A97363"
+        property color term3: "#AF535D"
+        property color term4: "#A67F7C"
+        property color term5: "#B2416B"
+        property color term6: "#8D76AD"
+        property color term7: "#272022"
+        property color term8: "#0E0D0D"
+        property color term9: "#B52755"
+        property color term10: "#A97363"
+        property color term11: "#AF535D"
+        property color term12: "#A67F7C"
+        property color term13: "#B2416B"
+        property color term14: "#8D76AD"
+        property color term15: "#221A1A"
     }
-    
+
     colors: QtObject {
         property color colSubtext: m3colors.m3outline
         property color colLayer0: ColorUtils.mix(ColorUtils.transparentize(m3colors.m3background, root.backgroundTransparency), m3colors.m3primary, Config.options.appearance.extraBackgroundTint ? 0.99 : 1)
@@ -152,7 +186,7 @@ Singleton {
         property color colErrorContainerActive: ColorUtils.mix(m3colors.m3errorContainer, m3colors.m3onErrorContainer, 0.70)
         property color colOnErrorContainer: m3colors.m3onErrorContainer
     }
-    
+
     rounding: QtObject {
         property int unsharpen: 2
         property int unsharpenmore: 6
@@ -165,7 +199,7 @@ Singleton {
         property int screenRounding: large
         property int windowRounding: 18
     }
-    
+
     font: QtObject {
         property QtObject family: QtObject {
             property string main: Config.options.appearance.fonts.main
@@ -202,7 +236,7 @@ Singleton {
             property int title: huge
         }
     }
-    
+
     animationCurves: QtObject {
         readonly property list<real> expressiveFastSpatial: [0.42, 1.67, 0.21, 0.90, 1, 1] // Default, 350ms
         readonly property list<real> expressiveDefaultSpatial: [0.38, 1.21, 0.22, 1.00, 1, 1] // Default, 500ms
@@ -221,7 +255,7 @@ Singleton {
         readonly property real expressiveSlowSpatialDuration: 650
         readonly property real expressiveEffectsDuration: 200
     }
-    
+
     animation: QtObject {
         property QtObject elementMove: QtObject {
             property int duration: animationCurves.expressiveDefaultSpatialDuration
@@ -236,6 +270,7 @@ Singleton {
                 }
             }
         }
+
         property QtObject elementMoveEnter: QtObject {
             property int duration: 400
             property int type: Easing.BezierSpline
@@ -243,12 +278,14 @@ Singleton {
             property int velocity: 650
             property Component numberAnimation: Component {
                 NumberAnimation {
+                    alwaysRunToEnd: true
                     duration: root.animation.elementMoveEnter.duration
                     easing.type: root.animation.elementMoveEnter.type
                     easing.bezierCurve: root.animation.elementMoveEnter.bezierCurve
                 }
             }
         }
+
         property QtObject elementMoveExit: QtObject {
             property int duration: 200
             property int type: Easing.BezierSpline
@@ -256,12 +293,14 @@ Singleton {
             property int velocity: 650
             property Component numberAnimation: Component {
                 NumberAnimation {
+                    alwaysRunToEnd: true
                     duration: root.animation.elementMoveExit.duration
                     easing.type: root.animation.elementMoveExit.type
                     easing.bezierCurve: root.animation.elementMoveExit.bezierCurve
                 }
             }
         }
+
         property QtObject elementMoveFast: QtObject {
             property int duration: animationCurves.expressiveEffectsDuration
             property int type: Easing.BezierSpline
@@ -273,11 +312,13 @@ Singleton {
                 easing.bezierCurve: root.animation.elementMoveFast.bezierCurve
             }}
             property Component numberAnimation: Component { NumberAnimation {
-                    duration: root.animation.elementMoveFast.duration
-                    easing.type: root.animation.elementMoveFast.type
-                    easing.bezierCurve: root.animation.elementMoveFast.bezierCurve
+                alwaysRunToEnd: true
+                duration: root.animation.elementMoveFast.duration
+                easing.type: root.animation.elementMoveFast.type
+                easing.bezierCurve: root.animation.elementMoveFast.bezierCurve
             }}
         }
+
         property QtObject elementResize: QtObject {
             property int duration: 300
             property int type: Easing.BezierSpline
@@ -285,21 +326,24 @@ Singleton {
             property int velocity: 650
             property Component numberAnimation: Component {
                 NumberAnimation {
+                    alwaysRunToEnd: true
                     duration: root.animation.elementResize.duration
                     easing.type: root.animation.elementResize.type
                     easing.bezierCurve: root.animation.elementResize.bezierCurve
                 }
             }
         }
+
         property QtObject clickBounce: QtObject {
             property int duration: 400
             property int type: Easing.BezierSpline
             property list<real> bezierCurve: animationCurves.expressiveDefaultSpatial
             property int velocity: 850
             property Component numberAnimation: Component { NumberAnimation {
-                    duration: root.animation.clickBounce.duration
-                    easing.type: root.animation.clickBounce.type
-                    easing.bezierCurve: root.animation.clickBounce.bezierCurve
+                alwaysRunToEnd: true
+                duration: root.animation.clickBounce.duration
+                easing.type: root.animation.clickBounce.type
+                easing.bezierCurve: root.animation.clickBounce.bezierCurve
             }}
         }
         
@@ -308,12 +352,13 @@ Singleton {
             property int type: Easing.BezierSpline
             property list<real> bezierCurve: animationCurves.standardDecel
         }
+
         property QtObject menuDecel: QtObject {
             property int duration: 350
             property int type: Easing.OutExpo
         }
     }
-    
+
     sizes: QtObject {
         property real baseBarHeight: 40
         property real barHeight: Config.options.bar.cornerStyle === 1 ? 
@@ -343,6 +388,6 @@ Singleton {
         property real wallpaperSelectorItemMargins: 8
         property real wallpaperSelectorItemPadding: 6
     }
-    
-    syntaxHighlightingTheme: "Monokai"
+
+    syntaxHighlightingTheme: root.m3colors.darkmode ? "Monokai" : "ayu Light"
 }
