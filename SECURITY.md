@@ -1,332 +1,304 @@
-## Instalación detallada
+## Detailed Installation
 
-### 1. Clonar el repositorio
+### 1. Clone the repository
 ```bash
-git clone https://github.com/0CrazyLove/dotfiles.git ~/dotfiles
+git clone https://github.com/0CrazyLove/dotfiles.git
 cd ~/dotfiles
 ```
 
-### 2. Script de dependencias
+### 2. Master installation script (Recommended)
 ```bash
-chmod +x dependencies.sh
+./rice.sh
+```
+This script:
+- Executes the complete installation process
+- Runs dependencies.sh followed by install.sh
+- Handles errors and allows continuation
+- Provides a unified installation experience
+
+### 3. Dependencies installation script (Manual)
+```bash
 ./dependencies.sh
 ```
-Este script:
-- Verifica y corrige permisos del sistema
-- Instala yay (AUR helper) si no está presente
-- Instala todas las dependencias necesarias
-- Ofrece paquetes opcionales
+This script:
+- Verifies and fixes system permissions
+- Installs yay (AUR helper) if not present
+- Installs all necessary dependencies
+- Offers optional packages
 
-### 3. Script de instalación principal
+### 4. Main installation script (Manual)
 ```bash
-chmod +x install.sh
 ./install.sh
 ```
-Este script:
-- Crea backups de configuraciones existentes
-- Copia todas las configuraciones a `~/.config/`
-- Instala wallpapers en `~/Documents/Wallpapers/`
-- Aplica permisos correctos
+This script:
+- Creates backups of existing configurations
+- Copies all configurations to `~/.config/`
+- Installs wallpapers in `~/Documents/walls/`
+- Applies correct permissions
 
+## Configured Applications
 
-## Aplicaciones configuradas
+### Base System
+- **Fish Shell** - Modern shell with intelligent autocompletion
+- **Starship** - Customizable cross-shell prompt
+- **Hyprland** - Dynamic and efficient Wayland compositor
+- **Kitty** - GPU-accelerated terminal
+- **Matugen** - Color selector for Qt Quick
 
-### Sistema base
-- **Fish Shell** - Shell moderno con autocompletado inteligente
-- **Starship** - Prompt cross-shell personalizable
-- **Hyprland** - Compositor Wayland dinámico y eficiente
-- **Hyprlock** - Pantalla de bloqueo
-- **Hypridle** - Daemon de inactividad
-- **Hyprpicker** - Selector de colores
-- **Kitty** - Terminal acelerado por GPU
-- **Neovim** - Editor con configuración LazyVim
+### Tools and Utilities
+- **Grim + Slurp** - Screenshots
+- **Cliphist** - Clipboard manager
+- **Fuzzel** - Application launcher
+- **Fastfetch** - System information
+- **Pywal** - Color scheme generator
+- **QuickShell** - Custom shell for Qt Quick
 
-### Herramientas y utilidades
-- **SWWW** - Daemon de wallpapers para Wayland
-- **Grim + Slurp** - Capturas de pantalla
-- **Cliphist** - Gestor de portapapeles
-- **Fuzzel** - Lanzador de aplicaciones
-- **Neofetch** - Información del sistema
-- **Pywal** - Generador de esquemas de color
-- **QuickShell** - Shell personalizado para Qt Quick
+### Additional Configurations
+- **Illogical Impulse** - Additional theme configurations
+- **Fonts** - JetBrains Mono Nerd, Space Grotesk, and more
 
-### Configuraciones adicionales
-- **Illogical Impulse** - Configuraciones de tema adicionales
-- **Material You Colors** - Paletas de colores dinámicas
-- **Fonts** - JetBrains Mono Nerd, Space Grotesk, y más
+## Hardware Requirements
 
-## Requisitos de Hardware
-
-### Mínimos
+### Minimum
 - CPU: 4 cores
 - RAM: 4GB
-- GPU: Soporte Wayland
+- GPU: Wayland support
 - Storage: 5GB
 
-### Recomendados
+### Recommended
 - CPU: 8+ cores  
 - RAM: 16GB
 - GPU: AMD Vega / NVIDIA GTX 1060+
 - Storage: 20GB
 
-### Componentes Core
+### Core Components
 - Hyprland: ~200MB RAM
 - Fish + Kitty: ~70MB RAM
 - QuickShell: ~200MB RAM
 
-## Atajos de teclado
-Esta configuración incluye una amplia gama de atajos de teclado optimizados para un flujo de trabajo eficiente. Todos los atajos principales usan la tecla **Super** (Windows/Cmd) como modificador principal.
+## Keyboard Shortcuts
+This configuration includes a wide range of keyboard shortcuts optimized for an efficient workflow. All main shortcuts use the **Super** (Windows/Cmd) key as the primary modifier.
 
-### Gestión de workspaces
-| Atajo | Acción |
-|-------|---------|
-| `Super + 1-9` | Cambiar al workspace especificado |
-| `Super + Shift + 1-9` | Mover ventana activa al workspace especificado |
+### Workspace Management
+| Shortcut | Action |
+|----------|--------|
+| `Super + 1-9` | Switch to specified workspace |
+| `Super + Shift + 1-9` | Move active window to specified workspace |
 
-### Gestión de ventanas
-| Atajo | Acción |
-|-------|---------|
-| `Super + Q` | Cerrar ventana activa |
-| `Super + L` | Bloquear pantalla |
-| `Super + J` | Ocultar/mostrar la barra de QuickShell |
-| `Super + F` | Poner ventana en pantalla completa |
-| `Super + Alt + F` | Falso fullscreen (simulación) |
+### Window Management
+| Shortcut | Action |
+|----------|--------|
+| `Super + Q` | Close active window |
+| `Super + L` | Lock screen |
+| `Super + J` | Hide/show QuickShell bar |
+| `Super + F` | Put window in fullscreen |
+| `Super + Alt + F` | Fake fullscreen (simulation) |
 
-### Aplicaciones rápidas
-| Atajo | Acción |
-|-------|---------|
-| `Super + T` | Abrir terminal |
-| `Super + Enter` | Abrir terminal (alternativo) |
-| `Super + W` | Abrir navegador predeterminado |
-| `Super + E` | Abrir explorador de archivos (Dolphin) |
-| `Super + C` | Abrir editor de código (VS Code) |
-| `Super + N` | Abrir menú del sistema |
+### Quick Applications
+| Shortcut | Action |
+|----------|--------|
+| `Super + T` | Open terminal |
+| `Super + Enter` | Open terminal (alternative) |
+| `Super + W` | Open default browser |
+| `Super + E` | Open file explorer (Dolphin) |
+| `Super + C` | Open code editor (VS Code) |
+| `Super + N` | Open system menu |
 
-### Asistente de IA
-| Atajo | Acción |
-|-------|---------|
-| `Super + O` | Abrir asistente de IA |
-| `Super + A` | Abrir asistente de IA (alternativo) |
-| `Super + B` | Abrir asistente de IA (alternativo) |
+### AI Assistant
+| Shortcut | Action |
+|----------|--------|
+| `Super + O` | Open AI assistant |
+| `Super + A` | Open AI assistant (alternative) |
+| `Super + B` | Open AI assistant (alternative) |
 
-### Capturas y multimedia
-| Atajo | Acción |
-|-------|---------|
-| `Super + Shift + S` | Captura de pantalla interactiva |
-| `Super + Shift + T` | OCR: Reconocimiento de texto en pantalla |
-| `Super + Alt + R` | Grabar video MP4 en región seleccionada (sin audio) |
-| `Ctrl + Alt + R` | Grabar video MP4 de pantalla completa (sin audio) |
-| `Super + Shift + Alt + R` | Grabar video MP4 de pantalla completa (con audio) |
-| `Ctrl + Super + T` | Seleccionar fondo de pantalla manualmente |
+### Screenshots and Multimedia
+| Shortcut | Action |
+|----------|--------|
+| `Super + Shift + S` | Interactive screenshot |
+| `Super + Shift + T` | OCR: Screen text recognition |
+| `Super + Shift + A` | Visual search with Google Lens |
+| `Super + Alt + R` | Record MP4 video in selected region (no audio) |
+| `Ctrl + Alt + R` | Record MP4 video fullscreen (no audio) |
+| `Super + Shift + Alt + R` | Record MP4 video fullscreen (with audio) |
+| `Ctrl + Super + T` | Manually select wallpaper |
 
-### Control de audio y media
-| Atajo | Acción |
-|-------|---------|
-| `Super + Shift + M`| Mutear/desmutear audio del sistema y micrófono |
-| `Super + Espacio` | Cambiar distribución de teclado (US ⇄ Latinoamérica) |
-| `Super + Shift + N` | Siguiente canción |
-| `Super + Shift + B` | Canción anterior |
+### Audio and Media Control
+| Shortcut | Action |
+|----------|--------|
+| `Super + Shift + M`| Mute/unmute system audio and microphone |
+| `Super + Space` | Switch keyboard layout (US ⇄ Latin America) |
+| `Super + Shift + N` | Next song |
+| `Super + Shift + B` | Previous song |
 | `Super + Shift + P` | Play/Pause |
-| `Ctrl + Super + V` | Mezclador de volumen |
+| `Ctrl + Super + V` | Volume mixer |
 
-### Zoom y navegación
-| Atajo | Acción |
-|-------|---------|
-| `Super + +` | Hacer zoom donde apunta el mouse |
-| `Super + -` | Disminuir zoom |
+### Zoom and Navigation
+| Shortcut | Action |
+|----------|--------|
+| `Super + +` | Zoom in where mouse points |
+| `Super + -` | Zoom out |
 
-### Portapapeles y herramientas
-| Atajo | Acción |
-|-------|---------|
-| `Super + V` | Abrir historial del portapapeles |
-| `Super + ;` | Abrir historial del portapapeles (alternativo) |
-| `Super + .` | Selector de emojis |
-| `Super + K` | Muestra el diseño de teclado activo|
+### Clipboard and Tools
+| Shortcut | Action |
+|----------|--------|
+| `Super + V` | Open clipboard history |
+| `Super + ;` | Open clipboard history (alternative) |
+| `Super + .` | Emoji selector |
+| `Super + K` | Show active keyboard layout |
 
-### Sistema y herramientas
-| Atajo | Acción |
-|-------|---------|
-| `Ctrl + Shift + Esc` | Administrador de tareas |
+### System and Tools
+| Shortcut | Action |
+|----------|--------|
+| `Super + I` | Open QuickShell configuration interface |
+| `Ctrl + Super + R` | Restart QuickShell |
+| `Ctrl + Shift + Esc` | Task manager |
 
-### Consejos de uso
-- **OCR (Reconocimiento de texto)**: Al presionar `Super + Shift + T`, puedes seleccionar cualquier área de la pantalla y extraer el texto que contenga. El texto reconocido se copia automáticamente al portapapeles. Ideal para copiar texto de imágenes, PDFs, videos o cualquier contenido que no se pueda seleccionar normalmente.
-- **Control de mute: Al usar `Super + Shift + M`, se silencia tanto el audio del sistema como el micrófono simultáneamente. El estado se refleja visualmente en la barra de QuickShell**
-- **Historial de portapapeles**: Al usar `Super + V`, se despliega un menú con todo lo que has copiado. Selecciona el elemento deseado y úsalo con `Ctrl + V`
-- **Selector de emojis**: Con `Super + .` aparece un menú de emojis. Selecciona uno y pégalo con `Ctrl + V`
-- **Control de media**: Los atajos `Super + Shift + N/B/P` están optimizados para Spotify y funcionan específicamente con esta aplicación
-- **Pantalla completa vs Falso fullscreen**: `Super + F` activa fullscreen real, mientras que `Super + Alt + F` simula el comportamiento para apps que lo requieren
-- **Workspaces dinámicos**: Los workspaces se crean automáticamente cuando los necesitas
-- **Zoom inteligente**: El zoom sigue la posición del mouse para mayor precisión
-- **Grabación de video**: Los videos se guardan en `~/Videos/`. Para detener la grabación, ejecuta el mismo comando por segunda vez
+### Usage Tips
+- **OCR (Text Recognition)**: When pressing `Super + Shift + T`, you can select any screen area and extract the text it contains. The recognized text is automatically copied to the clipboard. Ideal for copying text from images, PDFs, videos, or any content that cannot be selected normally.
+- **Visual Search**: With `Super + Shift + A`, select a screen region and it will open Google Lens to search for the selected image content.
+- **Mute Control**: When using `Super + Shift + M`, both system audio and microphone are muted simultaneously. The status is visually reflected in the QuickShell bar.
+- **Clipboard History**: When using `Super + V`, a menu displays everything you've copied. Select the desired item and use it with `Ctrl + V`.
+- **Emoji Selector**: With `Super + .` an emoji menu appears. Select one and paste it with `Ctrl + V`.
+- **Media Control**: The shortcuts `Super + Shift + N/B/P` are optimized for Spotify and work specifically with this application.
+- **Fullscreen vs Fake Fullscreen**: `Super + F` activates real fullscreen, while `Super + Alt + F` simulates the behavior for apps that require it.
+- **Dynamic Workspaces**: Workspaces are created automatically when you need them.
+- **Smart Zoom**: Zoom follows mouse position for greater precision.
+- **Video Recording**: Videos are saved in `~/Videos/`. To stop recording, execute the same command a second time.
 
-## Configuración del Asistente de IA
+## AI Assistant Configuration
 
-### Activar el asistente
-Puedes acceder al asistente de IA de dos formas:
-- Usando los atajos: `Super + O`, `Super + A`, o `Super + B`
-- Click derecho en la parte superior izquierda de la barra
+### Activate the assistant
+You can access the AI assistant in two ways:
+- Using shortcuts: `Super + O`, `Super + A`, or `Super + B`
+- Right-click on the top left of the bar
 
-### Configurar API key
-1. Obtén tu API key de Google: https://aistudio.google.com/app/apikey
-2. En el apartado "Intelligence" del asistente, escribe:
+### Configure API key
+1. Get your Google API key: https://aistudio.google.com/app/apikey
+2. In the "Intelligence" section of the assistant, type:
    ```
-   /key TU_API_KEY_GOOGLE
+   /key YOUR_GOOGLE_API_KEY
    ```
 
-## Personalización
+## Customization
 
-### Cambiar wallpapers
+### Change Wallpapers
 ```bash
-# Los wallpapers están en:
-~/Documents/Wallpapers/
-# Usa el script personalizado:
-~/.config/hypr/scripts/cambiar-fondo-completo.sh
+# Wallpapers are located in:
+~/Documents/walls/
 ```
 
-### Modificar configuraciones
-1. Edita archivos en `~/.config/`
-2. Sincroniza cambios: `./update.sh`
-3. Haz commit de cambios al repositorio
+### Modify Configurations
+1. Edit files in `~/.config/`
+2. Sync changes: `./update.sh`
+3. Commit changes to your remote repo
 
-## Dependencias
+## Dependencies
 
-### Automáticamente instaladas
-El script `dependencies.sh` instala automáticamente:
-- **Paquetes oficiales**: +40 paquetes esenciales
-- **Paquetes AUR**: +25 paquetes adicionales (requiere yay)
-- **Opcional**: VS Code, Discord, Brave Browser
+### Automatically Installed
+The `dependencies.sh` script automatically installs:
+- **Official packages**: 40+ essential packages
+- **AUR packages**: 25+ additional packages (requires yay)
 
-### Requisitos previos
-- **Arch Linux** o distribución basada en Arch
-- **Conexión a internet** para descargar dependencias
-- **Usuario con privilegios sudo**
+### Prerequisites
+- **Arch Linux** or Arch-based distribution
+- **Internet connection** to download dependencies
+- **User with sudo privileges**
 
-## Estructura del proyecto
+## Project Structure
 
 ```
 dotfiles/
-├── .config/                    # Configuraciones principales
+├── .config/                    # Main configurations
 │   ├── fish/                   # Fish shell
 │   ├── hypr/                   # Hyprland ecosystem
-│   │   ├── custom/             # Configuraciones personalizadas
-│   │   ├── hyprland/           # Scripts y configs de Hyprland
-│   │   ├── hyprlock/           # Pantalla de bloqueo
-│   │   ├── scripts/            # Scripts utilitarios
-│   │   └── shaders/            # Shaders personalizados
-│   ├── illogical-impulse/      # Configuraciones de tema adicionales
-│   ├── kitty/                  # Terminal Kitty
-│   ├── neofetch/               # System info display
-│   ├── nvim/                   # Neovim (LazyVim setup)
-│   ├── quickshell/             # Shell Qt Quick personalizado
-│   └── starship.toml           # Configuración del prompt
-├── bin/                        # Scripts personalizados
-│   └── rm                      # Script rm protector
-├── Wallpapers/                 # Wallpapers personalizados
-├── dependencies.sh            # Script de instalación de dependencias
-├── install.sh                 # Script de instalación principal
-└── update.sh                  # Script de sincronización
+│   │   ├── custom/             # Custom configurations
+│   │   ├── hyprland/           # Hyprland scripts and configs
+│   │   ├── hyprlock/           # Lock screen
+│   │   ├── scripts/            # Utility scripts
+│   │   └── shaders/            # Custom shaders
+│   ├── illogical-impulse/      # Additional theme configurations
+│   ├── kitty/                  # Kitty terminal
+│   ├── matugen/                # Color scheme generator
+│   ├── quickshell/             # Custom Qt Quick shell
+│   └── starship.toml           # Prompt configuration
+├── .local/                     # Local user data
+├── bin/                        # Custom scripts
+│   └── rm                      # Protective rm script
+├── wal/                        # Pywal color schemes
+├── walls/                      # Custom wallpapers
+├── dependencies.sh             # Dependencies installation script
+├── install.sh                  # Main installation script
+├── rice.sh                     # Master installation script
+└── update.sh                   # Synchronization script
 ```
 
-## Gestión de configuraciones
+## Configuration Management
 
-### Actualizar desde el repositorio
+### Update from Repository
 ```bash
 cd ~/dotfiles
 git pull
 ./install.sh
 ```
 
-### Sincronizar cambios locales al repositorio
+### Sync Local Changes to Repository
 ```bash
 cd ~/dotfiles
 ./update.sh
 ```
-Este script:
-- Copia configuraciones actuales del sistema al repo
-- Muestra estado de git
-- Permite hacer commit automático
-- Opción de push a GitHub
+This script:
+- Copies current system configurations to repo
+- Shows git status
+- Allows automatic commit
+- Option to push to your remote repo
 
-## Solución de problemas
+## Troubleshooting
 
-### Problemas comunes
+### Common Issues
 
-**Error de permisos:**
+**Permission errors:**
 ```bash
-# Los scripts verifican y corrigen automáticamente
+# Scripts automatically verify and fix
 sudo chown -R $USER:$USER $HOME
 chmod 755 $HOME
 ```
 
-**Pacman bloqueado (Database lock):**
+**Locked Pacman (Database lock):**
 ```bash
 # Error: "failed to init transaction (unable to lock database)"
-# Verificar que no hay procesos pacman activos:
+# Verify there are no active pacman processes:
 ps aux | grep pacman
 
-# Si no hay procesos activos, eliminar el archivo de bloqueo:
+# If no active processes, remove lock file:
 sudo rm /var/lib/pacman/db.lck
 
-# Luego reintentar la instalación de las dependencias:
+# Then retry dependencies installation:
 ./dependencies.sh
 ```
-Este error es muy común cuando pacman se interrumpe con Ctrl+C o el sistema se apaga durante una instalación
+This error is very common when pacman is interrupted with Ctrl+C or the system shuts down during installation.
 
-**Dependencias faltantes:**
+**Missing dependencies:**
 ```bash
-# Reejecutar el script de dependencias
+# Re-run dependencies script
 ./dependencies.sh
 ```
 
-**Hyprland no inicia:**
+**Hyprland won't start:**
 ```bash
-# Verificar instalación de Hyprland
+# Verify Hyprland installation
 pacman -Qi hyprland
-# Verificar logs
+# Check logs
 journalctl -u hyprland --no-pager
 ```
 
-**Fish no es el shell por defecto:**
+**Fish is not the default shell:**
 ```bash
 chsh -s /usr/bin/fish
-# Reiniciar sesión
+# Restart session
 ```
 
-### Reinstalación limpia
+### Clean Reinstallation
 ```bash
-# Restaurar backup si algo sale mal
-cp -r ~/.config_backup_FECHA/* ~/.config/
-```
-
-## Configuraciones específicas
-
-### Fish Shell
-- Configuración moderna con autocompletado
-- Integración con Starship prompt
-- Alias personalizados
-- Funciones utilitarias
-
-### Hyprland
-- Configuración optimizada para rendimiento
-- Atajos de teclado personalizados
-- Reglas de ventanas específicas
-- Integración con SWWW para wallpapers
-
-### Kitty Terminal
-- Configuración acelerada por GPU
-- Tema personalizado
-- Integración con esquema de colores del sistema
-
-### Neovim
-- Setup LazyVim preconfigurado
-- Plugins esenciales incluidos
-- Configuración LSP lista para usar
-
-## Configuración post-instalación
-
-### Configurar Hyprland en el gestor de sesiones
-```bash
-# Para SDDM o GDM, Hyprland debería aparecer automáticamente
-# Para startx, agregar a ~/.xinitrc:
-exec Hyprland
+# Restore backup if something goes wrong
+cp -r ~/.config_backup_DATE/* ~/.config/
 ```
