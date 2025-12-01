@@ -1,7 +1,7 @@
 #!/bin/bash
-# Script para instalar todas las dependencias necesarias
+# Script to install all necessary dependencies
 # Arch Linux + Hyprland Setup
-# Colores
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -11,56 +11,54 @@ print_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-print_info "Instalando dependencias para dotfiles..."
-# Verificar si estamos en Arch Linux
+print_info "Installing dependencies for dotfiles..."
+# Check if we are on Arch Linux
 if ! command -v pacman >/dev/null 2>&1; then
-  print_error "Este script está diseñado para Arch Linux"
+  print_error "This script is designed for Arch Linux"
   exit 1
 fi
-# Verificar y arreglar permisos del directorio HOME
+# Check and fix HOME directory permissions
 check_home_permissions() {
   local home_owner=$(stat -c %U "$HOME")
   local current_user=$(whoami)
   if [ "$home_owner" != "$current_user" ]; then
-    print_error "Directorio HOME tiene permisos incorrectos"
-    print_info "Arreglando permisos del directorio HOME..."
+    print_error "HOME directory has incorrect permissions"
+    print_info "Fixing HOME directory permissions..."
     sudo chown -R "$current_user:$current_user" "$HOME"
     chmod 755 "$HOME"
-    print_success "✓ Permisos del directorio HOME corregidos"
+    print_success "✓ HOME directory permissions fixed"
   fi
 }
-
-
-# Verificar y reparar claves PGP
+# Check and repair PGP keys
 fix_pgp_keys() {
-  print_info "Verificando estado del keyring de pacman..."
+  print_info "Checking pacman keyring status..."
   
-  # Verificar si el keyring está inicializado
+  # Check if keyring is initialized
   if [ ! -f /etc/pacman.d/gnupg/trustdb.gpg ]; then
-    print_warning "Keyring no inicializado, inicializando..."
+    print_warning "Keyring not initialized, initializing..."
     echo
     sudo pacman-key --init
     echo
     sudo pacman-key --populate archlinux
     echo
-    print_success "✓ Keyring inicializado"
+    print_success "✓ Keyring initialized"
     return 0
   fi
   
-  # Verificar si las claves principales de Arch están presentes
-  print_info "Verificando claves de Arch Linux..."
+  # Check if main Arch keys are present
+  print_info "Verifying Arch Linux keys..."
   local archlinux_keys_present=false
   
-  # Intentar listar las claves para verificar que el keyring funciona
+  # Try to list keys to verify keyring works
   echo
   if sudo pacman-key --list-keys | grep -q "Arch Linux"; then
     archlinux_keys_present=true
     echo
-    print_success "✓ Claves de Arch Linux ya están presentes"
+    print_success "✓ Arch Linux keys already present"
   fi
   
-  # Verificar si pacman puede usar el keyring correctamente
-  print_info "Verificando funcionalidad del keyring..."
+  # Check if pacman can use keyring correctly
+  print_info "Verifying keyring functionality..."
   echo
   local pacman_test_output
   pacman_test_output=$(timeout 10 sudo pacman -Sy 2>&1)
@@ -68,63 +66,61 @@ fix_pgp_keys() {
   echo "$pacman_test_output"
   
   if echo "$pacman_test_output" | grep -qi "signature"; then
-    print_warning "⚠ Detectados problemas de firma, actualizando claves..."
+    print_warning "⚠ Signature issues detected, updating keys..."
     archlinux_keys_present=false
   elif [ $pacman_exit -eq 0 ]; then
-    print_success "✓ Keyring funciona correctamente"
+    print_success "✓ Keyring works correctly"
     if $archlinux_keys_present; then
-      print_info "Saltando actualización de claves (ya están configuradas)"
+      print_info "Skipping key update (already configured)"
       return 0
     fi
   fi
   
-  # Solo actualizar si es necesario
+  # Only update if necessary
   if ! $archlinux_keys_present; then
-    print_info "Actualizando claves de Arch Linux..."
+    print_info "Updating Arch Linux keys..."
     echo
     sudo pacman-key --populate archlinux
     
-    print_info "Refrescando claves desde servidores (con timeout de 60s)..."
+    print_info "Refreshing keys from servers (with 60s timeout)..."
     echo
     if timeout 60 sudo pacman-key --refresh-keys; then
       echo
-      print_success "✓ Claves actualizadas exitosamente"
+      print_success "✓ Keys updated successfully"
     else
       echo
-      print_warning "⚠ Timeout o error al refrescar claves"
-      print_info "Verificando si las claves básicas funcionan..."
+      print_warning "⚠ Timeout or error refreshing keys"
+      print_info "Checking if basic keys work..."
       echo
       if timeout 10 sudo pacman -Sy; then
         echo
-        print_success "✓ Las claves básicas funcionan, continuando..."
+        print_success "✓ Basic keys work, continuing..."
       else
         echo
-        print_error "✗ Problema con el keyring"
-        print_info "Intenta manualmente: sudo pacman-key --init && sudo pacman-key --populate archlinux"
+        print_error "✗ Keyring problem"
+        print_info "Try manually: sudo pacman-key --init && sudo pacman-key --populate archlinux"
         return 1
       fi
     fi
   fi
   
-  print_success "✓ Keyring verificado y listo"
+  print_success "✓ Keyring verified and ready"
   return 0
 }
-
-
 # AUR helper (yay)
 install_yay_optional() {
   if ! command -v yay >/dev/null 2>&1; then
-    print_info "¿Instalar yay (AUR helper)?"
-    print_warning "Requerido para algunas dependencias adicionales"
-    read -p "Recomendado para algunos paquetes adicionales (y/N): " -n 1 -r
+    print_info "Install yay (AUR helper)?"
+    print_warning "Required for some additional dependencies"
+    read -p "Recommended for some additional packages (y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-      print_info "Instalando yay..."
+      print_info "Installing yay..."
       
       local yay_deps=("git" "base-devel")
       for dep in "${yay_deps[@]}"; do
         if ! is_package_installed "$dep"; then
-          print_info "Instalando dependencia: $dep"
+          print_info "Installing dependency: $dep"
           sudo pacman -S --noconfirm "$dep"
         fi
       done
@@ -135,22 +131,22 @@ install_yay_optional() {
       makepkg -si --noconfirm
       cd ~
       rm -rf /tmp/yay
-      print_success "✓ yay instalado"
+      print_success "✓ yay installed"
       return 0
     else
-      print_warning "Sin yay, se omitirán paquetes AUR"
+      print_warning "Without yay, AUR packages will be skipped"
       return 1
     fi
   else
-    print_success "✓ yay ya está instalado"
+    print_success "✓ yay already installed"
     return 0
   fi
 }
 check_home_permissions
 fix_pgp_keys
-print_info "Actualizando sistema..."
+print_info "Updating system..."
 sudo pacman -Syu --noconfirm
-# Dependencias principales
+# Main dependencies
 MAIN_PACKAGES=(
   "base-devel"         
   "fish"                
@@ -233,7 +229,6 @@ NEW_PACMAN_PACKAGES=(
   "songrec"
   "python-colorthief"         
 )
-
 AUR_PACKAGES=(
   "neofetch"               
   "translate-shell"        
@@ -285,39 +280,39 @@ install_package() {
   local max_retries=3
   local retry=0
   if is_package_installed "$package"; then
-    print_success "✓ $package ya está instalado"
+    print_success "✓ $package already installed"
     return 0
   fi
   while [ $retry -lt $max_retries ]; do
-    print_info "Instalando $package... (intento $((retry + 1)))"
+    print_info "Installing $package... (attempt $((retry + 1)))"
     
     if timeout 180 sudo pacman -S --noconfirm "$package"; then
-      print_success "✓ $package instalado correctamente"
+      print_success "✓ $package installed successfully"
       return 0
     else
       local exit_code=$?
-      print_warning "⚠ Error instalando $package (intento $((retry + 1)))"
+      print_warning "⚠ Error installing $package (attempt $((retry + 1)))"
       
       if [ $exit_code -eq 124 ]; then
-        print_error "✗ Timeout instalando $package"
+        print_error "✗ Timeout installing $package"
         return 1
       fi
       
       retry=$((retry + 1))
       if [ $retry -lt $max_retries ]; then
-        print_info "Esperando 5 segundos antes del siguiente intento..."
+        print_info "Waiting 5 seconds before next attempt..."
         
         for i in {5..1}; do
-          echo -ne "\r${BLUE}[INFO]${NC} Reintentando en $i segundos..."
+          echo -ne "\r${BLUE}[INFO]${NC} Retrying in $i seconds..."
           sleep 1
         done
-        echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
+        echo -e "\r${BLUE}[INFO]${NC} Retrying now...                    "
         
         sudo pacman -Sc --noconfirm
       fi
     fi
   done
-  print_error "✗ No se pudo instalar $package después de $max_retries intentos"
+  print_error "✗ Could not install $package after $max_retries attempts"
   return 1
 }
 is_aur_package_installed() {
@@ -329,56 +324,56 @@ install_aur_package() {
   local max_retries=3
   local retry=0
   if is_aur_package_installed "$package"; then
-    print_success "✓ $package ya está instalado"
+    print_success "✓ $package already installed"
     return 0
   fi
   while [ $retry -lt $max_retries ]; do
-    print_info "Instalando $package desde AUR... (intento $((retry + 1)))"
+    print_info "Installing $package from AUR... (attempt $((retry + 1)))"
     
     if timeout 300 yay -S --noconfirm "$package"; then
-      print_success "✓ $package instalado correctamente desde AUR"
+      print_success "✓ $package installed successfully from AUR"
       return 0
     else
       local exit_code=$?
-      print_warning "⚠ Error instalando $package desde AUR (intento $((retry + 1)))"
+      print_warning "⚠ Error installing $package from AUR (attempt $((retry + 1)))"
       
       if [ $exit_code -eq 124 ]; then
-        print_error "✗ Timeout instalando $package desde AUR"
+        print_error "✗ Timeout installing $package from AUR"
         return 1
       fi
       
       retry=$((retry + 1))
       if [ $retry -lt $max_retries ]; then
-        print_info "Esperando 5 segundos antes del siguiente intento..."
+        print_info "Waiting 5 seconds before next attempt..."
         
         for i in {5..1}; do
-          echo -ne "\r${BLUE}[INFO]${NC} Reintentando en $i segundos..."
+          echo -ne "\r${BLUE}[INFO]${NC} Retrying in $i seconds..."
           sleep 1
         done
-        echo -e "\r${BLUE}[INFO]${NC} Reintentando ahora...                    "
+        echo -e "\r${BLUE}[INFO]${NC} Retrying now...                    "
         
         yay -Sc --noconfirm
       fi
     fi
   done
-  print_error "✗ No se pudo instalar $package desde AUR después de $max_retries intentos"
+  print_error "✗ Could not install $package from AUR after $max_retries attempts"
   return 1
 }
-# Instalar paquetes principales
-print_info "Instalando paquetes principales..."
+# Install main packages
+print_info "Installing main packages..."
 failed_packages=()
 for package in "${MAIN_PACKAGES[@]}"; do
   if ! install_package "$package"; then
     failed_packages+=("$package")
   fi
 done
-print_info "Instalando paquetes de Hyprland..."
+print_info "Installing Hyprland packages..."
 for package in "${HYPRLAND_PACKAGES[@]}"; do
   if ! install_package "$package"; then
     failed_packages+=("$package")
   fi
 done
-print_info "Instalando nuevas dependencias con pacman..."
+print_info "Installing new dependencies with pacman..."
 for package in "${NEW_PACMAN_PACKAGES[@]}"; do
   if [[ ! " ${MAIN_PACKAGES[@]} " =~ " ${package} " ]] && [[ ! " ${HYPRLAND_PACKAGES[@]} " =~ " ${package} " ]]; then
     if ! install_package "$package"; then
@@ -386,9 +381,9 @@ for package in "${NEW_PACMAN_PACKAGES[@]}"; do
     fi
   else
     if is_package_installed "$package"; then
-      print_success "✓ $package ya está instalado (saltando duplicado)"
+      print_success "✓ $package already installed (skipping duplicate)"
     else
-      print_info "Saltando $package (ya incluido en otra lista)"
+      print_info "Skipping $package (already included in another list)"
     fi
   fi
 done
@@ -397,7 +392,7 @@ if install_yay_optional; then
   yay_installed=true
 fi
 if $yay_installed || command -v yay >/dev/null 2>&1; then
-  print_info "Instalando dependencias desde AUR..."
+  print_info "Installing dependencies from AUR..."
   failed_aur_packages=()
   for package in "${AUR_PACKAGES[@]}"; do
     if ! install_aur_package "$package"; then
@@ -406,33 +401,33 @@ if $yay_installed || command -v yay >/dev/null 2>&1; then
   done
   failed_packages+=("${failed_aur_packages[@]}")
 else
-  print_warning "⚠ yay no está disponible, saltando paquetes AUR"
-  print_info "Paquetes AUR que se omitieron:"
+  print_warning "⚠ yay not available, skipping AUR packages"
+  print_info "AUR packages that were skipped:"
   for package in "${AUR_PACKAGES[@]}"; do
     echo "  • $package"
   done
   echo
 fi
 if [ ${#failed_packages[@]} -ne 0 ]; then
-  print_warning "Paquetes que no se pudieron instalar:"
+  print_warning "Packages that could not be installed:"
   for package in "${failed_packages[@]}"; do
     echo "  • $package"
   done
   echo
-  print_info "Puedes intentar instalarlos manualmente más tarde:"
-  echo "Pacman: sudo pacman -S [paquete]"
+  print_info "You can try to install them manually later:"
+  echo "Pacman: sudo pacman -S [package]"
   if command -v yay >/dev/null 2>&1; then
-    echo "AUR: yay -S [paquete]"
+    echo "AUR: yay -S [package]"
   fi
   echo
 fi
 if command -v yay >/dev/null 2>&1; then
   echo
-  print_info "Paquetes opcionales disponibles:"
+  print_info "Optional packages available:"
   for package in "${OPTIONAL_PACKAGES[@]}"; do
     echo "  • $package"
   done
-  read -t 30 -p "¿Instalar paquetes opcionales? (y/N) [timeout 30s]: " -n 1 -r
+  read -t 30 -p "Install optional packages? (y/N) [timeout 30s]: " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     for package in "${OPTIONAL_PACKAGES[@]}"; do
@@ -440,40 +435,40 @@ if command -v yay >/dev/null 2>&1; then
     done
   else
     if [ -z "$REPLY" ]; then
-      print_info "Timeout alcanzado, saltando paquetes opcionales"
+      print_info "Timeout reached, skipping optional packages"
     fi
   fi
 else
-  print_info "Paquetes opcionales omitidos (requieren yay)"
+  print_info "Optional packages skipped (require yay)"
 fi
-print_info "Configurando herramientas de color para wal..."
+print_info "Configuring color tools for wal..."
 if command -v wal >/dev/null 2>&1; then
-  print_success "✓ pywal (wal) está disponible"
+  print_success "✓ pywal (wal) is available"
   mkdir -p "$HOME/.cache/wal"
-  print_success "✓ Directorio cache de wal creado"
+  print_success "✓ wal cache directory created"
   if command -v convert >/dev/null 2>&1; then
-    print_success "✓ ImageMagick disponible para wal"
+    print_success "✓ ImageMagick available for wal"
   else
-    print_warning "⚠ ImageMagick no encontrado (recomendado para wal)"
+    print_warning "⚠ ImageMagick not found (recommended for wal)"
   fi
 else
-  print_error "✗ pywal no está disponible"
-  print_info "Instala con: sudo pacman -S python-pywal"
+  print_error "✗ pywal not available"
+  print_info "Install with: sudo pacman -S python-pywal"
 fi
 if command -v matugen >/dev/null 2>&1; then
-  print_success "✓ matugen disponible para esquemas Material You"
+  print_success "✓ matugen available for Material You schemes"
 else
-  print_warning "⚠ matugen no encontrado (se instalará desde AUR si yay está disponible)"
+  print_warning "⚠ matugen not found (will be installed from AUR if yay is available)"
 fi
 if command -v fastfetch >/dev/null 2>&1; then
-  print_success "✓ fastfetch disponible"
+  print_success "✓ fastfetch available"
 else
-  print_warning "⚠ fastfetch no encontrado (se instalará desde AUR si yay está disponible)"
+  print_warning "⚠ fastfetch not found (will be installed from AUR if yay is available)"
 fi
-print_success "¡Dependencias instaladas!"
-print_warning "NOTA: Quickshell se instalará con Illogical Impulse durante install.sh"
+print_success "Dependencies installed!"
+print_warning "NOTE: Quickshell will be installed with Illogical Impulse during install.sh"
 echo
-print_info "Verificación final de dependencias principales..."
+print_info "Final verification of main dependencies..."
 declare -A PACKAGE_TO_COMMAND=(
   ["python-pywal"]="wal"
   ["imagemagick"]="convert"
@@ -501,35 +496,35 @@ declare -A PACKAGE_TO_COMMAND=(
 )
 all_good=true
 all_packages=("${MAIN_PACKAGES[@]}" "${HYPRLAND_PACKAGES[@]}" "${NEW_PACMAN_PACKAGES[@]}")
-print_info "Verificando dependencias críticas para wal..."
+print_info "Verifying critical dependencies for wal..."
 WAL_CRITICAL=("python-pywal" "imagemagick" "python-pillow")
 for package in "${WAL_CRITICAL[@]}"; do
   if [[ -n "${PACKAGE_TO_COMMAND[$package]}" ]]; then
     if eval "${PACKAGE_TO_COMMAND[$package]}" --version >/dev/null 2>&1 || eval "${PACKAGE_TO_COMMAND[$package]}" >/dev/null 2>&1; then
-      print_success "✓ $package (crítico para wal)"
+      print_success "✓ $package (critical for wal)"
     elif is_package_installed "$package"; then
-      print_success "✓ $package instalado (crítico para wal)"
+      print_success "✓ $package installed (critical for wal)"
     else
-      print_error "✗ $package (crítico para wal)"
+      print_error "✗ $package (critical for wal)"
       all_good=false
     fi
   else
     if is_package_installed "$package"; then
-      print_success "✓ $package (crítico para wal)"
+      print_success "✓ $package (critical for wal)"
     else
-      print_error "✗ $package (crítico para wal)"
+      print_error "✗ $package (critical for wal)"
       all_good=false
     fi
   fi
 done
-print_info "Verificando otras dependencias..."
+print_info "Verifying other dependencies..."
 for package in "${all_packages[@]}"; do
   if [[ ! " ${WAL_CRITICAL[@]} " =~ " ${package} " ]]; then
     if [[ -n "${PACKAGE_TO_COMMAND[$package]}" ]]; then
       if eval "${PACKAGE_TO_COMMAND[$package]}" --version >/dev/null 2>&1 || eval "${PACKAGE_TO_COMMAND[$package]}" >/dev/null 2>&1; then
         print_success "✓ $package"
       elif is_package_installed "$package"; then
-        print_success "✓ $package instalado"
+        print_success "✓ $package installed"
       else
         print_error "✗ $package"
         all_good=false
@@ -546,8 +541,8 @@ for package in "${all_packages[@]}"; do
 done
 echo
 if [[ $all_good == true ]]; then
-  print_success "Todas las dependencias principales están listas UWU "
+  print_success "All main dependencies are ready UWU "
 else
-  print_warning "⚠ Algunas dependencias fallaron, pero puedes continuar"
-  print_info "Para reintentar solo los paquetes faltantes, consulta la lista anterior"
+  print_warning "⚠ Some dependencies failed, but you can continue"
+  print_info "To retry only missing packages, check the list above"
 fi
