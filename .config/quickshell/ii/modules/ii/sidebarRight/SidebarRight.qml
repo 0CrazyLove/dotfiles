@@ -1,9 +1,6 @@
 import qs
 import qs.services
 import qs.modules.common
-import qs.modules.common.widgets  // AGREGAR
-import qs.modules.common.functions  // AGREGAR
-import QtQuick.Layouts  // AGREGAR
 import QtQuick
 import Quickshell.Io
 import Quickshell

@@ -40,19 +40,19 @@ Item {
                         return `${minutes}:${seconds}`;
                     }
                     font.pixelSize: 40
-                    color: "#F2F2F2"
+                    color: Appearance.m3colors.m3onSurface
                 }
                 StyledText {
                     Layout.alignment: Qt.AlignHCenter
                     text: TimerService.pomodoroLongBreak ? Translation.tr("Long break") : TimerService.pomodoroBreak ? Translation.tr("Break") : Translation.tr("Focus")
                     font.pixelSize: Appearance.font.pixelSize.normal
-                    color: "#C2C2C2"
+                    color: Appearance.colors.colSubtext
                 }
             }
 
             Rectangle {
                 radius: Appearance.rounding.full
-                color: "#181818"
+                color: Appearance.colors.colLayer2
                 
                 anchors {
                     right: parent.right
@@ -64,7 +64,7 @@ Item {
                 StyledText {
                     id: cycleText
                     anchors.centerIn: parent
-                    color: "#F2F2F2"
+                    color: Appearance.colors.colOnLayer2
                     text: TimerService.pomodoroCycle + 1
                 }
             }
@@ -86,8 +86,8 @@ Item {
                 implicitWidth: 90
                 font.pixelSize: Appearance.font.pixelSize.larger
                 onClicked: TimerService.togglePomodoro()
-             colBackground: TimerService.pomodoroRunning ? "#303030" : Appearance.colors.colPrimary
-              colBackgroundHover: TimerService.pomodoroRunning ? "#494949"  : Appearance.colors.colPrimary
+                colBackground: TimerService.pomodoroRunning ? Appearance.colors.colSecondaryContainer : Appearance.colors.colPrimary
+                colBackgroundHover: TimerService.pomodoroRunning ? Appearance.colors.colSecondaryContainer : Appearance.colors.colPrimary
             }
 
             RippleButton {
@@ -106,7 +106,7 @@ Item {
                     anchors.centerIn: parent
                     horizontalAlignment: Text.AlignHCenter
                     text: Translation.tr("Reset")
-                     color: "#F2F2F2"
+                    color: Appearance.colors.colOnErrorContainer
                 }
             }
         }

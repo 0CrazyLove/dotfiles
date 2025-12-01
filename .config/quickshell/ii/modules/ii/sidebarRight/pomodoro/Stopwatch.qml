@@ -53,7 +53,7 @@ Item {
             StyledText {
                 // Layout.preferredWidth: elapsedIndicator.width * 0.6 // Prevent shakiness
                 font.pixelSize: 40
-                color: "#F2F2F2" 
+                color: Appearance.m3colors.m3onSurface
                 text: {
                     let totalSeconds = Math.floor(TimerService.stopwatchTime) / 100
                     let minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0')
@@ -64,7 +64,7 @@ Item {
             StyledText {
                 Layout.fillWidth: true
                 font.pixelSize: 40
-                color: "#AAAAAA" 
+                color: Appearance.colors.colSubtext
                 text: {
                     return `:<sub>${(Math.floor(TimerService.stopwatchTime) % 100).toString().padStart(2, '0')}</sub>`
                 }
@@ -99,7 +99,7 @@ Item {
                 width: lapsList.width
                 implicitHeight: lapRow.implicitHeight + verticalPadding * 2
                 implicitWidth: lapRow.implicitWidth + horizontalPadding * 2
-                color:"#303030" 
+                color: Appearance.colors.colLayer2
                 radius: Appearance.rounding.small
 
                 RowLayout {
@@ -114,13 +114,12 @@ Item {
 
                     StyledText {
                         font.pixelSize: Appearance.font.pixelSize.small
-                        color:  "#AAAAAA"
+                        color: Appearance.colors.colSubtext
                         text: `${TimerService.stopwatchLaps.length - lapItem.index}.`
                     }
 
                     StyledText {
                         font.pixelSize: Appearance.font.pixelSize.small
-                          color: "#F2F2F2"
                         text: {
                             const lapTime = lapItem.modelData
                             const _10ms = (Math.floor(lapTime) % 100).toString().padStart(2, '0')
@@ -135,7 +134,7 @@ Item {
 
                     StyledText {
                         font.pixelSize: Appearance.font.pixelSize.smaller
-                        color: "#F2F2F2"
+                        color: Appearance.colors.colPrimary
                         text: {
                             const originalIndex = TimerService.stopwatchLaps.length - lapItem.index - 1
                             const lastTime = originalIndex > 0 ? TimerService.stopwatchLaps[originalIndex - 1] : 0
@@ -169,13 +168,13 @@ Item {
                     TimerService.toggleStopwatch()
                 }
 
-                  colBackground: TimerService.stopwatchRunning ? "#303030" : Appearance.colors.colPrimary
-                 colBackgroundHover: TimerService.stopwatchRunning ? "#494949" : Appearance.colors.colPrimaryHover
-               colRipple: TimerService.stopwatchRunning ? "#000000" : Appearance.colors.colPrimaryActive
+                colBackground: TimerService.stopwatchRunning ? Appearance.colors.colSecondaryContainer : Appearance.colors.colPrimary 
+                colBackgroundHover: TimerService.stopwatchRunning ? Appearance.colors.colSecondaryContainerHover : Appearance.colors.colPrimaryHover 
+                colRipple: TimerService.stopwatchRunning ? Appearance.colors.colSecondaryContainerActive : Appearance.colors.colPrimaryActive 
 
                 contentItem: StyledText {
                     horizontalAlignment: Text.AlignHCenter
-               color: TimerService.stopwatchRunning ? "#F2F2F2" : Appearance.colors.colOnPrimary
+                    color: TimerService.stopwatchRunning ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnPrimary
                     text: TimerService.stopwatchRunning ? Translation.tr("Pause") : TimerService.stopwatchTime === 0 ? Translation.tr("Start") : Translation.tr("Resume")
                 }
             }
@@ -193,14 +192,14 @@ Item {
                 }
                 enabled: TimerService.stopwatchTime > 0 || Persistent.states.timer.stopwatch.laps.length > 0
 
-               colBackground: "#303030"  
-                colBackgroundHover: "#494949"
-                 colRipple: "#000000"
+                colBackground: TimerService.stopwatchRunning ? Appearance.colors.colLayer2 : Appearance.colors.colErrorContainer
+                colBackgroundHover: TimerService.stopwatchRunning ? Appearance.colors.colLayer2Hover : Appearance.colors.colErrorContainerHover
+                colRipple: TimerService.stopwatchRunning ? Appearance.colors.colLayer2Active : Appearance.colors.colErrorContainerActive
 
                 contentItem: StyledText {
                     horizontalAlignment: Text.AlignHCenter
                     text: TimerService.stopwatchRunning ? Translation.tr("Lap") : Translation.tr("Reset")
-                  color: "#F2F2F2"
+                    color: TimerService.stopwatchRunning ? Appearance.colors.colOnLayer2 : Appearance.colors.colOnErrorContainer
                 }
             }
         }

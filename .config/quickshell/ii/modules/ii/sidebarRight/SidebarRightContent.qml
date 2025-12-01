@@ -53,9 +53,9 @@ Item {
         anchors.fill: parent
         implicitHeight: parent.height - Appearance.sizes.hyprlandGapsOut * 2
         implicitWidth: sidebarWidth - Appearance.sizes.hyprlandGapsOut * 2
-        color:"#000000"
+        color: Appearance.colors.colLayer0
         border.width: 1
-        border.color: "#303030"
+        border.color: Appearance.colors.colLayer0Border
         radius: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
 
         ColumnLayout {
@@ -217,7 +217,7 @@ Item {
                 bottom: parent.bottom
                 left: parent.left
             }
-            color: "#181818"
+            color: Appearance.colors.colLayer1
             radius: height / 2
             implicitWidth: uptimeRow.implicitWidth + 24
             implicitHeight: uptimeRow.implicitHeight + 8
@@ -233,7 +233,7 @@ Item {
                     height: 25
                     source: SystemInfo.distroIcon
                     colorize: true
-                    color: "#F2F2F2"
+                    color: Appearance.colors.colOnLayer0
                 }
                 StyledText {
                     anchors.verticalCenter: parent.verticalCenter
@@ -252,7 +252,7 @@ Item {
                 bottom: parent.bottom
                 right: parent.right
             }
-            color:"#181818"
+            color: Appearance.colors.colLayer1
             padding: 4
 
             QuickToggleButton {

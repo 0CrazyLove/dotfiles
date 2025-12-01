@@ -10,7 +10,7 @@ import QtQuick.Layouts
 Rectangle {
     id: root
     radius: Appearance.rounding.normal
-    color: "#181818"
+    color: Appearance.colors.colLayer1
 
     NotificationList {
         anchors.fill: parent
