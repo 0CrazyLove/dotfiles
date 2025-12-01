@@ -36,8 +36,10 @@ RippleButton {
     implicitHeight: rowLayout.implicitHeight + root.buttonVerticalPadding * 2
     implicitWidth: rowLayout.implicitWidth + root.buttonHorizontalPadding * 2
     buttonRadius: Appearance.rounding.normal
-    colBackground: (root.down || root.keyboardDown) ? Appearance.colors.colPrimaryContainerActive : ((root.hovered || root.focus) ? "#494949" :  ColorUtils.transparentize(Appearance.colors.colPrimaryContainer, 1))
-    colBackgroundHover:"#303030"
+    colBackground: (root.down || root.keyboardDown) ? Appearance.colors.colPrimaryContainerActive : 
+        ((root.hovered || root.focus) ? Appearance.colors.colPrimaryContainer : 
+        ColorUtils.transparentize(Appearance.colors.colPrimaryContainer, 1))
+    colBackgroundHover: Appearance.colors.colPrimaryContainer
     colRipple: Appearance.colors.colPrimaryContainerActive
 
     property string highlightPrefix: `<u><font color="${Appearance.colors.colPrimary}">`
@@ -144,7 +146,7 @@ RippleButton {
             MaterialSymbol {
                 text: root.materialSymbol
                 iconSize: 30
-                color: "#F2F2F2"
+                color: Appearance.m3colors.m3onSurface
             }
         }
 
@@ -201,7 +203,7 @@ RippleButton {
                     textFormat: Text.StyledText // RichText also works, but StyledText ensures elide work
                     font.pixelSize: Appearance.font.pixelSize.small
                     font.family: Appearance.font.family[root.fontType]
-                    color: "#F2F2F2"
+                    color: Appearance.m3colors.m3onSurface
                     horizontalAlignment: Text.AlignLeft
                     elide: Text.ElideRight
                     text: `${root.displayContent}`
