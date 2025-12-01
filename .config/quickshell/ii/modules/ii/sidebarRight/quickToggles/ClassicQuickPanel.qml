@@ -18,7 +18,8 @@ AbstractQuickPanel {
         id: buttonGroup
         spacing: 5
         padding: 5
-        color: "transparent"
+        color: Appearance.colors.colLayer1
+
         NetworkToggle {
             altAction: () => {
                 root.openWifiDialog();
