@@ -49,11 +49,11 @@ ApplicationWindow {
             icon: "settings",
             component: "modules/settings/ServicesConfig.qml"
         },
-        // {
-        //     name: Translation.tr("Advanced"),
-        //     icon: "construction",
-        //     component: "modules/settings/AdvancedConfig.qml"
-        // },
+        {
+            name: Translation.tr("Advanced"),
+            icon: "construction",
+            component: "modules/settings/AdvancedConfig.qml"
+        },
         {
             name: Translation.tr("About"),
             icon: "info",
