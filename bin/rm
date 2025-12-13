@@ -1,73 +1,65 @@
 #!/bin/bash
-# Wrapper de seguridad para rm - VERSIÓN COMPLETAMENTE SILENCIOSA
+# Security wrapper for rm - SAFE AND NON-INTRUSIVE VERSION
 
-# Función para detectar patrones peligrosos
+# Function to check if the command is truly dangerous
 is_dangerous() {
-    local args="$*"
+    local args=("$@")
     local original_user="${SUDO_USER:-$USER}"
     local original_home="/home/$original_user"
     local root_home="/root"
-    
-    # 1. Cualquier rm recursivo sobre raíz
-    if [[ "$args" == "-r /" ]] || [[ "$args" == "-rf /" ]]; then
-        return 0
-    fi
-    
-    # 2. Cualquier rm recursivo sobre ~
-    if [[ "$args" == "-r ~" ]] || [[ "$args" == "-rf ~" ]]; then
-        return 0
-    fi
-    
-    # 3. Cualquier rm recursivo sobre home del usuario original
-    if [[ "$args" == "-r ${original_home}" ]] || [[ "$args" == "-rf ${original_home}" ]]; then
-        return 0
-    fi
-    
-    # 4. Cualquier rm recursivo sobre /root
-    if [[ "$args" == "-r ${root_home}" ]] || [[ "$args" == "-rf ${root_home}" ]]; then
-        return 0
-    fi
-    
-    # 5. Detectar patrones con --no-preserve-root
-    if [[ "$args" =~ --no-preserve-root ]]; then
+
+    # Rebuild argument string for simple checks
+    local args_str="$*"
+
+    # 1. Recursive deletion of root filesystem
+    if [[ "$args_str" == *" -r /"* ]] || [[ "$args_str" == *" -rf /"* ]] || [[ "$args_str" == *" -fr /"* ]]; then
         return 0
     fi
 
-    # 6. Detectar rm recursivo peligroso en /home/, pero excluir cache y temp
-    if [[ "$args" =~ ^-r[f]?[[:space:]]+/home/ ]]; then
-        # Permitir directorios de cache y temporales
-        if [[ ! "$args" =~ /\.cache/ ]] && [[ ! "$args" =~ /tmp/ ]] && [[ ! "$args" =~ /\.tmp/ ]]; then
-            return 0
-        fi
+    # 2. Dangerous option --no-preserve-root
+    if [[ "$args_str" == *"--no-preserve-root"* ]]; then
+        return 0
     fi
-    
-    # 7. Verificaciones adicionales con patrones específicos (CORREGIDA)
-    case "$args" in
-        "-r /"|"-rf /")
-            return 0
-            ;;
-        "-r ~"|"-rf ~")
-            return 0
-            ;;
-        "-r /root"|"-rf /root")
-            return 0
-            ;;
-    esac
-    
+
+    # 3. Check if trying to recursively delete the entire home or /root
+    for arg in "${args[@]}"; do
+        # Skip options
+        [[ "$arg" == -* ]] && continue
+
+        # Expand ~ in the argument
+        if [[ "$arg" == ~* ]]; then
+            arg="${arg/#\~/$original_home}"
+        fi
+
+        # Resolve to absolute path
+        resolved=$(realpath -m "$arg" 2>/dev/null || echo "$arg")
+
+        # Dangerous if the target is exactly the home directory, /root, or /
+        if [[ "$resolved" == "$original_home" || "$resolved" == "$root_home" || "$resolved" == "/" ]]; then
+            # Check if recursive option is present
+            for opt in "${args[@]}"; do
+                if [[ "$opt" == "-r" || "$opt" == "-rf" || "$opt" == "-fr" ]]; then
+                    return 0
+                fi
+            done
+        fi
+    done
+
+    # Everything else is allowed
     return 1
 }
 
-# Verificar si el comando es peligroso 
+# If dangerous, block and show message
 if is_dangerous "$@"; then
-    echo " COMANDO BLOQUEADO POR SEGURIDAD DEL SISTEMA"
-    echo "Comando: rm $*"
+    echo " COMMAND BLOCKED BY SYSTEM SECURITY"
+    echo "Command: rm $*"
     if [[ -n "$SUDO_USER" ]]; then
-        echo "Ejecutado por: $SUDO_USER (vía sudo)"
+        echo "Executed by: $SUDO_USER (via sudo)"
     fi
-    echo "Este comando ha sido identificado como potencialmente destructivo."
-    echo "RAZÓN: Protección contra eliminación masiva de sistema o directorios home"
+    echo "This command has been identified as potentially destructive."
+    echo "REASON: Protection against massive deletion of system or home directories"
     exit 1
 fi
 
-# Ejecutar rm real si es seguro
+# Execute real rm if safe
 exec /bin/rm "$@"
