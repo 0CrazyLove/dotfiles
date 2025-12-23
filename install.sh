@@ -259,7 +259,6 @@ HYPRLAND_DEPS=(
 )
 
 AUR_DEPENDENCIES=(
-  "neofetch"               
   "translate-shell"        
   "python-materialyoucolor" 
   "wlogout"               
@@ -524,7 +523,6 @@ install_config "$DOTFILES_DIR/.config/fish" "$HOME/.config/fish" "Fish shell"
 install_config "$DOTFILES_DIR/.config/fastfetch" "$HOME/.config/fastfetch" "Fastfetch"
 install_config "$DOTFILES_DIR/.config/hypr" "$HOME/.config/hypr" "Hyprland"
 install_config "$DOTFILES_DIR/.config/kitty" "$HOME/.config/kitty" "Kitty terminal"
-install_config "$DOTFILES_DIR/.config/neofetch" "$HOME/.config/neofetch" "Neofetch"
 install_config "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim" "Neovim"
 install_config "$DOTFILES_DIR/.config/quickshell" "$HOME/.config/quickshell" "Quickshell"
 install_config "$DOTFILES_DIR/.config/illogical-impulse" "$HOME/.config/illogical-impulse" "Illogical Impulse (Quickshell design)"
@@ -593,7 +591,6 @@ check_config "$HOME/.config/fish" "Fish"
 check_config "$HOME/.config/fastfetch" "Fastfetch"
 check_config "$HOME/.config/hypr" "Hyprland"
 check_config "$HOME/.config/kitty" "Kitty"
-check_config "$HOME/.config/neofetch" "Neofetch"
 check_config "$HOME/.config/nvim" "Neovim"
 check_config "$HOME/.config/quickshell" "Quickshell"
 check_config "$HOME/.config/illogical-impulse" "Illogical Impulse"
