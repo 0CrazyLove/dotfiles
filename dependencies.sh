@@ -130,7 +130,6 @@ install_yay_optional() {
       cd yay
       makepkg -si --noconfirm
       cd ~
-      rm -rf /tmp/yay
       print_success "✓ yay installed"
       return 0
     else
@@ -227,10 +226,10 @@ NEW_PACMAN_PACKAGES=(
   "pavucontrol-qt"
   "fastfetch"
   "songrec"
-  "python-colorthief"         
+  "python-colorthief"
+  "hyprsunset"     
 )
-AUR_PACKAGES=(
-  "neofetch"               
+AUR_PACKAGES=(              
   "translate-shell"        
   "python-materialyoucolor" 
   "wlogout"               

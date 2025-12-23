@@ -248,7 +248,8 @@ DEPENDENCIES=(
   "syntax-highlighting"
   "fastfetch"
   "songrec"
-  "python-colorthief" 
+  "python-colorthief"
+  "hyprsunset"
 )
 
 HYPRLAND_DEPS=(
