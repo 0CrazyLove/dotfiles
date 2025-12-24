@@ -189,19 +189,6 @@ install_item() {
   fi
 }
 
-# --- WiFi Module Config ---
-configure_wifi() {
-  if grep -q "rtl8xxxu" /etc/modules-load.d/wifi.conf 2>/dev/null; then
-    print_success "WiFi module already configured."
-    return
-  fi
-  
-  print_info "Configuring WiFi module..."
-  echo "rtl8xxxu" | sudo tee /etc/modules-load.d/wifi.conf >/dev/null
-  sudo modprobe rtl8xxxu 2>/dev/null
-  print_success "WiFi module configured."
-}
-
 # --- MAIN EXECUTION FLOW ---
 
 # Setup Environment
