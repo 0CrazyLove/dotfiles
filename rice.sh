@@ -1,9 +1,8 @@
 #!/bin/bash
 # Master script for complete dotfiles installation
 # Executes dependencies.sh followed by install.sh
-# Arch Linux + Hyprland Setup
 
-# Colors
+# --- Colors ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -12,11 +11,16 @@ MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+# --- Printing Functions ---
 print_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 print_header() { echo -e "${MAGENTA}${1}${NC}"; }
+
+# --- Clean Exit on Interrupt ---
+# If you press Ctrl+C, it will exit gracefully
+trap 'echo -e "\n${RED}[ERROR]${NC} Installation interrupted by user"; exit 1' INT
 
 # Banner
 clear
@@ -29,106 +33,89 @@ echo
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Verify that scripts exist
-if [ ! -f "$SCRIPT_DIR/dependencies.sh" ]; then
-  print_error "dependencies.sh not found in $SCRIPT_DIR"
-  exit 1
-fi
+# Verify and define scripts
+DEPS_SCRIPT="$SCRIPT_DIR/dependencies.sh"
+INST_SCRIPT="$SCRIPT_DIR/install.sh"
 
-if [ ! -f "$SCRIPT_DIR/install.sh" ]; then
-  print_error "install.sh not found in $SCRIPT_DIR"
-  exit 1
-fi
+# Basic verification
+for script in "$DEPS_SCRIPT" "$INST_SCRIPT"; do
+    if [ ! -f "$script" ]; then
+        print_error "Critical file missing: $(basename "$script")"
+        exit 1
+    fi
+    # Make sure they are executable
+    chmod +x "$script"
+done
 
-# Make scripts executable if they aren't already
-chmod +x "$SCRIPT_DIR/dependencies.sh"
-chmod +x "$SCRIPT_DIR/install.sh"
-
-# Function to handle errors
+# --- Error Handling Function ---
 handle_error() {
-  local script_name="$1"
-  print_error "Error executing $script_name"
-  print_warning "Do you want to continue with the next step anyway?"
-  read -p "Continue (y/N): " -n 1 -r
-  echo
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    print_info "Installation cancelled by user"
-    exit 1
-  fi
+    local script_name="$1"
+    echo
+    print_error "Something went wrong in: $script_name"
+    read -p "Do you want to continue with the next step anyway? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        print_info "Installation aborted."
+        exit 1
+    fi
 }
 
-# ============================================================
-# STEP 1: Dependencies Installation
-# ============================================================
-echo
-print_header "═══════════════════════════════════════════════════════════"
-print_header "  STEP 1/2: Installing Dependencies"
-print_header "═══════════════════════════════════════════════════════════"
-echo
+# --- Execution Engine ---
+run_step() {
+    local step_num="$1"
+    local step_title="$2"
+    local script_path="$3"
 
-print_info "Executing dependencies.sh..."
-echo
+    print_header "═══════════════════════════════════════════════════════════"
+    print_header "  STEP $step_num: $step_title"
+    print_header "═══════════════════════════════════════════════════════════"
+    echo
+    
+    print_info "Running $(basename "$script_path")..."
+    
+    # Execute the script and capture exit code
+    "$script_path"
+    local status=$?
 
-if bash "$SCRIPT_DIR/dependencies.sh"; then
-  echo
-  print_success "✓ Dependencies phase completed"
-else
-  echo
-  handle_error "dependencies.sh"
-fi
+    if [ $status -eq 0 ]; then
+        print_success "Step $step_num completed successfully."
+    else
+        handle_error "$(basename "$script_path")"
+    fi
+    echo
+}
 
-# Pause between scripts
-echo
-print_header "═══════════════════════════════════════════════════════════"  
-print_info "Press Enter to continue with dotfiles installation..."
-read -r
+# MAIN
 
-# ============================================================
-# STEP 2: Dotfiles Installation
-# ============================================================
-echo
-print_header "═══════════════════════════════════════════════════════════"
-print_header "  STEP 2/2: Installing Dotfiles and Configurations"
-print_header "═══════════════════════════════════════════════════════════"
-echo
+# Step 1: Dependencies
+run_step "1/2" "Installing Dependencies" "$DEPS_SCRIPT"
 
-print_info "Executing install.sh..."
-echo
+# User Pause
+print_warning "Step 1 finished. Ready for Step 2 (Configurations)?"
+read -p "Press [Enter] to continue or [Ctrl+C] to stop..."
 
-if bash "$SCRIPT_DIR/install.sh"; then
-  echo
-  print_success "✓ Installation phase completed"
-else
-  echo
-  handle_error "install.sh"
-fi
+# Step 2: Dotfiles
+run_step "2/2" "Installing Dotfiles" "$INST_SCRIPT"
 
-# ============================================================
-# Completion
-# ============================================================
-echo
+# COMPLETION
+
 print_header "╔══════════════════════════════════════════════════════════╗"
 print_header "║                 Rice Completed!                          ║"
 print_header "╚══════════════════════════════════════════════════════════╝"
 echo
-
-print_success "All done, my love! (>:<)"
+print_success "All done, my love! (>:<) ~Nya"
 echo
 
 print_info "Next steps:"
-echo "  1. Reboot your system"
-echo "  2. Log in by typing 'Hyprland' in the TTY"
-echo "  3. Enjoy your new rice... ~Nya"
+echo "  1. Reboot your system."
+echo "  2. Select Hyprland in your display manager (or type it in TTY)."
 echo
 
-# Ask if user wants to reboot now
-print_info "Do you want to reboot now?"
-read -p "Reboot system (y/N): " -n 1 -r
+read -p "Reboot system now? (y/N): " -n 1 -r
 echo
-
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  print_info "Rebooting system..."
-  systemctl reboot
+    print_info "Rebooting..."
+    systemctl reboot
 else
-  print_info "⚠ Don't forget to reboot later to apply all changes!"
+    print_warning "Reboot later to ensure all services (like Waybar/Quickshell) start correctly."
 fi
