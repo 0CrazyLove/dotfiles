@@ -18,6 +18,7 @@ print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 DOTFILES_DIR="$HOME/dotfiles"
 BACKUP_DIR="$HOME/.configbackup$(date +%Y%m%d_%H%M%S)"
 WALLPAPERS_DIR="$HOME/Documents/walls"
+WALLPAPERS_REPO="https://github.com/0CrazyLove/walls"
 DOTS_HYPRLAND_DIR="$HOME/dots-hyprland"
 
 print_info "Starting dotfiles installation..."
@@ -62,6 +63,52 @@ clone_illogical_impulse() {
     return 0
   else
     print_error "✗ Error cloning Illogical Impulse repository"
+    return 1
+  fi
+}
+
+# Function to ask user if they want to clone wallpapers repository
+ask_clone_wallpapers() {
+  print_info "There's a repository wallpapers available"
+  print_info "Repository: $WALLPAPERS_REPO"
+  print_info "Installation directory: $WALLPAPERS_DIR"
+  echo
+  
+  # Check if directory already exists
+  if [ -d "$WALLPAPERS_DIR" ]; then
+    print_warning "Directory $WALLPAPERS_DIR already exists"
+    read -t 59 -p "Do you want to replace it with the wallpapers repository? (y/N): " -n 1 -r
+    local exit_code=$?
+    echo
+    
+    # If timeout (exit code 142) or empty response, default to No
+    if [ $exit_code -gt 128 ] || [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      print_info "Keeping existing wallpapers directory"
+      return 0
+    fi
+    
+    print_info "Backing up existing wallpapers..."
+    mv "$WALLPAPERS_DIR" "$BACKUP_DIR/walls_backup"
+  else
+    read -t 59 -p "Do you want to clone the wallpapers repository? (y/N): " -n 1 -r
+    local exit_code=$?
+    echo
+    
+    # If timeout (exit code 142) or empty response, default to No
+    if [ $exit_code -gt 128 ] || [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      print_info "Skipping wallpapers installation"
+      return 0
+    fi
+  fi
+  
+  print_info "Cloning wallpapers repository..."
+  mkdir -p "$(dirname "$WALLPAPERS_DIR")"
+  
+  if git clone "$WALLPAPERS_REPO" "$WALLPAPERS_DIR"; then
+    print_success "✓ Wallpapers repository cloned successfully at $WALLPAPERS_DIR"
+    return 0
+  else
+    print_error "✗ Error cloning wallpapers repository"
     return 1
   fi
 }
@@ -388,7 +435,7 @@ fi
 print_info "Creating backup at: $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
-# NEW: Clone dots-hyprland for Illogical Impulse
+# Clone dots-hyprland for Illogical Impulse
 if ! clone_illogical_impulse; then
   print_error "Error cloning dots-hyprland"
   read -p "Continue without Illogical Impulse? (y/N): " -n 1 -r
@@ -398,7 +445,7 @@ if ! clone_illogical_impulse; then
   fi
 fi
 
-# NEW: Install Illogical Impulse Quickshell
+# Install Illogical Impulse Quickshell
 if [ -d "$DOTS_HYPRLAND_DIR" ]; then
   if ! install_illogical_impulse_quickshell; then
     print_error "Error installing illogical-impulse-quickshell-git"
@@ -411,6 +458,11 @@ if [ -d "$DOTS_HYPRLAND_DIR" ]; then
 else
   print_warning "⚠ Skipping quickshell installation (dots-hyprland not available)"
 fi
+
+# Ask user if they want to clone wallpapers repository
+echo
+ask_clone_wallpapers
+echo
 
 configure_wifi_module() {
   print_info "Configuring automatic WiFi module loading..."
@@ -532,30 +584,12 @@ install_config "$DOTFILES_DIR/.config/xdg-desktop-portal" "$HOME/.config/xdg-des
 install_config "$DOTFILES_DIR/.local/share/icons" "$HOME/.local/share/icons" "Custom icons"
 install_file "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml" "Starship"
 
-# NEW: Initialize shapes submodule after copying quickshell config
+# Initialize shapes submodule after copying quickshell config
 if [ -d "$HOME/.config/quickshell" ]; then
   init_shapes_submodule
 fi
 
 configure_wifi_module
-
-if [ -d "$DOTFILES_DIR/walls" ]; then
-  print_info "Installing wallpapers..."
-  mkdir -p "$(dirname "$WALLPAPERS_DIR")"
-  
-  if [ -d "$WALLPAPERS_DIR" ]; then
-    print_warning "Backing up existing wallpapers"
-    mv "$WALLPAPERS_DIR" "$BACKUP_DIR/"
-  fi
-  
-  if cp -r "$DOTFILES_DIR/walls" "$WALLPAPERS_DIR"; then
-    print_success "✓ Wallpapers installed at $WALLPAPERS_DIR"
-  else
-    print_warning "⚠ Error copying wallpapers"
-  fi
-else
-  print_warning "walls folder not found at $DOTFILES_DIR"
-fi
 
 if command_exists fish; then
   print_info "Configuring Fish shell..."
