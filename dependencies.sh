@@ -24,7 +24,7 @@ fi
 
 print_info "Starting dependency installation..."
 
-# --- 1. Fix HOME Permissions ---
+# --- Fix HOME Permissions ---
 # Ensures the user owns their own home folder (fixes common issues with sudo usage)
 check_home_permissions() {
     local home_owner=$(stat -c %U "$HOME")
@@ -37,7 +37,7 @@ check_home_permissions() {
     fi
 }
 
-# --- 2. Manage PGP Keys (Optimized) ---
+# --- Manage PGP Keys ---
 # Fixes common 'signature is unknown trust' errors
 fix_pgp_keys() {
     print_info "Verifying keyring status..."
@@ -61,7 +61,7 @@ fix_pgp_keys() {
     fi
 }
 
-# --- 3. Install Yay (AUR Helper) ---
+# --- Install Yay (AUR Helper) ---
 # Installs 'yay' only if it's not present
 install_yay() {
     if ! command -v yay >/dev/null 2>&1; then
@@ -82,7 +82,7 @@ install_yay() {
 }
 
 # --- PACKAGE LISTS ---
-# Consolidated list for batch installation (Much faster than loops)
+# Consolidated list for batch installation 
 OFFICIAL_PACKAGES=(
   "base-devel" "fish" "starship" "hyprland" "kitty" "neovim" "qt5-tools" 
   "dolphin" "eza" "python-pywal" "cliphist" "ddcutil" "python-pillow" 
@@ -123,9 +123,8 @@ fix_pgp_keys
 print_info "Updating system..."
 sudo pacman -Syu --noconfirm
 
-# 1. Install Official Packages (BATCH MODE)
+# Install Official Packages 
 print_info "Installing official packages (pacman)..."
-# '--needed' tells pacman to skip packages that are already up to date
 if sudo pacman -S --needed --noconfirm "${OFFICIAL_PACKAGES[@]}"; then
     print_success "Official packages installed."
 else
@@ -133,7 +132,7 @@ else
     print_warning "Attempting to continue..."
 fi
 
-# 2. Install AUR Packages
+# Install AUR Packages
 install_yay
 print_info "Installing AUR packages..."
 # Yay also supports batch installation
@@ -144,7 +143,7 @@ else
     echo "yay -S ${AUR_PACKAGES[*]}"
 fi
 
-# 3. Optional Packages
+# Optional Packages
 print_info "Optional packages available: ${OPTIONAL_PACKAGES[*]}"
 read -t 30 -p "Install optional packages? (y/N) [timeout 30s]: " -n 1 -r
 echo
