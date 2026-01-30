@@ -90,8 +90,8 @@ setup_wallpapers() {
     return 0
   fi
   
-  print_info "Cloning wallpapers (Depth 1 for speed)..."
-  mkdir -p "$(dirname "$WALLPAPERS_DIR")"
+  print_info "Cloning wallpapers..."
+  mkdir -p "$HOME/Documents" 
   
   if git clone --depth 1 "$WALLPAPERS_REPO" "$WALLPAPERS_DIR"; then
     print_success "Wallpapers cloned successfully."
