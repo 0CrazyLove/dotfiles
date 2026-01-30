@@ -12,7 +12,7 @@ NC='\033[0m'
 # --- Variables ---
 DOTFILES_DIR="$HOME/dotfiles"
 BACKUP_DIR="$HOME/.configbackup/$(date +%Y%m%d_%H%M%S)"
-WALLPAPERS_DIR="$HOME/Documents/walls"
+WALLPAPERS_DIR="$HOME/Documents/"
 WALLPAPERS_REPO="https://github.com/0CrazyLove/walls"
 DOTS_HYPRLAND_DIR="$HOME/dots-hyprland"
 
@@ -91,7 +91,7 @@ setup_wallpapers() {
   fi
   
   print_info "Cloning wallpapers..."
-  mkdir -p "$HOME/Documents" 
+  mkdir -p "$WALLPAPERS_DIR"
   
   if git clone --depth 1 "$WALLPAPERS_REPO" "$WALLPAPERS_DIR"; then
     print_success "Wallpapers cloned successfully."
