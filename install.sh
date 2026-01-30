@@ -243,8 +243,6 @@ if [ -d "$HOME/.config/quickshell" ]; then
     init_shapes_submodule
 fi
 
-configure_wifi
-
 # Fish Starship Hook
 if [ -f "$HOME/.config/fish/config.fish" ] && ! grep -q "starship init fish" "$HOME/.config/fish/config.fish"; then
     echo "starship init fish | source" >> "$HOME/.config/fish/config.fish"
