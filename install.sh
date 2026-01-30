@@ -77,11 +77,11 @@ clone_illogical_impulse() {
 
 # --- Wallpapers ---
 setup_wallpapers() {
-  if [ -d "$WALLPAPERS_DIR" ]; then
+  if [ -d "$WALLPAPERS_DIR/Walls/.git" ]; then
     print_info "Wallpapers directory already exists. Skipping clone."
     return 0
   fi
-
+  
   print_info "Wallpapers repository available."
   read -t 30 -p "Clone wallpapers repo? (y/N): " -n 1 -r
   echo
@@ -93,7 +93,9 @@ setup_wallpapers() {
   print_info "Cloning wallpapers..."
   mkdir -p "$WALLPAPERS_DIR"
   
-  if git clone --depth 1 "$WALLPAPERS_REPO" "$WALLPAPERS_DIR"; then
+  if git clone --depth 1 "$WALLPAPERS_REPO" "/tmp/walls_clone_temp"; then
+    mv /tmp/walls_clone_temp/Walls "$WALLPAPERS_DIR/"
+    rm -rf /tmp/walls_clone_temp
     print_success "Wallpapers cloned successfully."
   else
     print_error "Failed to clone wallpapers."
@@ -253,4 +255,4 @@ echo
 print_success "Installation completed successfully! OWO"
 print_info "Backup stored at: $BACKUP_DIR"
 print_warning "If something looks wrong, check the missing packages with dependencies.sh"
-print_info "Please reboot your system."n
+print_info "Please reboot your system."
