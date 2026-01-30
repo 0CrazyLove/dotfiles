@@ -21,7 +21,7 @@ MouseArea {
     Component.onCompleted: {
         // Establecer el directorio inicial a Documents/Wallpapers/
         if (!initialDirectorySet) {
-            const wallpapersPath = `${Directories.documents}/walls`;
+            const wallpapersPath = `${Directories.documents}/Walls`;
             Wallpapers.setDirectory(wallpapersPath);
             initialDirectorySet = true;
         }
