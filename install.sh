@@ -77,7 +77,7 @@ clone_illogical_impulse() {
 
 # --- Wallpapers ---
 setup_wallpapers() {
-  if [ -d "$WALLPAPERS_DIR/Walls/.git" ]; then
+  if [ -d "$WALLPAPERS_DIR/Walls" ]; then
     print_info "Wallpapers directory already exists. Skipping clone."
     return 0
   fi
@@ -101,7 +101,6 @@ setup_wallpapers() {
     print_error "Failed to clone wallpapers."
   fi
 }
-
 # --- Quickshell Compilation ---
 install_quickshell() {
   local quickshell_dir="$DOTS_HYPRLAND_DIR/sdata/dist-arch/illogical-impulse-quickshell-git"
