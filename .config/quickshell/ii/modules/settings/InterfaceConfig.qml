@@ -453,14 +453,14 @@ ContentPage {
             }
         }
 
-        // ConfigSwitch {
-        //     buttonIcon: "translate"
-        //     text: Translation.tr('Enable translator')
-        //     checked: Config.options.sidebar.translator.enable
-        //     onCheckedChanged: {
-        //         Config.options.sidebar.translator.enable = checked;
-        //     }
-        // }
+        ConfigSwitch {
+            buttonIcon: "translate"
+            text: Translation.tr('Enable translator')
+            checked: Config.options.sidebar.translator.enable
+            onCheckedChanged: {
+                Config.options.sidebar.translator.enable = checked;
+            }
+        }
 
         ContentSubsection {
             title: Translation.tr("Quick toggles")
