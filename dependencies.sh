@@ -97,7 +97,7 @@ OFFICIAL_PACKAGES=(
   "qt6-svg" "qt6-tools" "qt6-translations" "qt6-wayland" "upower" 
   "qt6-5compat" "syntax-highlighting" "imagemagick" "python-pip" "go" 
   "cava" "gnome-system-monitor" "pavucontrol-qt" "fastfetch" "songrec" 
-  "python-colorthief" "hyprsunset"
+  "python-colorthief" "hyprsunset" "noto-fonts-cjk"
 )
 
 AUR_PACKAGES=(
