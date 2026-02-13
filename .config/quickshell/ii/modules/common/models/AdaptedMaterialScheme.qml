@@ -7,11 +7,10 @@ import qs.modules.common.functions
  */
 QtObject {
     id: root
-    
     required property color color
     readonly property bool colorIsDark: color.hslLightness < 0.5
-    
-    property color colLayer0: ColorUtils.mix(Appearance.colors.colLayer0, root.color, colorIsDark ? 0.6 : 0.5)
+
+    property color colLayer0: ColorUtils.mix(Appearance.colors.colLayer0, root.color, (colorIsDark && Appearance.m3colors.darkmode) ? 0.6 : 0.5)
     property color colLayer1: ColorUtils.mix(Appearance.colors.colLayer1, root.color, 0.5)
     property color colOnLayer0: ColorUtils.mix(Appearance.colors.colOnLayer0, root.color, 0.5)
     property color colOnLayer1: ColorUtils.mix(Appearance.colors.colOnLayer1, root.color, 0.5)

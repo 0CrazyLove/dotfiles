@@ -135,8 +135,8 @@ Singleton {
 
     property var groupsByAppName: groupsForList(root.list)
     property var popupGroupsByAppName: groupsForList(root.popupList)
-    property var appNameList: appNameListForGroups(root.groupsByAppName)
-    property var popupAppNameList: appNameListForGroups(root.popupGroupsByAppName)
+    property list<string> appNameList: appNameListForGroups(root.groupsByAppName)
+    property list<string> popupAppNameList: appNameListForGroups(root.popupGroupsByAppName)
 
     // Quickshell's notification IDs starts at 1 on each run, while saved notifications
     // can already contain higher IDs. This is for avoiding id collisions
@@ -160,14 +160,6 @@ Singleton {
         persistenceSupported: true
 
         onNotification: (notification) => {
-            // ====== FILTER TO BLOCK UPSCAYL ======
-            const blockedApps = ["Upscayl", "upscayl", "org.upscayl.Upscayl", "Wallpaper switcher"];
-            if (blockedApps.includes(notification.appName)) {
-             console.log("[Notifications] Blocked notification from: " + notification.appName);
-             notification.dismiss(); // Descartar la notificación inmediatamente
-             return; 
-            }
-        // ====
             notification.tracked = true
             const newNotifObject = notifComponent.createObject(root, {
                 "notificationId": notification.id + root.idOffset,

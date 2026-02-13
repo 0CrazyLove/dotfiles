@@ -10,7 +10,7 @@ Singleton {
     property string firstRunFilePath: `${Directories.state}/user/first_run.txt`
     property string firstRunFileContent: "This file is just here to confirm you've been greeted :>"
     property string firstRunNotifSummary: "Welcome!"
-    // property string firstRunNotifBody: "Hit Super+/ for a list of keybinds"
+    property string firstRunNotifBody: "Hit Super+/ for a list of keybinds"
     property string defaultWallpaperPath: FileUtils.trimFileProtocol(`${Directories.assetsPath}/images/default_wallpaper.png`)
     property string welcomeQmlPath: FileUtils.trimFileProtocol(Quickshell.shellPath("welcome.qml"))
 
@@ -27,8 +27,7 @@ Singleton {
 
     function handleFirstRun() {
         Quickshell.execDetached([Directories.wallpaperSwitchScriptPath, root.defaultWallpaperPath])
-        // Quickshell.execDetached(["bash", "-c", `qs -p '${root.welcomeQmlPath}'`])
-          Quickshell.execDetached(["notify-send", "Aplicación de Bienvenida", "Enjoy! To open the settings app , hit <tt>Super+I</tt> (✿◠‿◠)", "-a", "Shell"])
+        Quickshell.execDetached(["bash", "-c", `qs -p '${root.welcomeQmlPath}'`])
     }
 
     FileView {

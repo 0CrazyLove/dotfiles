@@ -12,8 +12,12 @@ Singleton {
         });
     }
 
+    function changePassword() {
+        Quickshell.execDetached(["bash", "-c", `${Config.options.apps.changePassword}`]);
+    }
+
     function lock() {
-        Quickshell.execDetached(["loginctl", "lock-session"]);
+        Quickshell.execDetached(["hyprctl", "dispatch", "global", "quickshell:lock"]);
     }
 
     function suspend() {
