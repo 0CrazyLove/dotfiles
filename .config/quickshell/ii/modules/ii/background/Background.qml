@@ -194,17 +194,17 @@ Variants {
                         easing.bezierCurve: Appearance.animationCurves.expressiveDefaultSpatial
                     }
                 }
-                // sourceComponent: GaussianBlur {
-                //     source: wallpaper
-                //     radius: GlobalStates.screenLocked ? Config.options.lock.blur.radius : 0
-                //     samples: radius * 2 + 1
+                sourceComponent: GaussianBlur {
+                    source: wallpaper
+                    radius: GlobalStates.screenLocked ? Config.options.lock.blur.radius : 0
+                    samples: radius * 2 + 1
 
-                //     Rectangle {
-                //         opacity: GlobalStates.screenLocked ? 1 : 0
-                //         anchors.fill: parent
-                //         color: CF.ColorUtils.transparentize(Appearance.colors.colLayer0, 0.7)
-                //     }
-                // }
+                    Rectangle {
+                        opacity: GlobalStates.screenLocked ? 1 : 0
+                        anchors.fill: parent
+                        color: CF.ColorUtils.transparentize(Appearance.colors.colLayer0, 0.7)
+                    }
+                }
             }
 
             WidgetCanvas {
