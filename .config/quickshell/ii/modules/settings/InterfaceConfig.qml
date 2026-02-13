@@ -157,14 +157,14 @@ ContentPage {
             }
         }
 
-        ConfigSwitch {
-            buttonIcon: "account_circle"
-            text: Translation.tr('Launch on startup')
-            checked: Config.options.lock.launchOnStartup
-            onCheckedChanged: {
-                Config.options.lock.launchOnStartup = checked;
-            }
-        }
+        // ConfigSwitch {
+        //     buttonIcon: "account_circle"
+        //     text: Translation.tr('Launch on startup')
+        //     checked: Config.options.lock.launchOnStartup
+        //     onCheckedChanged: {
+        //         Config.options.lock.launchOnStartup = checked;
+        //     }
+        // }
 
         ContentSubsection {
             title: Translation.tr("Security")
