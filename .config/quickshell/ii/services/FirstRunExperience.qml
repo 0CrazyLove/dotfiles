@@ -25,11 +25,11 @@ Singleton {
         Quickshell.execDetached(["bash", "-c", `echo '${root.firstRunFileContent}' > '${root.firstRunFilePath}'`])
     }
 
-    function handleFirstRun() {
+   function handleFirstRun() {
         Quickshell.execDetached([Directories.wallpaperSwitchScriptPath, root.defaultWallpaperPath])
-        Quickshell.execDetached(["bash", "-c", `qs -p '${root.welcomeQmlPath}'`])
-    }
-
+        Quickshell.execDetached(["bash", "-c", `qs -p '${Quickshell.shellPath("settings.qml")}'`])
+        Quickshell.execDetached(["bash", "-c", "notify-send 'Welcome!' 'Enjoy! To open the settings app, hit Super+I (✿◠‿◠)' -a Shell"])
+    } 
     FileView {
         id: firstRunFileView
         path: Qt.resolvedUrl(firstRunFilePath)

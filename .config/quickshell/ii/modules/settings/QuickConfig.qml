@@ -125,7 +125,7 @@ ContentPage {
                         text: Translation.tr("Pick wallpaper image on your system")
                     }
                     onClicked: {
-                        Quickshell.execDetached(`${Directories.wallpaperSwitchScriptPath}`);
+                        Quickshell.execDetached(["hyprctl", "dispatch", "global", "quickshell:wallpaperSelectorToggle"])
                     }
                     mainContentComponent: Component {
                         RowLayout {
@@ -218,17 +218,17 @@ ContentPage {
             ]
         }
 
-        ConfigSwitch {
-            buttonIcon: "ev_shadow"
-            text: Translation.tr("Transparency")
-            checked: Config.options.appearance.transparency.enable
-            onCheckedChanged: {
-                Config.options.appearance.transparency.enable = checked;
-            }
-            StyledToolTip {
-                text: Translation.tr("Might look ass. Unsupported.")
-            }
-        }
+        // ConfigSwitch {
+        //     buttonIcon: "ev_shadow"
+        //     text: Translation.tr("Transparency")
+        //     checked: Config.options.appearance.transparency.enable
+        //     onCheckedChanged: {
+        //         Config.options.appearance.transparency.enable = checked;
+        //     }
+        //     StyledToolTip {
+        //         text: Translation.tr("Might look ass. Unsupported.")
+        //     }
+        // }
     }
 
     ContentSection {
