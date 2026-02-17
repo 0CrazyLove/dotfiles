@@ -109,6 +109,7 @@ AUR_PACKAGES=(
   "xdg-desktop-portal-hyprland" "wl-clipboard" "bluedevil" "gnome-keyring" 
   "networkmanager" "plasma-nm" "polkit-kde-agent" "systemsettings" "uv" 
   "hyprshot" "swappy" "wtype" "ydotool" "google-breakpad" "qt6-avif-image-plugin"
+  "upscayl-bin"
 )
 
 OPTIONAL_PACKAGES=(
