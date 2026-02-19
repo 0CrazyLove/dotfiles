@@ -15,6 +15,7 @@ BACKUP_DIR="$HOME/.configbackup/$(date +%Y%m%d_%H%M%S)"
 WALLPAPERS_DIR="$HOME/Documents/"
 WALLPAPERS_REPO="https://github.com/0CrazyLove/walls"
 DOTS_HYPRLAND_DIR="$HOME/dots-hyprland"
+WALLPAPER="$HOME/.config/quickshell/ii/assets/images/default_wallpaper.png"
 
 # --- Helper Functions ---
 print_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
@@ -248,6 +249,17 @@ fi
 if [ -f "$HOME/.config/fish/config.fish" ] && ! grep -q "starship init fish" "$HOME/.config/fish/config.fish"; then
     echo "starship init fish | source" >> "$HOME/.config/fish/config.fish"
     print_success "Added starship init to fish config."
+fi
+
+# Apply Pywal + Color Scheme
+if [ -f "$WALLPAPER" ]; then
+    command -v wal >/dev/null 2>&1 && wal -i "$WALLPAPER" -q
+    command -v kitty >/dev/null 2>&1 && killall -SIGUSR1 kitty
+    command -v matugen >/dev/null 2>&1 && matugen image "$WALLPAPER" --mode dark
+    if [ -f ~/.cache/wal/colors-kde.conf ]; then
+        cp ~/.cache/wal/colors-kde.conf ~/.config/kdeglobals
+        command -v qdbus >/dev/null 2>&1 && qdbus org.kde.KWin /KWin reconfigure
+    fi
 fi
 
 echo
