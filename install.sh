@@ -251,16 +251,6 @@ if [ -f "$HOME/.config/fish/config.fish" ] && ! grep -q "starship init fish" "$H
     print_success "Added starship init to fish config."
 fi
 
-# Apply Pywal + Color Scheme
-if [ -f "$WALLPAPER" ]; then
-    command -v wal >/dev/null 2>&1 && wal -i "$WALLPAPER" -q
-    command -v kitty >/dev/null 2>&1 && killall -SIGUSR1 kitty
-    command -v matugen >/dev/null 2>&1 && matugen image "$WALLPAPER" --mode dark --source-color-index 0
-    if [ -f ~/.cache/wal/colors-kde.conf ]; then
-        cp ~/.cache/wal/colors-kde.conf ~/.config/kdeglobals
-        command -v qdbus >/dev/null 2>&1 && qdbus org.kde.KWin /KWin reconfigure
-    fi
-fi
 
 echo
 print_success "Installation completed successfully! OWO"
