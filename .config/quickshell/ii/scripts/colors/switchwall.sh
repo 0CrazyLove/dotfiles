@@ -299,7 +299,7 @@ switch() {
     fi
     
     # Run matugen for other apps (not for terminal colors)
-    matugen "${matugen_args[@]}"
+    matugen "${matugen_args[@]}" --source-color-index 0
     
     "$SCRIPT_DIR"/applycolor.sh
     

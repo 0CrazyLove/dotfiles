@@ -255,7 +255,7 @@ fi
 if [ -f "$WALLPAPER" ]; then
     command -v wal >/dev/null 2>&1 && wal -i "$WALLPAPER" -q
     command -v kitty >/dev/null 2>&1 && killall -SIGUSR1 kitty
-    command -v matugen >/dev/null 2>&1 && matugen image "$WALLPAPER" --mode dark --quiet
+    command -v matugen >/dev/null 2>&1 && matugen image "$WALLPAPER" --mode dark --source-color-index 0
     if [ -f ~/.cache/wal/colors-kde.conf ]; then
         cp ~/.cache/wal/colors-kde.conf ~/.config/kdeglobals
         command -v qdbus >/dev/null 2>&1 && qdbus org.kde.KWin /KWin reconfigure
