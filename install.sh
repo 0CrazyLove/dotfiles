@@ -251,8 +251,6 @@ if [ -f "$HOME/.config/fish/config.fish" ] && ! grep -q "starship init fish" "$H
     print_success "Added starship init to fish config."
 fi
 
-plasma-apply-colorscheme BreezeDark 2>/dev/null || true
-
 echo
 print_success "Installation completed successfully! OWO"
 print_info "Backup stored at: $BACKUP_DIR"
